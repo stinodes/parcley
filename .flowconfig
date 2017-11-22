@@ -12,6 +12,10 @@
 ; For RN Apps installed via npm, "Libraries" folder is inside
 ; "node_modules/react-native" but in the source repo it is in the root
 .*/Libraries/react-native/React.js
+.*/node_modules/react-navigation/*
+.*/node_modules/react-native-linear-gradient/*
+.*/node_modules/polished/*
+.*/node_modules/formik/*
 
 ; Ignore polyfills
 .*/Libraries/polyfills/.*
@@ -28,6 +32,9 @@ emoji=true
 module.system=haste
 
 munge_underscores=true
+
+experimental.strict_type_args=true
+esproposal.export_star_as=enable
 
 module.name_mapper='^[./a-zA-Z0-9$_-]+\.\(bmp\|gif\|jpg\|jpeg\|png\|psd\|svg\|webp\|m4v\|mov\|mp4\|mpeg\|mpg\|webm\|aac\|aiff\|caf\|m4a\|mp3\|wav\|html\|pdf\)$' -> 'RelativeImageStub'
 

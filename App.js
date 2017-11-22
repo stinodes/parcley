@@ -1,57 +1,35 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- * @flow
- */
+import React from 'react'
+import { View, StyleSheet, Platform, } from 'react-native'
+import { Provider } from 'react-redux'
+import configureStore from './src/store'
+import createHistory from 'history/createMemoryHistory'
+import { ThemeProvider } from 'glamorous-native'
 
-import React, { Component } from 'react';
-import {
-  Platform,
-  StyleSheet,
-  Text,
-  View
-} from 'react-native';
+import { ConnectedMainNavigator } from './src/Navigation'
+import theme from './src/theme'
+import initializeFirebase from './src/Firebase'
 
-const instructions = Platform.select({
-  ios: 'Press Cmd+R to reload,\n' +
-    'Cmd+D or shake for dev menu',
-  android: 'Double tap R on your keyboard to reload,\n' +
-    'Shake or press menu button for dev menu',
-});
+const url = 'bardown://splash'
+// const url = '://james'
 
-export default class App extends Component<{}> {
-  render() {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>
-          Welcome to React Native!
-        </Text>
-        <Text style={styles.instructions}>
-          To get started, edit App.js
-        </Text>
-        <Text style={styles.instructions}>
-          {instructions}
-        </Text>
-      </View>
-    );
-  }
-}
+const delimiter = /*config(env).URI_PREFIX ||*/ '://'
+const initialPath = url ? `/${url.split(delimiter)[1]}` : '/'
+const history = createHistory({ initialEntries: [initialPath] })
+const store = configureStore(history)
+initializeFirebase()
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
-});
+    app: {
+        flex: 1,
+    }
+})
+
+export default ((store) => () => (
+    <View style={styles.app}>
+      <Provider store={store}>
+        <ThemeProvider theme={theme}>
+          <ConnectedMainNavigator/>
+        </ThemeProvider>
+      </Provider>
+    </View>
+))(store)

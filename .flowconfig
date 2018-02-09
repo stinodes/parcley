@@ -23,7 +23,6 @@
 .*/Libraries/react-native/React.js
 
 ; Custom ignores
-.*/Libraries/Components/StatusBar/StatusBar.js
 .*/node_modules/fbemitter/lib/EventSubscriptionVendor.js
 .*/node_modules/fbemitter/lib/EmitterSubscription.js
 .*/node_modules/fbemitter/lib/EventSubscription.js

@@ -6,7 +6,7 @@ import glamorous, {withTheme} from 'glamorous-native'
 import {colorFromTheme} from '../helpers'
 import {DismissArea} from './DismissArea'
 
-import type {ColorProps, Theme} from '../flowtypes'
+import type {ColorProps, Theme} from '../index'
 import type {ComponentType, Node, Ref} from 'react'
 
 type ScreenProps = {

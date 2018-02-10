@@ -1,5 +1,5 @@
 // @flow
-import type { ThemeColors, ThemeBaseColors, Theme } from './index'
+import type { ThemeColors, ThemeBaseColors, Theme } from './types'
 
 const colors: ThemeColors = {
   white: '#FFF',

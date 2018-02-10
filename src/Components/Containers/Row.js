@@ -9,7 +9,7 @@ import {Text} from '../Text'
 import {Base} from '../Buttons'
 
 import type {ComponentType, Node} from 'react'
-import type {Color, Theme} from '../index'
+import type {Color, Theme} from '../types'
 
 const {View} = glamorous
 

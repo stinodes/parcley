@@ -6,7 +6,7 @@ import {CardModal} from './CardModal'
 import {Text} from '../Text'
 import {StyledButton} from '../Buttons'
 
-import type {ColorProps} from '../index'
+import type {ColorProps} from '../types'
 import type {Node} from 'react'
 
 type Props = {

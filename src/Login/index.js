@@ -1,2 +1,2 @@
 // @flow
-export * from './LoginScreen'
+export * from './EntryScreen'

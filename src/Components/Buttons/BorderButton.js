@@ -25,8 +25,10 @@ const StyledBase = glamorous(Base)({
   justifyContent: 'center',
   flexDirection: 'row',
   alignItems: 'center',
+  backgroundColor: 'transparent',
 }, ({theme, ...props}) => ({
-  backgroundColor: colorFromTheme(theme, props) || theme.base.primary,
+  borderWidth: 3,
+  borderColor: colorFromTheme(theme, props) || theme.base.primary,
   height: props.height,
 }))
 
@@ -45,10 +47,10 @@ type Props =
   theme: Theme,
 }
 
-class StyledButtonComponent extends PureComponent<Props> {
+class BorderButtonComponent extends PureComponent<Props> {
 
-  get colorTheme() {
-    return buttonColorFromTheme(this.props.theme, this.props)
+  get color() {
+    return colorFromTheme(this.props.theme, this.props) || this.props.theme.base.primary
   }
 
   get sizeTheme() {
@@ -62,7 +64,7 @@ class StyledButtonComponent extends PureComponent<Props> {
   get textProps(): TextProps {
     return {
       [this.sizeTheme.text]: true,
-      color: colorFromTheme(this.props.theme, {color: this.props.textColor}) || this.colorTheme.text,
+      color: colorFromTheme(this.props.theme, {color: this.props.textColor}) || this.color,
       align: 'center',
       bold: this.props.bold,
     }
@@ -79,7 +81,9 @@ class StyledButtonComponent extends PureComponent<Props> {
             borderRadius: 5,
           }}
           border={border}
-          background={Base.Ripple(this.colorTheme.ripple, true)}
+          background={Base.Ripple(this.color, true)}
+          highlight={this.color}
+          highlightOpacity={0.5}
           height={this.height}>
           <View>
             {spinner && spinner !== 'right' ?
@@ -101,6 +105,6 @@ class StyledButtonComponent extends PureComponent<Props> {
   }
 }
 
-const StyledButton = withTheme(StyledButtonComponent)
-StyledButton.delayedHandler = Base.delayHandler
-export { StyledButton }
+const BorderButton = withTheme(BorderButtonComponent)
+BorderButton.delayedHandler = Base.delayHandler
+export {BorderButton}

@@ -3,14 +3,22 @@ import * as React from 'react'
 import {StackNavigator, addNavigationHelpers} from 'react-navigation'
 import {createReduxBoundAddListener, createReactNavigationReduxMiddleware} from 'react-navigation-redux-helpers'
 import {connect} from 'react-redux'
+import {theme} from '../Components'
+import {EntryScreen} from '../Login/EntryScreen'
 
 const Navigator = StackNavigator(
   {
     'login': {
-      screen: () => null,
+      screen: EntryScreen,
     },
   },
-  {}
+  {
+    navigationOptions: () => ({
+      headerStyle: {
+        backgroundColor: theme.base.primary,
+      }
+    })
+  }
 )
 
 const reducer = (state: Object, action: Action<string, *>) => {

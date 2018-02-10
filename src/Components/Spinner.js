@@ -3,7 +3,7 @@ import React from 'react'
 import {withTheme} from 'glamorous-native'
 import {ActivityIndicator} from 'react-native'
 
-import type {ColorProps, Theme} from './index'
+import type {ColorProps, Theme} from './types'
 import {colorFromTheme} from './helpers'
 
 type Props = &ColorProps

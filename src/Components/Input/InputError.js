@@ -3,7 +3,7 @@ import React, {Component} from 'react'
 import {Animated} from 'react-native'
 import {withTheme, View} from 'glamorous-native'
 import {Text} from '../Text'
-import type {Theme} from '../index'
+import type {Theme} from '../types'
 
 type Props = {
   light?: boolean,

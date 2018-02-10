@@ -13,8 +13,8 @@ const Overlay = glamorous(Base)({
   flex: 1,
   padding: 32,
   justifyContent: 'center'
-}, ({theme}) => ({
-  backgroundColor: transparentize(0.2, theme.base.secondary),
+}, ({theme, color}) => ({
+  backgroundColor: color || transparentize(0.2, theme.base.secondary),
 }))
 
 type ModalProps = {
@@ -22,6 +22,7 @@ type ModalProps = {
   transparent?: boolean,
   animationType?: string,
   onRequestClose: () => any,
+  overlayColor?: string,
 }
 
 type Props =
@@ -31,7 +32,7 @@ type Props =
   children: Node,
 }
 
-const CardModal = ({children, primary, secondary, tertiary, color, ...props}: Props) => {
+const CardModal = ({children, primary, secondary, tertiary, color, overlayColor, ...props}: Props) => {
   const cardProps = !primary && !secondary && !tertiary && !color ?
     {color: 'white'} :
     {
@@ -42,7 +43,7 @@ const CardModal = ({children, primary, secondary, tertiary, color, ...props}: Pr
     }
   return (
     <Modal transparent animationType="slide" {...props}>
-      <Overlay containerStyle={{flex: 1}} onPress={props.onRequestClose}>
+      <Overlay color={overlayColor} containerStyle={{flex: 1}} onPress={props.onRequestClose}>
         <TouchableWithoutFeedback onPress={e => e.stopPropagation()}>
           <Card raised={5} radius={5} padding={32} {...cardProps}>
             {children}

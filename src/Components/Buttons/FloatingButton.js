@@ -7,7 +7,7 @@ import {elevationStyleFromRaised, buttonColorFromTheme, colorFromTheme} from '..
 import {Base} from './Base'
 
 import type {Node} from 'react'
-import type {ColorProps, Theme, Color, RaisedProps} from '../index'
+import type {ColorProps, Theme, Color, RaisedProps} from '../types'
 
 const CircleButton = glamorous(Base)({
   justifyContent: 'center',

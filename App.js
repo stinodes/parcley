@@ -1,13 +1,16 @@
 // @flow
 import React from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import {ThemeProvider} from 'glamorous-native'
 import {Provider} from 'react-redux'
 import {createReduxStore} from './src/Store'
 import {RootNavigator} from './src/Navigation'
+import {theme} from './src/Components'
 
 const store = createReduxStore()
 export default () => (
   <Provider store={store}>
-    <RootNavigator/>
+    <ThemeProvider theme={theme}>
+      <RootNavigator/>
+    </ThemeProvider>
   </Provider>
 )

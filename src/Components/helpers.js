@@ -1,7 +1,7 @@
 // @flow
 import { Platform } from 'react-native'
 
-import type {Theme, ColorProps, TextSizeProps, SizeProps, TextColorProps, RaisedProps} from './index'
+import type {Theme, ColorProps, TextSizeProps, SizeProps, TextColorProps, RaisedProps} from './types'
 
 const colorPropNames: Array<$Keys<ColorProps>> = ['primary', 'secondary', 'tertiary', 'color',]
 const sizePropNames: Array<$Keys<SizeProps>> = ['small', 'medium', 'large', 'xlarge']

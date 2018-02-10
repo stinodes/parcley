@@ -1,18 +1,21 @@
 // @flow
 import React from 'react'
 import { Touchable, TouchableHighlight, TouchableOpacity, TouchableNativeFeedback } from 'react-native'
+import {transparentize} from 'polished'
 
 export type ButtonBaseProps = {
   highlight? : boolean|string,
+  highlightOpacity?: number,
 } & Touchable.PropTypes
 
 const ButtonBase = (props : ButtonBaseProps) => {
   const style = [props.style, props.containerStyle]
   if (props.highlight) {
+    console.log('highlight button')
     return <TouchableHighlight
       {...props}
       style={style}
-      underlayColor={typeof props.highlight === 'string' ? props.highlight : undefined}/>
+      underlayColor={typeof props.highlight === 'string' ? transparentize(props.highlightOpacity || 0, props.highlight) : undefined}/>
   }
   return (
     <TouchableOpacity

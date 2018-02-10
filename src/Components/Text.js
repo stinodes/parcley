@@ -6,7 +6,7 @@ import { textColorFromTheme, textSizeFromTheme } from './helpers'
 
 import type { Node } from 'react'
 import type { ComponentType } from 'react'
-import type { TextSizeProps, TextColorProps } from './index'
+import type { TextSizeProps, TextColorProps } from './types'
 
 export type Props = TextSizeProps & TextColorProps & {
   align?: 'center'|'right'|'left',

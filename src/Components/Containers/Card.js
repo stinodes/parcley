@@ -4,7 +4,7 @@ import glamorous from 'glamorous-native'
 import {elevationStyleFromRaised, colorFromTheme} from '../helpers'
 
 import type {ComponentType} from 'react'
-import type {ColorProps, FlexProps, RaisedProps} from '../index'
+import type {ColorProps, FlexProps, RaisedProps} from '../types'
 
 type CardProps = {
   radius?: number,

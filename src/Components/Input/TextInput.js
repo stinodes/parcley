@@ -7,7 +7,7 @@ import {textColorFromTheme, textSizeFromTheme} from '../helpers'
 import {WithThemeFAC} from '../WithThemeFAC'
 
 import type {ComponentType, Node} from 'react'
-import type {TextColorProps, TextSizeProps} from '../index'
+import type {TextColorProps, TextSizeProps} from '../types'
 
 type EventHandlers = {
   onBlur?: () => any,

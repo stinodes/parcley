@@ -5,7 +5,7 @@ import glamorous, {View} from 'glamorous-native'
 import {colorFromTheme} from './helpers'
 
 import type {ComponentType} from 'react'
-import type {ColorProps} from './index'
+import type {ColorProps} from './types'
 
 type Props = ColorProps & {
   vertical?: boolean,

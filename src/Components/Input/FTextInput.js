@@ -3,7 +3,7 @@ import React, {PureComponent} from 'react'
 
 import {TextInput, WrappedRNTextInput} from './TextInput'
 
-import type {TextColorProps, TextSizeProps} from '../index'
+import type {TextColorProps, TextSizeProps} from '../types'
 import type {InputProps} from './TextInput'
 
 type EventHandlers = {

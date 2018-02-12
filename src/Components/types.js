@@ -50,6 +50,7 @@ export type ButtonColorTheme = {
 export type InputTheme = {}
 export type MiscTheme = {
   separatorColor: Color,
+  buttonRadius: number,
   cardRadius: number,
 }
 export type Theme = {

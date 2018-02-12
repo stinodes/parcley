@@ -1,86 +1,121 @@
 // @flow
 import React, {PureComponent} from 'react'
-import {Dimensions, Animated} from 'react-native'
 import {connect} from 'react-redux'
 import glamorous, {View} from 'glamorous-native'
 
-import {Screen} from '../Components'
+import {BackgroundImage, FStyledTextInput, Screen, StyledButton as Button, Text} from '../Components'
 import BACKGROUND_IMAGE from './smoke-urban-bg.png'
 
 import type {Store} from '../Store'
-import {BackgroundImage} from '../Components/Containers'
-import {BorderButton} from '../Components/Buttons'
-import {LoginModal} from './LoginModal'
+import {Formik} from 'formik'
+import {errorMessageForName} from '../Utils'
 
 type MappedProps = {}
 type LoginScreenProps = ReduxProps<{}, MappedProps>
 type State = {
   loginModal: boolean,
-  animation: Animated.Value,
 }
 
-const ButtonsContainer = glamorous(Animated.View)({
-  flex: 1,
-  paddingHorizontal: 64,
+const ButtonsContainer = glamorous(View)({
+  paddingHorizontal: 32,
   justifyContent: 'center',
-}, ({animation}) => ({
-  transform: [
-    {
-      translateY: animation.interpolate({
-        inputRange: [0, 1],
-        outputRange: [0, -1 * Dimensions.get('window').height * 0.6]
-      })
-    }
-  ]
-}))
+})
+const InputsContainer = glamorous(View)({
+  paddingHorizontal: 32,
+  justifyContent: 'center',
+})
 
 class EntryScreen extends PureComponent<LoginScreenProps, State> {
   state = {
     loginModal: false,
-    animation: new Animated.Value(0)
   }
   
-  componentDidUpdate(oldProps, oldState) {
-    if (oldState.loginModal && !this.state.loginModal)
-      this.animateButtons(0)
-    if (!oldState.loginModal && this.state.loginModal)
-      this.animateButtons(1)
-  }
-  
-  animateButtons(toValue: number) {
-    Animated.spring(
-      this.state.animation,
-      {toValue}
-    ).start()
-  }
   
   onLoginPress = () => this.setState({loginModal: true})
   onLoginClose = () => this.setState({loginModal: false})
-  onCreatePress = () => {}
+  onCreatePress = () => {
+  }
+  
+  validate = (values) => {
+    const errors = {}
+    if (!values.email) {
+      errors.email = 'Please enter an e-mail address.'
+    }
+    else if (!/^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(values.email)) {
+      errors.email = 'Your email seems to be invalid.'
+    }
+    if (!values.password) {
+      errors.password = 'Please enter a password.'
+    }
+    return errors
+  }
   
   render() {
-    const {animation, loginModal} = this.state
+    const {loginModal} = this.state
     return (
       <Screen dismissKeyboardOnTap>
         <BackgroundImage source={BACKGROUND_IMAGE}>
-          <ButtonsContainer animation={this.state.animation}>
-            <View marginVertical={16}>
-              <BorderButton
-                bold  raised
-                onPress={this.onLoginPress}>
-                Log in
-              </BorderButton>
-            </View>
-            <View marginVertical={16}>
-              <BorderButton
-                secondary bold raised
-                onPress={this.onCreatePress}>
-                Create account
-              </BorderButton>
+          <View flex={1} justifyContent="space-around">
+            <View flex={0.4} justifyContent="center">
+              <Text title faded align="center">
+                C o o l i o
+              </Text>
             </View>
             
-          </ButtonsContainer>
-          <LoginModal visible={loginModal} close={this.onLoginClose}/>
+            <Formik
+              validate={this.validate}
+              initialValues={{email: '', password: '',}}>
+              {({setFieldValue, setFieldTouched, values, errors, touched, handleSubmit}) => (
+                <View flex={0.6}>
+                  <InputsContainer>
+                    <View marginTop={8}>
+                      <Text small faded>
+                        E-mail address
+                      </Text>
+                      <FStyledTextInput
+                        useErrorColor
+                        name="email"
+                        value={values.email}
+                        errorMessage={errorMessageForName('email', errors, touched)}
+                        onChange={setFieldValue}
+                        onTouched={setFieldTouched}/>
+                    </View>
+                    <View marginTop={8}>
+                      <Text small faded>
+                        Password
+                      </Text>
+                      <FStyledTextInput
+                        secureTextEntry
+                        useErrorColor
+                        name="password"
+                        value={values.password}
+                        errorMessage={errorMessageForName('password', errors, touched)}
+                        onChange={setFieldValue}
+                        onTouched={setFieldTouched}/>
+                    </View>
+                  </InputsContainer>
+                  <ButtonsContainer>
+                    <View marginVertical={8}>
+                      <Button
+                        raised
+                        onPress={handleSubmit}>
+                        Log in
+                      </Button>
+                    </View>
+                    <View>
+                      <Button
+                        small secondary raised
+                        color="transparent"
+                        onPress={this.onCreatePress}>
+                        Create account
+                      </Button>
+                    </View>
+                  
+                  </ButtonsContainer>
+                </View>
+              )}
+            </Formik>
+          </View>
         </BackgroundImage>
       </Screen>
     )
@@ -90,4 +125,9 @@ class EntryScreen extends PureComponent<LoginScreenProps, State> {
 const mapStateToProps = (state: Store): MappedProps => ({})
 
 const ConnectedEntryScreen = connect(mapStateToProps)(EntryScreen)
+// $FlowFixMe
+ConnectedEntryScreen.navigationOptions = {
+  header: null,
+}
+
 export {ConnectedEntryScreen as EntryScreen}

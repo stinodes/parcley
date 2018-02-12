@@ -19,13 +19,13 @@ const Container = glamorous.view({
   ...elevationStyleFromRaised(props),
 }))
 const StyledBase = glamorous(Base)({
-  borderRadius: 5,
-  paddingVertical: 12,
+  // paddingVertical: 12,
   paddingHorizontal: 16,
   justifyContent: 'center',
   flexDirection: 'row',
   alignItems: 'center',
 }, ({theme, ...props}) => ({
+  borderRadius: theme.misc.buttonRadius,
   backgroundColor: colorFromTheme(theme, props) || theme.base.primary,
   height: props.height,
 }))
@@ -69,14 +69,14 @@ class StyledButtonComponent extends PureComponent<Props> {
   }
 
   render() {
-    const {spinner, border, raised} = this.props
+    const {spinner, border, raised, theme} = this.props
     return (
       <Container
         raised={raised}>
         <StyledBase
           {...this.props}
           containerStyle={{
-            borderRadius: 5,
+            borderRadius: theme.misc.buttonRadius,
           }}
           border={border}
           background={Base.Ripple(this.colorTheme.ripple, true)}

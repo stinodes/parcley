@@ -60,20 +60,20 @@ const theme: Theme = {
 
   buttonSizes: {
     small: {
-      text: 'medium',
-      height: 45,
+      text: 'small',
+      height: 40,
     },
     medium: {
-      text: 'large',
-      height: 60,
+      text: 'medium',
+      height: 50,
     },
     large: {
-      text: 'xlarge',
-      height: 70,
+      text: 'large',
+      height: 55,
     },
     xlarge: {
       text: 'xlarge',
-      height: 70,
+      height: 60,
     },
 
     floating: {
@@ -113,6 +113,7 @@ const theme: Theme = {
 
   misc: {
     separatorColor: colors.lightGreenCyan,
+    buttonRadius: 2,
     cardRadius: 5,
   }
 }

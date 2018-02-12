@@ -16,8 +16,8 @@ const Overlay = glamorous.view(({theme, ...props}) => ({
   backgroundColor: transparentize(
     typeof props.overlayTransparency === 'number' ?
       props.overlayTransparency :
-      0.3,
-    colorFromTheme(theme, props) || theme.colors.davysGrey
+      0.1,
+    colorFromTheme(theme, props) || theme.colors.magnolia
   )
 }))
 

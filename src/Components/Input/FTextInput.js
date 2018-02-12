@@ -12,6 +12,7 @@ type EventHandlers = {
   onChangeText?: (string) => any,
 }
 export type FormikProps = {
+  onTouched?: (name: string) => any,
   onChange: (name: string, value: string) => any,
   name: string,
 }
@@ -36,12 +37,17 @@ class FTextInput extends PureComponent<Props> {
   blur(){
     this.input.blur()
   }
+  _onBlur = () => {
+    this.props.onTouched && this.props.onTouched(this.props.name)
+    this.props.onBlur && this.props.onBlur()
+  }
 
   render() {
     const {name, onChange, onChangeText, inputRef, ...props} = this.props
     return (
       <TextInput
         {...props}
+        onBlur={this._onBlur}
         inputRef={inputRef}
         onChangeText={this.onChangeText}/>
     )

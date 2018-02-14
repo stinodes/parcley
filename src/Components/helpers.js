@@ -67,7 +67,8 @@ export const textColorFromTheme = (theme: Theme,  {dark, light, faded, error, co
   if (faded) return theme.textColors.faded
 }
 
-export const textSizeFromTheme = (theme: Theme, {small, medium, large, xlarge, title} : TextSizeProps) => {
+export const textSizeFromTheme = (theme: Theme, {xsmall, small, medium, large, xlarge, title} : TextSizeProps) => {
+  if (xsmall) return theme.textSizes.xsmall
   if (small) return theme.textSizes.small
   if (medium) return theme.textSizes.medium
   if (large) return theme.textSizes.large

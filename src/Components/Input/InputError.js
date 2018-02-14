@@ -57,7 +57,7 @@ class InputErrorComponent extends Component<Props> {
             extrapolateLeft: 'clamp',
           })
         }}>
-            <Text small error {...textProps}>{this.message}</Text>
+            <Text xsmall error {...textProps}>{this.message}</Text>
         </Animated.View>
       </View>
     )

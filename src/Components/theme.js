@@ -56,6 +56,10 @@ const theme: Theme = {
       fontSize: 14,
       lineHeight: 18,
     },
+    xsmall: {
+      fontSize: 12,
+      lineHeight: 14,
+    }
   },
 
   buttonSizes: {

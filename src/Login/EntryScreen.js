@@ -1,19 +1,22 @@
 // @flow
 import React, {PureComponent} from 'react'
+import {View as RNView} from 'react-native'
 import {connect} from 'react-redux'
 import glamorous, {View} from 'glamorous-native'
+import {Formik} from 'formik'
 
 import {BackgroundImage, FStyledTextInput, Screen, StyledButton as Button, Text} from '../Components'
 import BACKGROUND_IMAGE from './smoke-urban-bg.png'
-
 import type {Store} from '../Store'
-import {Formik} from 'formik'
 import {errorMessageForName} from '../Utils'
+import {RegisterOverlay} from './RegisterOverlay'
+import {StyledButton} from '../Components/Buttons/StyledButton'
 
 type MappedProps = {}
 type LoginScreenProps = ReduxProps<{}, MappedProps>
 type State = {
-  loginModal: boolean,
+  overlay: boolean,
+  loginButtonLayout: ?{width: number, height: number, x: number, y: number},
 }
 
 const ButtonsContainer = glamorous(View)({
@@ -27,14 +30,27 @@ const InputsContainer = glamorous(View)({
 
 class EntryScreen extends PureComponent<LoginScreenProps, State> {
   state = {
-    loginModal: false,
+    overlay: false,
+    loginButtonLayout: null,
+  }
+  loginButtonContainer: ?StyledButton
+  
+  measureLoginButton = () => {
+    setTimeout( () => {
+      this.loginButtonContainer && this.loginButtonContainer.measure((fx, fy, width, height, px, py) => {
+        this.setState({
+          loginButtonLayout: {
+            width,
+            height,
+            x: fx + px,
+            y: fy + py,
+          }
+        })
+      })
+    }, 0)
   }
   
-  
-  onLoginPress = () => this.setState({loginModal: true})
-  onLoginClose = () => this.setState({loginModal: false})
-  onCreatePress = () => {
-  }
+  onCreatePress = () => this.setState({overlay: true})
   
   validate = (values) => {
     const errors = {}
@@ -51,7 +67,8 @@ class EntryScreen extends PureComponent<LoginScreenProps, State> {
   }
   
   render() {
-    const {loginModal} = this.state
+    const {overlay, loginButtonLayout} = this.state
+    console.log(loginButtonLayout)
     return (
       <Screen dismissKeyboardOnTap>
         <BackgroundImage source={BACKGROUND_IMAGE}>
@@ -63,6 +80,7 @@ class EntryScreen extends PureComponent<LoginScreenProps, State> {
             </View>
             
             <Formik
+              onSubmit={() => {}}
               validate={this.validate}
               initialValues={{email: '', password: '',}}>
               {({setFieldValue, setFieldTouched, values, errors, touched, handleSubmit}) => (
@@ -74,6 +92,7 @@ class EntryScreen extends PureComponent<LoginScreenProps, State> {
                       </Text>
                       <FStyledTextInput
                         useErrorColor
+                        alignError="right"
                         name="email"
                         value={values.email}
                         errorMessage={errorMessageForName('email', errors, touched)}
@@ -87,6 +106,7 @@ class EntryScreen extends PureComponent<LoginScreenProps, State> {
                       <FStyledTextInput
                         secureTextEntry
                         useErrorColor
+                        alignError="right"
                         name="password"
                         value={values.password}
                         errorMessage={errorMessageForName('password', errors, touched)}
@@ -95,16 +115,19 @@ class EntryScreen extends PureComponent<LoginScreenProps, State> {
                     </View>
                   </InputsContainer>
                   <ButtonsContainer>
-                    <View marginVertical={8}>
+                    <RNView
+                      onLayout={this.measureLoginButton}
+                      ref={comp => this.loginButtonContainer = comp}
+                      style={{marginVertical: 8}}>
                       <Button
-                        raised
+                        raised={!overlay}
                         onPress={handleSubmit}>
                         Log in
                       </Button>
-                    </View>
+                    </RNView>
                     <View>
                       <Button
-                        small secondary raised
+                        small secondary
                         color="transparent"
                         onPress={this.onCreatePress}>
                         Create account
@@ -115,6 +138,12 @@ class EntryScreen extends PureComponent<LoginScreenProps, State> {
                 </View>
               )}
             </Formik>
+            
+            <RegisterOverlay
+              visible={overlay}
+              close={() => this.setState({overlay: false})}
+              startLayout={loginButtonLayout}/>
+            
           </View>
         </BackgroundImage>
       </Screen>

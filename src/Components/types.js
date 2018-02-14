@@ -2,7 +2,7 @@
 export type Color = string
 export type BaseColors = 'primary' | 'secondary' | 'tertiary'
 export type Sizes = 'small' | 'medium' | 'large' | 'xlarge'
-export type TextSizes = Sizes | 'title'
+export type TextSizes = 'xsmall'|Sizes | 'title'
 
 export type ThemeColors = {
   [name: string]: Color,

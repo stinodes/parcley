@@ -1,5 +1,4 @@
 // @flow
-export * from './StyledButton'
+export * from './IconButton'
+export * from './TextButton'
 export * from './Base'
-export * from './FloatingButton'
-export * from './BorderButton'

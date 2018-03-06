@@ -2,34 +2,32 @@
 import type { ThemeColors, ThemeBaseColors, Theme } from './types'
 
 const colors: ThemeColors = {
-  white: '#FFF',
-
-  greenCyan: '#1B996A',
-  lightGreenCyan: '#22BF7F',
-  darkGreenCyan: '#15724C',
+  white: '#fcfcff',
   
-  white: '#F3F2FF',
-  magnolia: '#F3F2FF',
-  soap: '#D6CDF4',
-  blackCoral: '#606175',
-  davysGrey: '#514E56',
+  eerieBlack: '#191616',
+  darkPuce: '#483d3f',
+  
+  yellowGreen: '#80C921',
   
   lightPink: '#FF7D77',
   darkPink: '#BF5A62',
 }
 const base: ThemeBaseColors = {
-  primary: colors.greenCyan,
-  secondary: colors.soap,
-  tertiary: colors.blackCoral,
+  primary: colors.white,
+  secondary: colors.eerieBlack,
+  tertiary: colors.yellowGreen,
 }
 const theme: Theme = {
   colors,
   base,
 
+  spacingUnit: 14,
+  space: [14, 14 * 2, 14 * 3, 14 * 4],
+  
   textColors: {
-    dark: colors.davysGrey,
-    light: colors.magnolia,
-    faded: colors.blackCoral,
+    dark: colors.eerieBlack,
+    faded: colors.darkPuce,
+    light: colors.white,
   },
   errors: {
     light: colors.lightPink,
@@ -37,89 +35,22 @@ const theme: Theme = {
   },
   textSizes: {
     title: {
-      fontSize: 24,
-      lineHeight: 26,
+      fontSize: 60,
+      fontWeight: '700',
+      lineHeight: 64,
     },
-    xlarge: {
-      fontSize: 20,
-      lineHeight: 24,
-    },
+    
     large: {
-      fontSize: 18,
-      lineHeight: 22,
+      fontSize: 30,
+      fontWeight: '600',
+      lineHeight: 32,
     },
     medium: {
-      fontSize: 16,
-      lineHeight: 20,
-    },
-    small: {
-      fontSize: 14,
+      fontSize: 15,
+      fontWeight: '500',
       lineHeight: 18,
     },
-    xsmall: {
-      fontSize: 12,
-      lineHeight: 14,
-    }
   },
-
-  buttonSizes: {
-    small: {
-      text: 'small',
-      height: 40,
-    },
-    medium: {
-      text: 'medium',
-      height: 50,
-    },
-    large: {
-      text: 'large',
-      height: 55,
-    },
-    xlarge: {
-      text: 'xlarge',
-      height: 60,
-    },
-
-    floating: {
-      icon: 30,
-      size: 80,
-    },
-  },
-  buttonColors: {
-    primary: {
-      text: colors.magnolia,
-      ripple: colors.darkGreenCyan,
-    },
-    secondary: {
-      text: colors.davysGrey,
-      ripple: colors.blackCoral,
-    },
-    tertiary: {
-      text: colors.magnolia,
-      ripple: colors.soap,
-    },
-  },
-
-  input: {
-    small: {
-      fontSize: 16,
-      lineHeight: 20,
-    },
-    medium: {
-      fontSize: 18,
-      lineHeight: 22,
-    },
-    large: {
-      fontSize: 20,
-      lineHeight: 24,
-    },
-  },
-
-  misc: {
-    separatorColor: colors.lightGreenCyan,
-    buttonRadius: 2,
-    cardRadius: 5,
-  }
 }
 
 export { theme }

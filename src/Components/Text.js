@@ -16,9 +16,8 @@ export type Props = TextSizeProps & TextColorProps & {
 const Text: ComponentType<Props> = glamorous.text({}, ({theme, ...props}) => {
   return {
     color: textColorFromTheme(theme, props),
-    ...textSizeFromTheme(theme, props),
     textAlign: props.align || 'left',
-    fontWeight: props.bold ? 'bold' : 'normal',
+    ...(textSizeFromTheme(theme, props) || textSizeFromTheme(theme, {medium: true})),
   }
 })
 

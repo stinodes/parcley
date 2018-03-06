@@ -1,15 +1,22 @@
 // @flow
 import React from 'react'
 import { Touchable, TouchableNativeFeedback, View } from 'react-native'
+import {withTheme} from 'glamorous-native'
+import type {ColorProps} from '../types'
+import {colorFromTheme, colorPropsFromString} from '../helpers'
 
+type Ripple = {
+  color: string,
+  borderless: ?boolean,
+}
 export type ButtonBaseProps = {
-  background? : TouchableNativeFeedback.propTypes.background,
+  background? : Ripple,
   noContainer? : boolean,
 } & Touchable.propTypes
 
-const ButtonBase = ({style, containerStyle, noContainer, children, ...props} : ButtonBaseProps) => {
+const ButtonBase = ({theme, style, containerStyle, noContainer, children, background = ripple('yellowGreen', false), ...props} : ButtonBaseProps) => {
   const button = (
-    <TouchableNativeFeedback {...props}>
+    <TouchableNativeFeedback {...props} background={parseRipple(background, theme)}>
       <View style={style}>
         {children}
       </View>
@@ -25,10 +32,21 @@ const ButtonBase = ({style, containerStyle, noContainer, children, ...props} : B
   )
 }
 
-ButtonBase.SelectableBackground = TouchableNativeFeedback.SelectableBackground
-ButtonBase.SelectableBackgroundBorderless = TouchableNativeFeedback.SelectableBackgroundBorderless
-ButtonBase.Ripple = TouchableNativeFeedback.Ripple
-ButtonBase.delayHandler = (handler: (any) => any) =>
+const ripple = (color: string, borderless?: boolean): Ripple => ({
+  color,
+  borderless,
+})
+const parseRipple = (ripple: Ripple, theme: Theme) =>
+  TouchableNativeFeedback.Ripple(
+    colorFromTheme(theme, colorPropsFromString(ripple.color)),
+    ripple.borderless,
+  )
+
+const Base = withTheme(ButtonBase)
+Base.SelectableBackground = TouchableNativeFeedback.SelectableBackground
+Base.SelectableBackgroundBorderless = TouchableNativeFeedback.SelectableBackgroundBorderless
+Base.Ripple = ripple
+Base.delayHandler = (handler: (any) => any) =>
   (...args: any) => setTimeout(() => handler(...args), 50)
 
-export const Base = ButtonBase
+export {Base}

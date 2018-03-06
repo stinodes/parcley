@@ -3,20 +3,22 @@ import * as React from 'react'
 import {StackNavigator, addNavigationHelpers} from 'react-navigation'
 import {createReduxBoundAddListener, createReactNavigationReduxMiddleware} from 'react-navigation-redux-helpers'
 import {connect} from 'react-redux'
-import {theme} from '../Components'
-import {EntryScreen} from '../Login/EntryScreen'
+
+// import {EntryScreen} from '../Login/EntryScreen'
+import {Playground} from '../Playground'
 
 const Navigator = StackNavigator(
   {
-    'login': {
-      screen: EntryScreen,
+    'playground': {
+      screen: Playground,
     },
+    // 'login': {
+    //   screen: EntryScreen,
+    // },
   },
   {
     navigationOptions: () => ({
-      headerStyle: {
-        backgroundColor: theme.base.primary,
-      }
+      header: null,
     })
   }
 )
@@ -44,7 +46,7 @@ class RootNavigator extends React.Component<RootNavigatorProps> {
   render() {
     const {navigation, dispatch} = this.props
     return (
-      <Navigator navigation={addNavigationHelpers({dispatch, state: navigation, addListener})}/>
+        <Navigator navigation={addNavigationHelpers({dispatch, state: navigation, addListener})}/>
     )
   }
 }

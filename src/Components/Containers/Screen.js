@@ -28,28 +28,23 @@ const StyledScreen = glamorous.view({
 }, ({theme, justifyContent, alignItems, ...props}) => ({
   justifyContent,
   alignItems,
-  backgroundColor: colorFromTheme(theme, props),
+  backgroundColor: colorFromTheme(theme, props)  || theme.colors.white,
 }))
 const DismissableScreen = glamorous(DismissArea)({
   flex: 1,
 }, ({theme, justifyContent, alignItems, ...props}) => ({
   justifyContent,
   alignItems,
-  backgroundColor: colorFromTheme(theme, props),
+  backgroundColor: colorFromTheme(theme, props) || theme.colors.white,
 }))
 
 class ScreenComponent extends PureComponent<Props&{theme: Theme}> {
 
   render() {
     const {
-      theme, statusBarColor: _statusBarColor,  statusBarStyle: _statusBarStyle, statusBarTranslucent=false,
-      dismissKeyboardOnTap, ignoredTargets, children, ...props
+      theme, dismissKeyboardOnTap, ignoredTargets, children, ...props
     } = this.props
-    const statusBarColor = typeof _statusBarColor === 'string' ?
-      colorFromTheme(theme, {color: _statusBarColor}) :
-      theme.base.primary
-    const statusBarStyle = typeof _statusBarStyle === 'string' ? _statusBarStyle : 'light-content'
-    const statusBar = <StatusBar backgroundColor={statusBarColor} barStyle={statusBarStyle} translucent={statusBarTranslucent}/>
+    const statusBar = <StatusBar backgroundColor={theme.colors.white} barStyle="dark-content"/>
 
     if (dismissKeyboardOnTap)
       return (

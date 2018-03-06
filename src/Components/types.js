@@ -17,6 +17,7 @@ export type ThemeErrorColors = {
 }
 export type ThemeTextSize = {
   fontSize: number,
+  fontWeight: string,
   lineHeight: number,
 }
 export type TextColorTheme = {
@@ -56,20 +57,15 @@ export type MiscTheme = {
 export type Theme = {
   colors: ThemeColors,
   base: ThemeBaseColors,
+  spacingUnit: number,
   errors: ThemeErrorColors,
   textColors: TextColorTheme,
   textSizes: TextSizeTheme,
-  buttonSizes: ButtonSizeTheme,
-  buttonColors: ButtonColorTheme,
-  input: InputTheme,
-  misc: MiscTheme,
 }
 
 export type SizeProps = {
-  small?: boolean,
   medium?: boolean,
   large?: boolean,
-  xlarge?: boolean,
 }
 export type ColorProps = {
   primary?: boolean,

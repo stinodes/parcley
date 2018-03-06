@@ -15,7 +15,10 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": false
+    },
+    "androidStatusBar": {
+      "barStyle": "dark-content"
     }
   }
 }

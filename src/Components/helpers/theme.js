@@ -5,14 +5,9 @@ import type {Theme, ColorProps, TextSizeProps, SizeProps, TextColorProps, Raised
 import {fontFamilyForWeight} from '../fonts'
 
 const colorPropNames: Array<$Keys<ColorProps>> = ['primary', 'secondary', 'tertiary', 'color',]
-const sizePropNames: Array<$Keys<SizeProps>> = ['medium', 'large']
+const sizePropNames: Array<$Keys<SizeProps>> = ['medium', 'large', 'xlarge']
 const textColorPropNames: Array<$Keys<TextColorProps>> = ['dark', 'light', 'faded', 'color',]
 const textSizePropNames: Array<$Keys<TextSizeProps>> = [...sizePropNames, 'title']
-
-export const colorPropsFromString = (str: string) =>
-  colorPropNames.some(v => v === str) ?
-    {[str]: true} :
-    {color: str}
   
 export const elevationStyle = (elevation: number) => {
   if (Platform.OS === 'android')
@@ -40,58 +35,26 @@ export const fromUnit = (theme: Theme, amount: ?number) =>
     theme.spacingUnit * amount :
     undefined
 
-export const extractColorProps = (props: { [_: string]: any } & ColorProps): ColorProps => {
-  return colorPropNames
-    .filter(key => props[key] !== undefined)
-    .reduce((prev, key) => ({...prev, [key]: props[key]}), {})
+
+export const themeColor = ({theme, color}: {theme: Theme, color: string}) => theme.colors[color] || color
+export const colorFromProps = ({theme, color, ...props}: {theme: Theme, color?: string, [string]: boolean}) => {
+  if (!!color)
+    return themeColor({theme, color})
+  return Object.keys(props)
+    .reduce((prev, key) => {
+      if (!!theme.colors[key] && !!props[key])
+        return theme.colors[key]
+      if (!!theme.base[key] && !!props[key])
+        return theme.base[key]
+      return prev
+    }, undefined)
 }
-export const colorFromTheme = (theme: Theme, {primary, secondary, tertiary, color}: ColorProps) => {
-  if (!!color) {
-    if (theme.colors[color]) return theme.colors[color]
-    return color
-  }
-  if (primary) {
-    return theme.base.primary
-  }
-  if (secondary) {
-    return theme.base.secondary
-  }
-  if (tertiary) {
-    return theme.base.tertiary
-  }
+export const colorFromTheme = (theme: Theme, props: ColorProps) => {
+  console.warn('"colorFromTheme" deprecated, phase out onegaishimasu')
+  return colorFromProps({theme, ...props})
+  
 }
 
-export const textColorFromTheme = (theme: Theme,  {dark, light, faded, error, color, ...props}: TextColorProps) => {
-  if (!!color) {
-    if (theme.colors[color]) return theme.colors[color]
-    return color
-  }
-  if (error) {
-    if (error === 'dark') return theme.errors.dark
-    if (error === 'light') return theme.errors.light
-    if (dark) return theme.errors.dark
-    if (light) return theme.errors.light
-    return theme.errors.dark
-  }
-  if (dark) return theme.textColors.dark
-  if (light) return theme.textColors.light
-  if (faded) return theme.textColors.faded
-}
-
-export const rawTextSizeFromTheme = (theme: Theme, {medium, large, title} : TextSizeProps) => {
-  if (medium) return theme.textSizes.medium
-  if (large) return theme.textSizes.large
-  if (title) return theme.textSizes.title
-  return theme.textSizes.medium
-}
-export const textSizeFromTheme = (theme: Theme, {medium, large, title} : TextSizeProps) => {
-  const size = rawTextSizeFromTheme(theme, {medium, large, title})
-  return {...size, fontWeight: undefined, fontFamily: fontFamilyForWeight(size.fontWeight)}
-}
-export const textInputSizeFromTheme = (theme: Theme, props: TextSizeProps) => {
-  const textSize = textSizeFromTheme(theme, props)
-  return {...textSize, height: textSize.fontSize * 1.3}
-}
 // export const buttonColorFromTheme = (theme: Theme, {primary, secondary, tertiary}: ColorProps) => {
 //   if (primary) return theme.buttonColors.primary
 //   if (secondary) return theme.buttonColors.secondary

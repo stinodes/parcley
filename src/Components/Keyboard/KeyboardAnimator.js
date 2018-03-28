@@ -16,7 +16,7 @@ class KeyboardAnimator extends Component<Props> {
     const {inactive, style, animation} = this.props
     
     if (inactive) return null
-    
+    console.log(animation)
     return (
       <Animated.View
         style={[style, {

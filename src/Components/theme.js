@@ -39,11 +39,15 @@ const theme: Theme = {
       fontWeight: '700',
       lineHeight: 64,
     },
-    
-    large: {
+    xlarge: {
       fontSize: 30,
       fontWeight: '600',
       lineHeight: 32,
+    },
+    large: {
+      fontSize: 22,
+      fontWeight: '500',
+      lineHeight: 24,
     },
     medium: {
       fontSize: 15,

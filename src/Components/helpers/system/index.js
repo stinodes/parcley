@@ -12,3 +12,4 @@ export const SystemView = g.view(
 export * from './spacing'
 export * from './size'
 export * from './flex'
+export * from './text'

@@ -3,7 +3,7 @@ import React from 'react'
 import { Touchable, TouchableNativeFeedback, View } from 'react-native'
 import {withTheme} from 'glamorous-native'
 import type {ColorProps} from '../types'
-import {colorFromTheme, colorPropsFromString} from '../helpers'
+import {colorFromProps, colorFromTheme, colorPropsFromString} from '../helpers'
 
 type Ripple = {
   color: string,
@@ -14,7 +14,7 @@ export type ButtonBaseProps = {
   noContainer? : boolean,
 } & Touchable.propTypes
 
-const ButtonBase = ({theme, style, containerStyle, noContainer, children, background = ripple('yellowGreen', false), ...props} : ButtonBaseProps) => {
+const ButtonBase = ({theme, style, containerStyle, noContainer, children, background = ripple('yellowGreen', true), ...props} : ButtonBaseProps) => {
   const button = (
     <TouchableNativeFeedback {...props} background={parseRipple(background, theme)}>
       <View style={style}>
@@ -38,7 +38,7 @@ const ripple = (color: string, borderless?: boolean): Ripple => ({
 })
 const parseRipple = (ripple: Ripple, theme: Theme) =>
   TouchableNativeFeedback.Ripple(
-    colorFromTheme(theme, colorPropsFromString(ripple.color)),
+    colorFromProps({theme, [ripple.color]: true}),
     ripple.borderless,
   )
 

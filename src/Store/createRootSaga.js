@@ -5,6 +5,6 @@ import {keyboardSaga} from '../Components/Keyboard/Sagas'
 export const createRootSaga = () =>
   function* () : Generator <*, *, *> {
     yield all([
-      keyboardSaga
+      // fork(keyboardSaga),
     ])
   }

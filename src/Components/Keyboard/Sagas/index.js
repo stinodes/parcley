@@ -35,6 +35,7 @@ const keyboardDismissSaga = function* (): Generator<*, *, *> {
 }
 
 const keyboardSaga = function* (): Generator<*, *, *> {
+  console.log('in saga')
   yield fork(keyboardListenSaga)
   yield takeEvery([actionTypes.HIDE_KEYBOARD], keyboardDismissSaga)
 }

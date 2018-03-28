@@ -1,13 +1,19 @@
 // @flow
 import React, {PureComponent} from 'react'
-import glamorous from 'glamorous-native'
+import g from 'glamorous-native'
 import {TextInput as RNTextInput} from 'react-native'
 
-import {textColorFromTheme, textSizeFromTheme} from '../helpers'
 import {WithThemeFAC} from '../WithThemeFAC'
 
 import type {ComponentType, Node} from 'react'
 import type {TextColorProps, TextSizeProps} from '../types'
+import {textColor, textSize, textStyle} from '../helpers/system'
+
+const GTextInput = g(RNTextInput)(
+  textSize,
+  textColor,
+  textStyle,
+)
 
 type EventHandlers = {
   onBlur?: () => any,
@@ -31,7 +37,6 @@ type Props =
 
 class WrappedRNTextInput extends PureComponent<Props> {
   textInput: RNTextInput
-  
   focus() {
    this.textInput.focus()
   }
@@ -39,32 +44,15 @@ class WrappedRNTextInput extends PureComponent<Props> {
    this.textInput.blur()
   }
   render() {
-    const {underlineColorAndroid, placeholderTextColor, inputRef, ...props} = this.props
+    const {underlineColorAndroid, inputRef, ...props} = this.props
     return (
-      <WithThemeFAC>
-        {({theme}) =>
-          <RNTextInput
-            {...props}
-            ref={inputRef}
-            underlineColorAndroid={underlineColorAndroid || 'transparent'}
-            placeholderTextColor={placeholderTextColor || textColorFromTheme(theme, {faded: true})}
-          />
-        }
-      </WithThemeFAC>
+      <GTextInput
+        {...props}
+        innerRef={inputRef}
+        underlineColorAndroid={underlineColorAndroid || 'transparent'}/>
     )
   }
 }
 
-const TextInput: ComponentType<Props> = glamorous(WrappedRNTextInput)(
-  {
-    padding: 0,
-    margin: 0,
-  },
-  ({theme, ...props}) => ({
-    color: textColorFromTheme(theme, props),
-    ...textSizeFromTheme(theme, props),
-    height: textSizeFromTheme(theme, props).lineHeight * 2
-  }))
-
-export {TextInput, WrappedRNTextInput, RNTextInput}
+export {WrappedRNTextInput, WrappedRNTextInput as TextInput, RNTextInput}
 export type {Props as TextInputProps}

@@ -2,7 +2,7 @@
 export type Color = string
 export type BaseColors = 'primary' | 'secondary' | 'tertiary'
 export type Sizes = 'small' | 'medium' | 'large' | 'xlarge'
-export type TextSizes = 'xsmall'|Sizes | 'title'
+export type TextSizes = 'xsmall'| Sizes | 'title'
 
 export type ThemeColors = {
   [name: string]: Color,
@@ -66,6 +66,7 @@ export type Theme = {
 export type SizeProps = {
   medium?: boolean,
   large?: boolean,
+  xlarge?: boolean,
 }
 export type ColorProps = {
   primary?: boolean,

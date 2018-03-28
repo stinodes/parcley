@@ -4,9 +4,9 @@ import g from 'glamorous-native'
 
 import {Base} from './Base'
 import {Text} from '../Text'
+import {flex, size, space} from '../helpers'
 import type {TextColorProps, TextSizeProps} from '../types'
 import type {ButtonBaseProps} from './Base'
-import {flex, size, space} from '../helpers'
 
 const GBase = g(Base)(
   flex,
@@ -14,24 +14,16 @@ const GBase = g(Base)(
   space,
 )
 
-const TextButton = ({dark, light, faded, medium, large, title, color, children, ...props}: ButtonBaseProps&TextColorProps&TextSizeProps) => {
-  const textProps = {
-    dark,
-    light,
-    faded,
-    medium,
-    large,
-    title,
-    color
-  }
+const TextButton = ({children, onPress, ...props}: ButtonBaseProps&TextColorProps&TextSizeProps) => {
   return (
-    <GBase {...props} noContainer background={Base.Ripple('yellowGreen', true)}>
-      <Text {...textProps}>
+    <GBase {...props} onPress={onPress} noContainer background={Base.Ripple('yellowGreen', true)}>
+      <Text {...props}>
         {children}
       </Text>
     </GBase>
   )
 }
 TextButton.Ripple = Base.Ripple
+TextButton.delayHandler = Base.delayHandler
 
 export {TextButton}

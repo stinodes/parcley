@@ -1,17 +1,16 @@
 // @flow
 import * as React from 'react'
+import { Dimensions } from 'react-native'
 
 import {Screen, } from '../Components'
 
 type Props = {}
 
 class Playground extends React.Component<Props> {
-  
   render() {
+    console.warn(Dimensions.get('window'))
     return (
-      <Screen
-        dismissKeyboardOnTap>
-      </Screen>
+      null
     )
   }
 }

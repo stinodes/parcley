@@ -1,6 +1,6 @@
 // @flow
 import type {Theme} from '../../types'
-import {fromUnit} from '../theme'
+import {fromUnit} from '../../helpers/theme'
 
 const properties = {
   w: 'width',

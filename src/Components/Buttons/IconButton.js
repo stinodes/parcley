@@ -7,7 +7,7 @@ import {Base} from './Base'
 import {textColor} from '../helpers'
 import type {ButtonBaseProps} from './Base'
 import type {ColorProps} from '../types'
-import {textSize} from '../helpers/system'
+import {textSize} from '../Theme/system'
 
 const GIcon = g(Icon)(
   textSize,

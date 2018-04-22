@@ -1,6 +1,6 @@
 // @flow
 import type {Theme} from '../../types'
-import {colorFromProps, themeColor} from '../theme'
+import {colorFromProps, themeColor} from '../../helpers/theme'
 import {fontFamilyForWeight} from '../../fonts'
 
 const styleProperties: { [string]: string } = {

@@ -4,8 +4,7 @@ import g from 'glamorous-native'
 
 import {Base} from './Base'
 import {Text} from '../Text'
-import {flex, size, space} from '../helpers'
-import type {TextColorProps, TextSizeProps} from '../types'
+import {flex, size, space} from '../Theme'
 import type {ButtonBaseProps} from './Base'
 
 const GBase = g(Base)(
@@ -14,7 +13,7 @@ const GBase = g(Base)(
   space,
 )
 
-const TextButton = ({children, onPress, ...props}: ButtonBaseProps&TextColorProps&TextSizeProps) => {
+const TextButton = ({children, onPress, ...props}: ButtonBaseProps) => {
   return (
     <GBase {...props} onPress={onPress} noContainer background={Base.Ripple('yellowGreen', true)}>
       <Text {...props}>

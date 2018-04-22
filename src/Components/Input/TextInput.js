@@ -7,7 +7,7 @@ import {WithThemeFAC} from '../WithThemeFAC'
 
 import type {ComponentType, Node} from 'react'
 import type {TextColorProps, TextSizeProps} from '../types'
-import {textColor, textSize, textStyle} from '../helpers/system'
+import {textColor, textSize, textStyle} from '../Theme/system'
 
 const GTextInput = g(RNTextInput)(
   textSize,

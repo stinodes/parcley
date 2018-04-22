@@ -11,7 +11,6 @@ export type ButtonBaseProps = {
 const ButtonBase = (props : ButtonBaseProps) => {
   const style = [props.style, props.containerStyle]
   if (props.highlight) {
-    console.log('highlight button')
     return <TouchableHighlight
       {...props}
       style={style}

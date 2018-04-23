@@ -3,17 +3,18 @@ import React from 'react'
 import {withTheme} from 'glamorous-native'
 import {ActivityIndicator} from 'react-native'
 
-import type {ColorProps, Theme} from './types'
-import {colorFromTheme} from './helpers'
+import {getColor} from './Theme'
+import type {Color, Theme} from './Theme'
 
-type Props = &ColorProps
-  &{small?: boolean, large?: boolean}
-  &{theme: Theme}
+type Props = {
+  color: Color,
+  theme: Theme,
+  size: 'medium'|'large'
+}
   
 
-const SpinnerComponent = ({theme, ...props}: Props) => {
-  const color = colorFromTheme(theme, props)
-  const size = props.small ? 'small' : 'large'
+const SpinnerComponent = ({theme, size, ...props}: Props) => {
+  const color = getColor(theme, props.color)
   return <ActivityIndicator color={color} size={size}/>
 }
 

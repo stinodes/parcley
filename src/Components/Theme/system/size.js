@@ -1,12 +1,10 @@
 // @flow
-import type {Theme} from '../../types'
-import {fromUnit} from '../../helpers/theme'
+import type {ThemeProps} from '../types'
 
 const properties = {
   w: 'width',
   h: 'height',
 }
-type ThemeProps = {theme: Theme}
 type SizeProps = {
   w?: number,
   h?: number,
@@ -23,7 +21,7 @@ export const size = ({theme, ...props}: SizeProps&ThemeProps) => {
           return prev
         return {
           ...prev,
-          [sizeStyleProp(key)]: fromUnit(theme, props[key])
+          [sizeStyleProp(key)]: props[key],
         }
       },
       {},

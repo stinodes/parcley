@@ -1,6 +1,6 @@
 // @flow
-import type {Theme} from '../../types'
-import {fromUnit} from '../../helpers/theme'
+import {getSpacing} from '../utils'
+import type {ThemeProps} from '../types'
 
 const properties = {
   m: 'margin',
@@ -14,7 +14,6 @@ const directions = {
   x: 'Horizontal',
   y: 'Vertical',
 }
-type ThemeProps = { theme: Theme }
 type SpaceProps = {
   p?: number,
   px?: number,
@@ -41,7 +40,7 @@ export const space = ({theme, ...props}: SpaceProps & ThemeProps) => {
           return prev
         return {
           ...prev,
-          [spaceStyleProp(key)]: fromUnit(theme, props[key]),
+          [spaceStyleProp(key)]: getSpacing(theme, props[key]),
         }
       },
       {},

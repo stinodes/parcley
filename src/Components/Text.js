@@ -2,13 +2,11 @@
 import React from 'react'
 import glamorous from 'glamorous-native'
 
-import {textColor, textSize, textStyle} from './Theme'
+import {text} from './Theme'
 
 const Text = glamorous.text(
   {fontFamily: 'Montserrat Medium'},
-  textColor,
-  textSize,
-  textStyle,
+  text,
 )
 
 export { Text }

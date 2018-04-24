@@ -1,12 +1,12 @@
 // @flow
 export type Color = string
-export type Modifier = '_large'|'_small'
+export type Modifier = 'large'|'small'
 
 export type ThemeColors = {
   [name: string]: Color,
 }
 
-export type ThemeModifiers<ThemeType> = { _large?: ThemeType, }
+export type ThemeModifiers<ThemeType> = { [?Modifier]: ThemeType, }
 export type BaseTextTheme = {
   color?: Color,
   fontSize?: number,
@@ -14,7 +14,10 @@ export type BaseTextTheme = {
   lineHeight?: number,
   fontFamily?: string,
 }
-export type TextTheme = ThemeModifiers<BaseTextTheme>&BaseTextTheme
+export type TextTheme = {
+  ...ThemeModifiers<BaseTextTheme>,
+  ...BaseTextTheme,
+}
 export type BaseButtonTheme = {
   backgroundColor?: Color,
   rippleColor?: Color,
@@ -24,7 +27,10 @@ export type BaseButtonTheme = {
   borderRadius?: number,
   elevation?: number,
 }
-export type ButtonTheme = ThemeModifiers<BaseButtonTheme>&BaseButtonTheme
+export type ButtonTheme = {
+  ...ThemeModifiers<BaseButtonTheme>,
+  ...BaseButtonTheme,
+}
 
 export type SubTheme = ButtonTheme|TextTheme
 export type BaseSubTheme = BaseButtonTheme|BaseTextTheme
@@ -36,6 +42,11 @@ export type Theme = {
   button: ButtonTheme,
 }
 
+
+export type ColorProps = { color?: ?Color }
+export type ModProps = { modifier?: ?Modifier }
+export type RaisedProps = { raised?: ?number }
+export type ThemeProps = { theme: Theme }
 export type FlexProps = {
   flex?: number,
   alignItems?: string,

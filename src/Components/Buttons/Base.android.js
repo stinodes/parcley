@@ -24,7 +24,7 @@ const ButtonBase = ({theme, style, containerStyle, noContainer, children, backgr
     </TouchableNativeFeedback>
   )
 
-  if (noContainer)
+  if (!containerStyle)
     return button
   return (
     <View style={containerStyle}>

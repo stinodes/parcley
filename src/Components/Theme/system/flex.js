@@ -1,6 +1,5 @@
 // @flow
-import type {Theme} from '../../types'
-import {fromUnit} from '../../helpers/theme'
+import type {Theme} from '../types'
 
 const properties = {
   jc: 'justifyContent',

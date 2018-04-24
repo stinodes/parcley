@@ -16,6 +16,8 @@ const colors: ThemeColors = {
   raisinBlack: '#212121',
   arsenic: '#424242',
   sonicSilver: '#757575',
+  
+  fallback: '#2d3047',
 }
 const theme: Theme = {
   colors,
@@ -27,11 +29,11 @@ const theme: Theme = {
     // sizes: 48, 58
     // weights: medium, bold
     color: colors.black,
-    fontFamily: 'Montserrat-Medium',
-    fontSize: 48,
-    '_large': {
-      fontSize: 58,
-      fontFamily: 'Montserrat-Bold',
+    fontFamily: 'Montserrat Medium',
+    fontSize: 48 * ratio,
+    large: {
+      fontSize: 58 * ratio,
+      fontFamily: 'Montserrat Bold',
     }
   },
   button: {
@@ -39,7 +41,6 @@ const theme: Theme = {
     height: 160 * ratio,
     paddingHorizontal: 80 * ratio,
     borderRadius: 80 * ratio,
-    elevation: 5,
   }
 }
 

@@ -2,22 +2,22 @@
 import type {Color, Modifier, SubTheme, Theme} from './types'
 import {Platform} from 'react-native'
 
-const getIn = <T>(obj: {[string]: T}, key: string): T => obj[key]
+const getIn = (obj: {[any]: any}, key: any) => obj[key]
 
-const subTheme = (theme: Theme, subThemeName: string) =>
-  theme[subThemeName]
-const subThemeMod = (theme: Theme, subThemeName: string, modifierName: Modifier) =>
+const getSubTheme = (theme: Theme, subThemeName: string) => getIn(theme, subThemeName)
+const getSubThemeMod = (theme: Theme, subThemeName: string, modifierKey: ?Modifier) =>
   getIn(
-    subTheme(theme, subThemeName),
-    `_${modifierName}`,
+    getSubTheme(theme, subThemeName),
+    modifierKey,
   )
 
-const mergeSubThemeObjects = (subTheme1: SubTheme, subTheme2: SubTheme) => ({...subTheme1, subTheme2})
+const mergeSubThemeObjects = (subTheme1: SubTheme = {}, subTheme2: SubTheme = {}) =>
+  ({...subTheme1, ...subTheme2})
 
-const subThemeWithModifier = (theme: Theme, subThemeName: string, modifierName: Modifier) =>
+const subThemeWithModifier = (theme: Theme, subThemeName: string, modifierName: ?Modifier) =>
   mergeSubThemeObjects(
-    subTheme(theme, subThemeName),
-    subThemeMod(theme, subThemeName, modifierName),
+    getSubTheme(theme, subThemeName),
+    getSubThemeMod(theme, subThemeName, modifierName),
   )
 
 const elevationStyle = (elevation: number) => {
@@ -43,14 +43,19 @@ const elevationStyleFromRaised = (raised: ?boolean|number) => {
 }
 
 
-const getColor = (theme: Theme, color: Color) => theme.colors[color] || color
-const getSpacing = (theme: Theme, spacing: number) =>
-  spacing >= 0 && spacing < 4 ? theme.spacing[spacing] : spacing
+const getColor = (theme: Theme, color: ?Color, defaultColor?: Color) =>
+  color ?
+    theme.colors[color] || color :
+    defaultColor || theme.colors.fallback
+const getSpacing = (theme: Theme, spacing: ?number) =>
+  spacing !== undefined && spacing !== null ?
+    (spacing >= 0 && spacing < 4 ? theme.spacing[spacing] : spacing) :
+    null
 
 export {
   getIn,
-  subTheme,
-  subThemeMod,
+  getSubTheme,
+  getSubThemeMod,
   mergeSubThemeObjects,
   subThemeWithModifier,
   elevationStyleFromRaised,

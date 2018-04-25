@@ -3,7 +3,7 @@ import React from 'react'
 import {withTheme} from 'glamorous-native'
 
 import type {Node} from 'react'
-import type {Theme} from './types'
+import type {Theme} from './Theme'
 
 type Props = {
   children: ({theme: Theme} => Node),

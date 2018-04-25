@@ -3,10 +3,10 @@ import React, {PureComponent} from 'react'
 import {StatusBar, Keyboard, TouchableWithoutFeedback} from 'react-native'
 import glamorous, {withTheme} from 'glamorous-native'
 
-import {colorFromTheme} from '../helpers'
+import {backgroundColor, flex} from '../Theme'
 import {DismissArea} from './DismissArea'
 
-import type {ColorProps, Theme} from '../types'
+import type {ColorProps, Theme} from '../Theme'
 import type {ComponentType, Node, Ref} from 'react'
 
 type ScreenProps = {
@@ -23,22 +23,18 @@ type LayoutProps = {
 }
 type Props = ColorProps&ScreenProps&LayoutProps
 
-const StyledScreen = glamorous.view({
-  flex: 1,
-}, ({theme, justifyContent, alignItems, ...props}) => ({
-  justifyContent,
-  alignItems,
-  backgroundColor: colorFromTheme(theme, props)  || theme.colors.white,
-}))
-const DismissableScreen = glamorous(DismissArea)({
-  flex: 1,
-}, ({theme, justifyContent, alignItems, ...props}) => ({
-  justifyContent,
-  alignItems,
-  backgroundColor: colorFromTheme(theme, props) || theme.colors.white,
-}))
+const StyledScreen = glamorous.view(
+  {flex: 1,},
+  flex,
+  backgroundColor,
+)
+const DismissableScreen = glamorous(DismissArea)(
+  {flex: 1,},
+  flex,
+  backgroundColor,
+)
 
-class ScreenComponent extends PureComponent<Props&{theme: Theme}> {
+class Screen extends PureComponent<Props&{theme: Theme}> {
 
   render() {
     const {
@@ -66,6 +62,6 @@ class ScreenComponent extends PureComponent<Props&{theme: Theme}> {
   }
 }
 
-const Screen = withTheme(ScreenComponent)
+const ThemedScreen = withTheme(Screen)
 
-export {Screen}
+export {ThemedScreen as Screen}

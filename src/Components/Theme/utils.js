@@ -1,23 +1,23 @@
 // @flow
-import type {Color, Modifier, SubTheme, Theme} from './types'
+import type {BaseSubTheme, Color, Modifier, SubTheme, Theme} from './types'
 import {Platform} from 'react-native'
 
 const getIn = (obj: {[any]: any}, key: any) => obj[key]
 
-const getSubTheme = (theme: Theme, subThemeName: string) => getIn(theme, subThemeName)
-const getSubThemeMod = (theme: Theme, subThemeName: string, modifierKey: ?Modifier) =>
+const getComponentTheme = (theme: Theme, subThemeName: string) => getIn(theme, subThemeName)
+const getSubTheme = (theme: Theme, subThemeName: string, modifierKey: ?Modifier = 'default') =>
   getIn(
-    getSubTheme(theme, subThemeName),
+    getComponentTheme(theme, subThemeName),
     modifierKey,
   )
 
-const mergeSubThemeObjects = (subTheme1: SubTheme = {}, subTheme2: SubTheme = {}) =>
+const mergeSubThemeObjects = (subTheme1: BaseSubTheme = {}, subTheme2: BaseSubTheme = {}) =>
   ({...subTheme1, ...subTheme2})
 
 const subThemeWithModifier = (theme: Theme, subThemeName: string, modifierName: ?Modifier) =>
   mergeSubThemeObjects(
     getSubTheme(theme, subThemeName),
-    getSubThemeMod(theme, subThemeName, modifierName),
+    getSubTheme(theme, subThemeName, modifierName),
   )
 
 const elevationStyle = (elevation: number) => {
@@ -54,8 +54,8 @@ const getSpacing = (theme: Theme, spacing: ?number) =>
 
 export {
   getIn,
+  getComponentTheme,
   getSubTheme,
-  getSubThemeMod,
   mergeSubThemeObjects,
   subThemeWithModifier,
   elevationStyleFromRaised,

@@ -28,19 +28,23 @@ const theme: Theme = {
   text: {
     // sizes: 48, 58
     // weights: medium, bold
-    color: colors.black,
-    fontFamily: 'Montserrat Medium',
-    fontSize: 48 * ratio,
+    default: {
+      color: colors.black,
+      fontFamily: 'Montserrat Medium',
+      fontSize: 48 * ratio,
+    },
     large: {
       fontSize: 58 * ratio,
       fontFamily: 'Montserrat Bold',
     }
   },
   button: {
-    backgroundColor: colors.ufoGreen,
-    height: 160 * ratio,
-    paddingHorizontal: 80 * ratio,
-    borderRadius: 80 * ratio,
+    default: {
+      backgroundColor: colors.ufoGreen,
+      height: 160 * ratio,
+      paddingHorizontal: 80 * ratio,
+      borderRadius: 80 * ratio,
+    }
   }
 }
 

@@ -35,8 +35,8 @@
 
 [libs]
 Libraries/react-native/react-native-interface.js
-flow/
 flow-typed/
+flow/
 
 [options]
 emoji=true

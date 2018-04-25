@@ -1,6 +1,6 @@
 // @flow
 export type Color = string
-export type Modifier = 'large'|'small'
+export type Modifier = 'default'|'large'|'small'
 
 export type ThemeColors = {
   [name: string]: Color,
@@ -16,7 +16,6 @@ export type BaseTextTheme = {
 }
 export type TextTheme = {
   ...ThemeModifiers<BaseTextTheme>,
-  ...BaseTextTheme,
 }
 export type BaseButtonTheme = {
   backgroundColor?: Color,
@@ -29,7 +28,6 @@ export type BaseButtonTheme = {
 }
 export type ButtonTheme = {
   ...ThemeModifiers<BaseButtonTheme>,
-  ...BaseButtonTheme,
 }
 
 export type SubTheme = ButtonTheme|TextTheme

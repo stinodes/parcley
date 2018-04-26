@@ -1,26 +1,33 @@
 // @flow
 import * as React from 'react'
-import { Dimensions } from 'react-native'
-import {View} from 'glamorous-native'
 
-import {Button, SystemView, Text} from '../Components'
+import {Button, Logo, SystemView as View, Text} from '../Components'
 
 type Props = {}
 
 class Playground extends React.Component<Props> {
   render() {
-    console.warn(Dimensions.get('window'))
     return (
-      <SystemView flex={1} jc="space-around" p={3}>
-      
-        <Button raised={75}>
-          <Text modifier="large">Click Me</Text>
-        </Button>
-        <Button>
-          <Text>Click Me</Text>
-        </Button>
-        
-      </SystemView>
+      <View flex={1} jc="space-around" p={3} backgroundColor="white" ai="center">
+        <Logo size={200}/>
+        <View w={250}>
+          <View py={8}>
+            <Button
+              raised={25} color="ufoGreen"
+              onPress={() => {}}>
+              <Text modifier="large" color="white">Log In</Text>
+            </Button>
+          </View>
+          <View py={8}>
+            <Button
+              raised={25} color="frenchSky"
+              onPress={() => {}}>
+              <Text modifier="large" color="white">Sign Up</Text>
+            </Button>
+          </View>
+        </View>
+
+      </View>
     )
   }
 }

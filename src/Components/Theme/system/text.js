@@ -1,5 +1,4 @@
 // @flow
-import {fontFamilyForWeight} from '../../fonts'
 import {getColor} from '../utils'
 import type {ColorProps, ModProps, ThemeProps} from '../types'
 import {subTheme} from './theme'

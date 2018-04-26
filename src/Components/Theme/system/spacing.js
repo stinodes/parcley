@@ -1,6 +1,6 @@
 // @flow
 import {getSpacing} from '../utils'
-import type {ThemeProps} from '../types'
+import type {SpaceProps, ThemeProps} from '../types'
 
 const properties = {
   m: 'margin',
@@ -13,15 +13,6 @@ const directions = {
   l: 'Left',
   x: 'Horizontal',
   y: 'Vertical',
-}
-type SpaceProps = {
-  p?: number,
-  px?: number,
-  py?: number,
-  pt?: number,
-  pr?: number,
-  pb?: number,
-  pl?: number,
 }
 const isSpaceProp = (key) => {
   if (key.length === 1)

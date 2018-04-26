@@ -1,5 +1,5 @@
 // @flow
-import type {BaseSubTheme, Color, Modifier, SubTheme, Theme} from './types'
+import type {BaseSubTheme, Color, Modifier, Theme} from './types'
 import {Platform} from 'react-native'
 
 const getIn = (obj: {[any]: any}, key: any) => obj[key]

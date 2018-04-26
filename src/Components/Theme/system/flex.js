@@ -1,5 +1,5 @@
 // @flow
-import type {Theme} from '../types'
+import type {FlexProps, ThemeProps} from '../types'
 
 const properties = {
   jc: 'justifyContent',
@@ -8,14 +8,6 @@ const properties = {
   fd: 'flexDirection',
   f: 'flex',
 }
-type FlexProps = {
-  jc?: 'center'|'flex-start'|'flex-end'|'space-between'|'space-around',
-  ai?: 'center'|'flex-start'|'flex-end'|'stretch',
-  ai?: 'center'|'flex-start'|'flex-end'|'stretch',
-  fd?: 'row'|'column',
-  f?: number,
-}
-type ThemeProps = {theme: Theme}
 
 const isFlexProp = (key) => !!properties[key]
 const flexStyleProp = (key) => properties[key]

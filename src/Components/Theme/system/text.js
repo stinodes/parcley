@@ -1,6 +1,6 @@
 // @flow
 import {getColor} from '../utils'
-import type {ColorProps, ModProps, ThemeProps} from '../types'
+import type {ColorProps, ModProps, TextProps, ThemeProps} from '../types'
 import {subTheme} from './theme'
 
 const styleProperties: { [string]: string } = {
@@ -15,8 +15,13 @@ const textStyleProp = (key) => styleProperties[key]
 export const textTheme = subTheme('text')
 export const textColor = ({theme, color}: ThemeProps&ColorProps) =>
   ({color: getColor(theme, color)})
+export const textProperties = ({align, bold}: TextProps) => ({
+  fontWeight: bold ? 'bold' : 'normal',
+  textAlign: align,
+})
 
-export const text = (props: ThemeProps&ColorProps&ModProps) => ({
+export const text = (props: ThemeProps&ColorProps&TextProps&ModProps) => ({
   ...textTheme(props),
   ...textColor(props),
+  ...textProperties(props),
 })

@@ -22,6 +22,7 @@ const isSpaceProp = (key) => {
   return false
 }
 const spaceStyleProp = (key) => `${ properties[key[0]] }${ directions[key[1]] || ''}`
+
 export const space = ({theme, ...props}: SpaceProps & ThemeProps) => {
   const styles = Object
     .keys(props)

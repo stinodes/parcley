@@ -20,7 +20,7 @@ class Button extends React.Component<Props> {
   render() {
     const {theme, rippleColor, ...props} = this.props
     const buttonTheme = subTheme('button')(this.props)
-    const background = Base.Ripple(getColor(theme, rippleColor), true)
+    const background = Base.Ripple(getColor(theme, rippleColor)||'', true)
     const raisedStyle = raised(this.props)
     return (
       <GButton

@@ -1,6 +1,6 @@
 // @flow
 export type Color = string
-export type Modifier = 'default'|'large'|'small'
+export type Modifier = 'default'|'large'|'small'|string
 
 export type ThemeColors = {
   [name: string]: Color,
@@ -46,6 +46,10 @@ export type ModProps = { modifier?: ?Modifier }
 export type RaisedProps = { raised?: ?number }
 export type ThemeProps = { theme: Theme }
 export type SizeProps = { w?: number, h?: number, }
+export type TextProps = {
+  bold?: boolean,
+  align?: 'center'|'left'|'right',
+}
 export type SpaceProps = {
   p?: number,
   px?: number,

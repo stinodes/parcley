@@ -1,20 +1,14 @@
 // @flow
-import React, {PureComponent} from 'react'
-import g from 'glamorous-native'
+import * as React from 'react'
+import glamorous from 'glamorous-native'
 import {TextInput as RNTextInput} from 'react-native'
 
-import {WithThemeFAC} from '../WithThemeFAC'
+import {getColor, subTheme} from '../Theme'
 
-import type {ComponentType, Node} from 'react'
-import type {TextColorProps, TextSizeProps} from '../types'
-import {textColor, textSize, textStyle} from '../Theme/system'
+import type {ColorProps, ModProps, ThemeProps} from '../Theme'
+import {textColor} from '../Theme/system'
 
-const GTextInput = g(RNTextInput)(
-  textSize,
-  textColor,
-  textStyle,
-)
-
+type RNTextInputType = typeof RNTextInput
 type EventHandlers = {
   onBlur?: () => any,
   onFocus?: () => any,
@@ -23,36 +17,40 @@ type EventHandlers = {
 export type InputProps = {
   value: string,
   placeholder?: string,
+  
   placeholderTextColor?: string,
   underlineColorAndroid?: string,
+  
   secureTextEntry?: boolean,
   keyboardType?: string,
+  
   inputRef?: (?RNTextInput) => any,
 }
 type Props =
   & InputProps
   & EventHandlers
-  & TextColorProps
-  & TextSizeProps
+  & ColorProps
+  & ModProps
 
-class WrappedRNTextInput extends PureComponent<Props> {
-  textInput: RNTextInput
-  focus() {
-   this.textInput.focus()
-  }
-  blur() {
-   this.textInput.blur()
-  }
+class WrappedRNTextInput extends React.PureComponent<Props&ThemeProps> {
   render() {
-    const {underlineColorAndroid, inputRef, ...props} = this.props
+    const {theme, underlineColorAndroid, placeholderTextColor, inputRef, ...props} = this.props
     return (
-      <GTextInput
+      <RNTextInput
         {...props}
-        innerRef={inputRef}
-        underlineColorAndroid={underlineColorAndroid || 'transparent'}/>
+        ref={inputRef}
+        underlineColorAndroid={getColor(theme, underlineColorAndroid)}
+        placeholderTextColor={getColor(theme, placeholderTextColor)}
+      />
     )
   }
 }
 
-export {WrappedRNTextInput, WrappedRNTextInput as TextInput, RNTextInput}
-export type {Props as TextInputProps}
+const TextInput = glamorous(WrappedRNTextInput)(
+  {padding: 0, margin: 0,},
+  subTheme('textInput'),
+  textColor,
+)
+
+export {TextInput}
+export type {Props as TextInputProps, RNTextInputType as RNTextInput}

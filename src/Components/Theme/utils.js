@@ -41,14 +41,11 @@ const elevationStyleFromRaised = (raised: ?boolean|number) => {
     return elevationStyle(raised)
   return {}
 }
-
-
 const getColor = (theme: Theme, color: ?Color, defaultColor?: Color) =>
-  color ?
-    theme.colors[color] || color :
-    defaultColor || theme.colors.fallback
+  (color && theme.colors[color] || color) || defaultColor && getColor(theme, defaultColor)
+
 const getSpacing = (theme: Theme, spacing: ?number) =>
-  spacing !== undefined && spacing !== null ?
+  typeof spacing === 'number' ?
     (spacing >= 0 && spacing < 4 ? theme.spacing[spacing] : spacing) :
     null
 

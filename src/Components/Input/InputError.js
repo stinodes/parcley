@@ -1,27 +1,24 @@
 // @flow
 import React, {Component} from 'react'
 import {Animated} from 'react-native'
-import {withTheme, View} from 'glamorous-native'
-import {Text} from '../Text'
-import type {Theme} from '../types'
+import {withTheme} from 'glamorous-native'
 
-type Props = {
-  light?: boolean,
-  dark?: boolean,
+import type {ColorProps, ThemeProps} from '../Theme'
+import {SystemView as View} from '../Theme'
+import {Text} from '../Text'
+
+type Props = ColorProps & ThemeProps & {
   children: string,
-  
-  theme: Theme,
 }
 
 class InputErrorComponent extends Component<Props> {
   transitionChildren: ?string
   animation = new Animated.Value(0)
   
-  componentWillReceiveProps(newProps) {
-    if (newProps.children && !this.props.children)
-      this.transitionChildren = newProps.children
-  }
   componentDidUpdate(oldProps) {
+    if (!!this.props.children)
+      this.transitionChildren = this.props.children
+    
     if (this.props.children && !oldProps.children)
       this.animate(1)
     else if (!this.props.children && oldProps.children)
@@ -38,26 +35,17 @@ class InputErrorComponent extends Component<Props> {
   get message() {
     return this.props.children || this.transitionChildren
   }
+  
   render() {
-    const {children, theme, light, dark, ...props} = this.props
+    const {children, ...props} = this.props
     const animation = this.animation
-    const textProps = {
-      ...props,
-      dark: !dark && !light ? true : dark,
-      light: light,
-    }
+    
     return (
-      <View marginTop={8} height={theme.textSizes.small.lineHeight}>
+      <View mt={8}>
         <Animated.View style={{
-          overflow: 'hidden',
-          backgroundColor: 'transparent',
-          height: animation.interpolate({
-            inputRange: [0, 1],
-            outputRange: [0, theme.textSizes.small.lineHeight],
-            extrapolateLeft: 'clamp',
-          })
+          opacity: animation,
         }}>
-            <Text xsmall error {...textProps}>{this.message}</Text>
+          <Text modifier="small" {...props}>{this.message}</Text>
         </Animated.View>
       </View>
     )

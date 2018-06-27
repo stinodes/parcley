@@ -1,8 +1,8 @@
 // @flow
 import * as React from 'react'
 import g from 'glamorous-native'
+import {size} from 'nativesystem'
 
-import {size} from './Theme'
 import LOGO from '../../assets/ic_launcher.png'
 
 const Image = g.image(

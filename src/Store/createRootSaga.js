@@ -1,10 +1,8 @@
 // @flow
-import { all, fork } from 'redux-saga/effects'
-import {keyboardSaga} from '../Components/Keyboard/Sagas'
+import { all } from 'redux-saga/effects'
 
 export const createRootSaga = () =>
   function* () : Generator <*, *, *> {
     yield all([
-      // fork(keyboardSaga),
     ])
   }

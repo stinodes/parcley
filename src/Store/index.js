@@ -9,11 +9,9 @@ import {createRootSaga} from './createRootSaga'
 
 import type {Reducer} from 'redux'
 
-import {rootNavigatorMiddleware} from '../Navigation'
-
 export const createReduxStore = () => {
   const saga = sagaMiddleware()
-  const middlewares = applyMiddleware(thunkMiddleware, saga, rootNavigatorMiddleware)
+  const middlewares = applyMiddleware(thunkMiddleware, saga)
   const reducers: Reducer<Store, *> = createRootReducer({})
   const composeEnhancers = __DEV__ ? composeWithDevTools({}) : compose
   

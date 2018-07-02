@@ -4340,9 +4340,9 @@ nanomatch@^1.2.9:
     snapdragon "^0.8.1"
     to-regex "^3.0.1"
 
-nativesystem@^0.0.7:
-  version "0.0.7"
-  resolved "https://registry.yarnpkg.com/nativesystem/-/nativesystem-0.0.7.tgz#513f3434f6acfe5e9caf0f0f12a25242f896691a"
+nativesystem@0.0.8:
+  version "0.0.8"
+  resolved "https://registry.yarnpkg.com/nativesystem/-/nativesystem-0.0.8.tgz#c36bab53d81c7ac5b1bd92d4c52b2ce89f887ff5"
   dependencies:
     fnional "^0.0.2"
     glamorous-native "^1.4.0"

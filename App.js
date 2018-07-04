@@ -4,14 +4,17 @@ import {Dimensions, Animated, UIManager} from 'react-native'
 import {ThemeProvider} from 'glamorous-native'
 import {Provider} from 'react-redux'
 import type {Theme} from 'nativesystem'
-import {createSubTheme, createTheme, Screen, Spinner, SystemView as View} from 'nativesystem'
+import {createSubTheme, createTheme, getColor, Screen, Spinner, subTheme, SystemView as View} from 'nativesystem'
+import {MessageBar, MessageBarManager} from 'react-native-message-bar'
 
 import {createReduxStore} from './src/Store'
-import {AppNavigator} from './src/Navigation'
+import {AppNavigator, NavigationService} from './src/Navigation'
 import {loadFonts, Logo} from './src/Components'
 import {delay} from './src/Utils'
 import {colors, ratio} from './colors'
+import {setupFirebase} from './src/Firebase'
 
+setupFirebase()
 const store = createReduxStore()
 
 type Props = {}
@@ -23,6 +26,9 @@ type State = {
 }
 
 class App extends React.Component<Props, State> {
+  
+  messageBar: ?MessageBar
+  
   constructor(...args: any) {
     super(...args)
     
@@ -63,6 +69,15 @@ class App extends React.Component<Props, State> {
           })
           .done()
       )
+      .withSubTheme('messageBar',
+        createSubTheme({
+          titleColor: colors.white,
+          messageColor: colors.white,
+        })
+          .withModifier('success', {strokeColor: colors.ufoGreen, backgroundColor: colors.ufoGreen,})
+          .withModifier('error', {strokeColor: colors.error, backgroundColor: colors.error,})
+          .done()
+      )
       .done()
     
     this.state = {
@@ -88,6 +103,16 @@ class App extends React.Component<Props, State> {
   componentDidUpdate(prevProps: Props, prevState: State) {
     if (!prevState.loaded && this.state.loaded)
       this.fadeInNavigator()
+  }
+  
+  componentWillUnmount() {
+    MessageBarManager.unregisterMessageBar()
+  }
+  
+  messageBarRef = (messageBar: MessageBar) => {
+    let register = !this.messageBar
+    this.messageBar = messageBar
+    register && MessageBarManager.registerMessageBar(this.messageBar)
   }
   
   fadeInNavigator = () =>
@@ -118,8 +143,18 @@ class App extends React.Component<Props, State> {
           {this.state.loaded ?
             <Animated.View
               style={{flex: 1, opacity: navigatorAnimation}}>
-              <AppNavigator/>
+              <AppNavigator ref={NavigationService.ref}/>
+              <MessageBar
+                ref={this.messageBarRef}
+                position="top"
+                messageBarPadding={16}
+                titleStyle={{...subTheme('text')({theme, modifier: 'small'}), fontFamily: 'Montserrat Bold'}}
+                messageStyle={subTheme('text')({theme, modifier: 'small'})}
+                stylesheetSuccess={subTheme('messageBar')({theme, modifier: 'success'})}
+                stylesheetError={subTheme('messageBar')({theme, modifier: 'error'})}
+                stylesheetInfo={subTheme('messageBar')({theme})}/>
             </Animated.View>:
+            
             <Screen
               f={1} jc="space-around" ai="center"
               color="white" statusBarColor="white" statusBarStyle="dark-content">
@@ -136,6 +171,7 @@ class App extends React.Component<Props, State> {
                 <Spinner color="ufoGreen" size="large"/>
               </Animated.View>
             </Screen>
+            
           }
         </ThemeProvider>
       </Provider>

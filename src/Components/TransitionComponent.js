@@ -26,7 +26,6 @@ class Transition extends React.Component<Props, State> {
     this.state = {mounted, opening: false, closing: false}
   }
   static getDerivedStateFromProps({mounted}: Props, state: State) {
-    console.log('state from props', mounted)
     if (mounted)
       return {opening: true, mounted}
     if (!mounted && state.mounted)
@@ -35,7 +34,6 @@ class Transition extends React.Component<Props, State> {
   }
   
   onEnd = () => {
-    console.log('on end fired', !this.props.mounted && 'setting state to unmounted')
     const {opening, closing} = this.state
     if (opening)
       this.setState({opening: false})
@@ -47,7 +45,6 @@ class Transition extends React.Component<Props, State> {
     const {mounted, children} = this.props
     const {opening, closing} = this.state
     const config = {onEnd: this.onEnd, mounted: opening || closing || mounted, originalMounted: mounted,}
-    console.log(config, opening, closing, mounted)
     return (
       children(config)
     )

@@ -119,7 +119,6 @@ class MorphingScreen extends React.Component<Props, State> {
   
   render() {
     const {children, style, expanded, expandedStyle, morphLayout} = this.props
-    console.log('morph', morphLayout, this.transform)
     if (!morphLayout)
       return null
     

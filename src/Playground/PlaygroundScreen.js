@@ -1,7 +1,8 @@
 // @flow
 import * as React from 'react'
+import {Button, SystemView as View, Text} from 'nativesystem'
 
-import {Button, Logo, SystemView as View, Text} from '../Components'
+import {Logo} from '../Components'
 
 type Props = {}
 

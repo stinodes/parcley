@@ -1,13 +1,15 @@
 // @flow
 import * as React from 'react'
-import {Keyboard} from 'react-native'
-import {Button, FTextInput, KeyboardAnimatedView, Screen, subTheme, SystemView as View, textColor, Base} from 'nativesystem'
+import {Button, FTextInput, KeyboardAnimatedView, Screen, SystemView as View, textColor, Base} from 'nativesystem'
 import {withFormik} from 'formik'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import g from 'glamorous-native'
+import * as firebase from 'firebase'
+import {MessageBarManager} from 'react-native-message-bar'
 
 import {Text} from '../Components'
 import type {FormikBag} from 'formik'
+import {createError, createMessage} from '../Utils/messageBar'
 
 const GIcon = g(Icon)(textColor)
 
@@ -18,7 +20,7 @@ type Props = {
 
 class LoginForm extends React.Component<Props> {
   render() {
-    const {setFieldValue, values: {username, password}, handleSubmit, submitting} = this.props
+    const {setFieldValue, values: {email, password}, handleSubmit, submitting} = this.props
     return (
       <Screen
         dismissKeyboardOnTap
@@ -31,11 +33,11 @@ class LoginForm extends React.Component<Props> {
           </View>
           <View my={2}>
             <Text modifier="small" color="white">
-              Username
+              E-mail address
             </Text>
             <FTextInput
-              name="username"
-              value={username}
+              name="email"
+              value={email}
               onChange={setFieldValue}
               color="white"
               underlineColorAndroid="white"/>
@@ -77,7 +79,23 @@ class LoginForm extends React.Component<Props> {
 
 const FormikLoginForm = withFormik({
   mapPropsToValues: props => ({email: '', password: ''}),
-  handleSubmit: (values) => {}
+  handleSubmit: async (values, {props, setSubmitting}) => {
+    setSubmitting(true)
+    try {
+      const auth = firebase.auth()
+      await auth.signInWithEmailAndPassword(values.email, values.password)
+      const user = auth.currentUser
+      props.close()
+      console.log(user)
+    }
+    catch(e) {
+      console.log(e)
+      createError({
+        title: e.message,
+      })
+    }
+    setSubmitting(false)
+  }
 })(LoginForm)
 
 export {FormikLoginForm as LoginForm}

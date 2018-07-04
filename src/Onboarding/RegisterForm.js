@@ -1,7 +1,11 @@
 // @flow
 import * as React from 'react'
+import * as firebase from 'firebase'
 import {Keyboard} from 'react-native'
-import {Button, FTextInput, KeyboardAnimatedView, Screen, subTheme, SystemView as View, textColor, Base} from 'nativesystem'
+import {
+  Button, FTextInput, KeyboardAnimatedView, Screen, subTheme, SystemView as View, textColor, Base,
+  Spinner
+} from 'nativesystem'
 import {withFormik} from 'formik'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import g from 'glamorous-native'
@@ -18,7 +22,7 @@ type Props = {
 
 class RegisterForm extends React.Component<Props> {
   render() {
-    const {setFieldValue, values: {username, password}, handleSubmit, submitting} = this.props
+    const {setFieldValue, values: {email, password}, handleSubmit, isSubmitting} = this.props
     return (
       <Screen
         dismissKeyboardOnTap
@@ -36,11 +40,11 @@ class RegisterForm extends React.Component<Props> {
           </View>
           <View my={2}>
             <Text modifier="small" color="white">
-              Username
+              E-mail address
             </Text>
             <FTextInput
-              name="username"
-              value={username}
+              name="email"
+              value={email}
               onChange={setFieldValue}
               color="white"
               underlineColorAndroid="white"/>
@@ -61,7 +65,10 @@ class RegisterForm extends React.Component<Props> {
             <Button
               color="white" ripple="frenchSky" raised={20}
               onPress={handleSubmit}>
-              <Text color="frenchSky" bold>Log In</Text>
+              {isSubmitting ?
+                <Spinner color="frenchSky"/>:
+                <Text color="frenchSky" bold>Sign Up</Text>
+              }
             </Button>
           </View>
           <View as="center" mt={3}>
@@ -82,7 +89,21 @@ class RegisterForm extends React.Component<Props> {
 
 const FormikRegisterForm = withFormik({
   mapPropsToValues: props => ({email: '', password: ''}),
-  handleSubmit: (values) => {}
+  handleSubmit: async (values, {props, setSubmitting}) => {
+    setSubmitting(true)
+    try {
+      const auth = firebase.auth()
+      await auth.createUserWithEmailAndPassword(values.email, values.password)
+      const user = auth.currentUser
+      props.close()
+      console.log(user)
+    }
+    catch(e) {
+      console.log(e)
+    }
+    setSubmitting(false)
+    props.close()
+  }
 })(RegisterForm)
 
 export {FormikRegisterForm as RegisterForm}

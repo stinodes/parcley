@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react'
-import {Dimensions, Animated, } from 'react-native'
+import {Dimensions, Animated, BackHandler} from 'react-native'
 import g from 'glamorous-native'
 import {SystemView as View} from 'nativesystem'
 import type {CompositeAnimation} from 'react-native/Libraries/Animated/src/AnimatedImplementation'
@@ -34,9 +34,11 @@ class Modal extends React.Component<Props> {
   
   componentDidMount() {
     this.props.onAnimate && this.animation.addListener(this.onAnimate)
+    BackHandler.addEventListener('hardwareBackPress', this.handleBack)
   }
   componentWillUnmount() {
     this.animation.removeAllListeners()
+    BackHandler.removeEventListener('hardwareBackPress', this.handleBack)
   }
   
   componentDidUpdate({visible: prevVisible}: Props) {
@@ -47,6 +49,14 @@ class Modal extends React.Component<Props> {
         onHide && onHide()
       this.animate(visible ? 1 : 0)
     }
+  }
+  
+  handleBack = () => {
+    if (this.props.visible) {
+      this.props.onRequestClose()
+      return true
+    }
+    return false
   }
   
   animate = (toValue: 0|1) => {

@@ -7,6 +7,7 @@
   "dependencies": {
     "expo": "^28.0.0",
     "firebase": "^5.2.0",
+    "fnional": "^0.0.2",
     "formik": "^0.11.9",
     "glamorous-native": "^1.3.0",
     "nativesystem": "^0.0.12",

@@ -2,13 +2,13 @@
 import * as React from 'react'
 import {createSwitchNavigator} from 'react-navigation'
 import {LoginScreen} from '../Onboarding'
-import {Dashboard} from '../App'
+import {AppNavigator} from '../App'
 
-const AppNavigator = createSwitchNavigator({
+const MainNavigator = createSwitchNavigator({
   Onboarding: {screen: LoginScreen},
-  App: {screen: Dashboard}
+  App: {screen: AppNavigator}
 }, {
   initialRouteName: 'Onboarding',
 })
 
-export {AppNavigator}
+export {MainNavigator}

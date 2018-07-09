@@ -21,6 +21,7 @@ const createNavigationService = (): API => {
   return {
     ref: setNavigator,
     dispatch: (...args) => {
+      console.log('navigator:', navigator)
       if (navigator)
         navigator.dispatch(...args)
       else

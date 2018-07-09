@@ -8,7 +8,7 @@ import {createSubTheme, createTheme, getColor, Screen, Spinner, subTheme, System
 import {MessageBar, MessageBarManager} from 'react-native-message-bar'
 
 import {createReduxStore} from './src/Store'
-import {AppNavigator, NavigationService} from './src/Navigation'
+import {MainNavigator, NavigationService} from './src/Navigation'
 import {loadFonts, Logo} from './src/Components'
 import {delay} from './src/Utils'
 import {colors, ratio} from './colors'
@@ -67,6 +67,7 @@ class App extends React.Component<Props, State> {
             height: 160 * ratio,
             width: 160 * ratio,
           })
+          .withModifier('tabBar', {borderRadius: 0})
           .done()
       )
       .withSubTheme('card', createSubTheme({backgroundColor: 'white', borderRadius: 24}).done())
@@ -145,7 +146,7 @@ class App extends React.Component<Props, State> {
           {this.state.loaded ?
             <Animated.View
               style={{flex: 1, opacity: navigatorAnimation}}>
-              <AppNavigator ref={NavigationService.ref}/>
+              <MainNavigator ref={NavigationService.ref}/>
               <MessageBar
                 ref={this.messageBarRef}
                 position="top"

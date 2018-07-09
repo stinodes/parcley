@@ -13,6 +13,7 @@ import * as firebase from 'firebase'
 
 import {FormHelper, FullscreenModal, Text} from '../Components'
 import {createError} from '../Utils/messageBar'
+import {login} from '../Firebase/helpers'
 
 const AnimatedView = g(Animated.View)(flex, space)
 const GIcon = g(Icon)(textColor)
@@ -184,8 +185,7 @@ const FormikLoginForm = withFormik({
   handleSubmit: async (values, {props, setSubmitting}) => {
     setSubmitting(true)
     try {
-      await firebase.auth()
-        .signInWithEmailAndPassword(values.email, values.password)
+      await login(values)
       props.close()
     }
     catch (e) {

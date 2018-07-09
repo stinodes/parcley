@@ -1,2 +1,2 @@
 // @flow
-export * from './Dashboard'
+export * from './AppNavigator'

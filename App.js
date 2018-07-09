@@ -69,6 +69,8 @@ class App extends React.Component<Props, State> {
           })
           .done()
       )
+      .withSubTheme('card', createSubTheme({backgroundColor: 'white', borderRadius: 24}).done())
+      .withSubTheme('overlay', createSubTheme({backgroundColor: colors.white}).done())
       .withSubTheme('messageBar',
         createSubTheme({
           titleColor: colors.white,

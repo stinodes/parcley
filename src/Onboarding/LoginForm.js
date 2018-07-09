@@ -1,16 +1,20 @@
 // @flow
 import * as React from 'react'
-import {Button, FTextInput, KeyboardAnimatedView, Screen, SystemView as View, textColor, Base} from 'nativesystem'
+import {Animated, Dimensions} from 'react-native'
+import {
+  Base, Button, flex, FTextInput, KeyboardAnimatedView, space, Spinner, SystemView as View,
+  textColor
+} from 'nativesystem'
+import type {FormikBag} from 'formik'
 import {withFormik} from 'formik'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import g from 'glamorous-native'
 import * as firebase from 'firebase'
-import {MessageBarManager} from 'react-native-message-bar'
 
-import {Text} from '../Components'
-import type {FormikBag} from 'formik'
-import {createError, createMessage} from '../Utils/messageBar'
+import {FormHelper, FullscreenModal, Text} from '../Components'
+import {createError} from '../Utils/messageBar'
 
+const AnimatedView = g(Animated.View)(flex, space)
 const GIcon = g(Icon)(textColor)
 
 type Props = {
@@ -19,60 +23,157 @@ type Props = {
 }
 
 class LoginForm extends React.Component<Props> {
+  
+  animations = {
+    titleAnimation: new Animated.Value(0),
+    inputsAnimation: new Animated.Value(0),
+    submitButtonAnimation: new Animated.Value(0),
+    closeButtonAnimation: new Animated.Value(0),
+  }
+  
+  createAnimation = ({animation, toValue}) => {
+    const {titleAnimation, inputsAnimation, submitButtonAnimation, closeButtonAnimation} = this.animations
+    const config = {
+      toValue, useNativeDriver: true, tension: 80, friction: 10,
+    }
+    const animations = [
+      Animated.spring(animation, config),
+      Animated.spring(titleAnimation, config),
+      Animated.spring(inputsAnimation, config),
+      Animated.spring(submitButtonAnimation, config),
+      Animated.spring(closeButtonAnimation, config),
+    ]
+    
+    return Animated.stagger(50, toValue === 1 ? animations : animations.reverse())
+  }
+  
   render() {
-    const {setFieldValue, values: {email, password}, handleSubmit, submitting} = this.props
+    const {visible, close, setFieldValue, values: {email, password}, handleSubmit, isSubmitting} = this.props
+    const {titleAnimation, inputsAnimation, submitButtonAnimation, closeButtonAnimation} = this.animations
+    const {height} = Dimensions.get('window')
     return (
-      <Screen
-        dismissKeyboardOnTap
-        color="ufoGreen" f={1}
-        statusBarStyle="dark-content"
-        statusBarColor="ufoGreen">
-        <View f={1} jc="center" px={3}>
-          <View my={2}>
-            <Text modifier="large" bold color="white">Welcome back!</Text>
-          </View>
-          <View my={2}>
-            <Text modifier="small" color="white">
-              E-mail address
-            </Text>
-            <FTextInput
-              name="email"
-              value={email}
-              onChange={setFieldValue}
-              color="white"
-              underlineColorAndroid="white"/>
-          </View>
-          <View my={2}>
-            <Text modifier="small" color="white">
-              Password
-            </Text>
-            <FTextInput
-              secureTextEntry
-              name="password"
-              value={password}
-              onChange={setFieldValue}
-              color="white"
-              underlineColorAndroid="white"/>
-          </View>
-          <View w={200} as="center" mt={2}>
-            <Button
-              color="white" ripple="ufoGreen" raised={20}
-              onPress={handleSubmit}>
-              <Text color="ufoGreen" bold>Log In</Text>
-            </Button>
-          </View>
-          <View as="center" mt={3}>
-            <Base
-              background={Base.Ripple('white', true)}
-              onPress={Base.delayHandler(this.props.close)}>
-              <View w={64} h={64} jc="center" ai="center">
-                <GIcon name="close" color="white" size={40}/>
-              </View>
-            </Base>
-          </View>
-          <KeyboardAnimatedView/>
-        </View>
-      </Screen>
+      <FormHelper inputNames={['email', 'password']}>
+        {({email: emailHelper, password: passwordHelper}) =>
+          <FullscreenModal
+            invertStatusBarStyle
+            visible={visible}
+            onRequestClose={close}
+            createAnimation={this.createAnimation}
+            color="ufoGreen"
+            statusBarColor="ufoGreen"
+            statusBarStyle="light-content">
+            <View px={3} jc="center" f={1}>
+              
+              <AnimatedView
+                my={2}
+                style={{
+                  transform: [{
+                    translateY: titleAnimation.interpolate({
+                      inputRange: [0, 1],
+                      outputRange: [height * 0.5, 0],
+                    })
+                  }]
+                }}>
+                <Text modifier="large" bold color="white">Welcome back!</Text>
+              </AnimatedView>
+              
+              <AnimatedView
+                my={2}
+                style={{
+                  transform: [{
+                    translateY: inputsAnimation.interpolate({
+                      inputRange: [0, 1],
+                      outputRange: [height * 0.5, 0],
+                    })
+                  }]
+                }}>
+                <Text modifier="small" color="white">
+                  E-mail address
+                </Text>
+                <FTextInput
+                  inputRef={emailHelper.ref}
+                  name="email"
+                  value={email}
+                  onChange={setFieldValue}
+                  color="white"
+                  autoCapitalize="none"
+                  keyboardType="email-address"
+                  returnKeyType="next"
+                  underlineColorAndroid="white"
+                  
+                  onSubmitEditing={passwordHelper.focus}/>
+              </AnimatedView>
+              <AnimatedView
+                my={2}
+                style={{
+                  transform: [{
+                    translateY: inputsAnimation.interpolate({
+                      inputRange: [0, 1],
+                      outputRange: [height * 0.5, 0],
+                    })
+                  }]
+                }}>
+                <Text modifier="small" color="white">
+                  Password
+                </Text>
+                <FTextInput
+                  secureTextEntry
+                  inputRef={passwordHelper.ref}
+                  name="password"
+                  value={password}
+                  onChange={setFieldValue}
+                  color="white"
+                  autoCapitalize="none"
+                  underlineColorAndroid="white"
+                  returnKeyType="send"
+                  onSubmitEditing={handleSubmit}/>
+              </AnimatedView>
+              <AnimatedView
+                style={{
+                  transform: [{
+                    translateY: submitButtonAnimation.interpolate({
+                      inputRange: [0, 1],
+                      outputRange: [height * 0.5, 0],
+                    })
+                  }]
+                }}>
+                <View
+                  w={200}
+                  as="center"
+                  pt={2} pb={4}>
+                  <Button
+                    color="white" ripple="ufoGreen" raised={20}
+                    onPress={handleSubmit}>
+                    {isSubmitting ?
+                      <Spinner color="ufoGreen"/> :
+                      <Text color="ufoGreen" bold>Log In</Text>
+                    }
+                  </Button>
+                </View>
+              </AnimatedView>
+              <AnimatedView
+                as="center"
+                style={{
+                  transform: [{
+                    translateY: closeButtonAnimation.interpolate({
+                      inputRange: [0, 1],
+                      outputRange: [height * 0.5, 0],
+                    })
+                  }]
+                }}>
+                <Base
+                  background={Base.Ripple('white', true)}
+                  onPress={Base.delayHandler(this.props.close)}>
+                  <View w={64} h={64} jc="center" ai="center">
+                    <GIcon name="close" color="white" size={40}/>
+                  </View>
+                </Base>
+              </AnimatedView>
+              <KeyboardAnimatedView/>
+            </View>
+          </FullscreenModal>
+        }
+      </FormHelper>
     )
   }
 }
@@ -88,7 +189,7 @@ const FormikLoginForm = withFormik({
       props.close()
       console.log(user)
     }
-    catch(e) {
+    catch (e) {
       console.log(e)
       createError({
         title: e.message,

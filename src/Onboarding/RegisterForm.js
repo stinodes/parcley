@@ -1,88 +1,187 @@
 // @flow
 import * as React from 'react'
 import * as firebase from 'firebase'
-import {Keyboard} from 'react-native'
 import {
-  Button, FTextInput, KeyboardAnimatedView, Screen, subTheme, SystemView as View, textColor, Base,
-  Spinner
+  Base, Button, flex, FTextInput, KeyboardAnimatedView, space, Spinner, SystemView as View,
+  textColor
 } from 'nativesystem'
+import type {FormikBag} from 'formik'
 import {withFormik} from 'formik'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import g from 'glamorous-native'
 
-import {Text} from '../Components'
-import type {FormikBag} from 'formik'
+import {FormHelper, FullscreenModal, Text} from '../Components'
+import {createError} from '../Utils/messageBar'
+import {Animated, Dimensions} from 'react-native'
 
+const AnimatedView = g(Animated.View)(flex, space)
 const GIcon = g(Icon)(textColor)
 
 type Props = {
   ...FormikBag,
+  visible: boolean,
   close: () => any,
 }
 
 class RegisterForm extends React.Component<Props> {
+  
+  animations = {
+    titleAnimation: new Animated.Value(0),
+    inputsAnimation: new Animated.Value(0),
+    submitButtonAnimation: new Animated.Value(0),
+    closeButtonAnimation: new Animated.Value(0),
+  }
+  
+  createAnimation = ({animation, toValue}) => {
+    const {titleAnimation, inputsAnimation, submitButtonAnimation, closeButtonAnimation} = this.animations
+    const config = {
+      toValue, useNativeDriver: true, tension: 80, friction: 10,
+    }
+    const animations = [
+      Animated.spring(animation, config),
+      Animated.spring(titleAnimation, config),
+      Animated.spring(inputsAnimation, config),
+      Animated.spring(submitButtonAnimation, config),
+      Animated.spring(closeButtonAnimation, config),
+    ]
+    
+    return Animated.stagger(50, toValue === 1 ? animations : animations.reverse())
+  }
+  
   render() {
-    const {setFieldValue, values: {email, password}, handleSubmit, isSubmitting} = this.props
+    const {visible, close, setFieldValue, values: {email, password}, handleSubmit, isSubmitting} = this.props
+    const {titleAnimation, inputsAnimation, submitButtonAnimation, closeButtonAnimation} = this.animations
+    const {height} = Dimensions.get('window')
     return (
-      <Screen
-        dismissKeyboardOnTap
-        color="frenchSky" f={1}
-        statusBarStyle="dark-content"
-        statusBarColor="frenchSky">
-        <View f={1} jc="center" px={3}>
-          <View my={2}>
-            <Text modifier="large" bold color="white">
-              Hi there friend!
-            </Text>
-            <Text color="white">
-              Who are you?
-            </Text>
-          </View>
-          <View my={2}>
-            <Text modifier="small" color="white">
-              E-mail address
-            </Text>
-            <FTextInput
-              name="email"
-              value={email}
-              onChange={setFieldValue}
-              color="white"
-              underlineColorAndroid="white"/>
-          </View>
-          <View my={2}>
-            <Text modifier="small" color="white">
-              Password
-            </Text>
-            <FTextInput
-              secureTextEntry
-              name="password"
-              value={password}
-              onChange={setFieldValue}
-              color="white"
-              underlineColorAndroid="white"/>
-          </View>
-          <View w={200} as="center" mt={2}>
-            <Button
-              color="white" ripple="frenchSky" raised={20}
-              onPress={handleSubmit}>
-              {isSubmitting ?
-                <Spinner color="frenchSky"/>:
-                <Text color="frenchSky" bold>Sign Up</Text>
-              }
-            </Button>
-          </View>
-          <View as="center" mt={3}>
-            <Base
-              background={Base.Ripple('white', true)}
-              onPress={Base.delayHandler(this.props.close)}>
-              <View w={64} h={64} jc="center" ai="center">
-                <GIcon name="close" color="white" size={40}/>
-              </View>
-            </Base>
-          </View>
-          <KeyboardAnimatedView/>
-        </View>
-      </Screen>
+      <FormHelper inputNames={['email', 'password']}>
+        {({email: emailHelper, password: passwordHelper}) =>
+          <FullscreenModal
+            invertStatusBarStyle
+            visible={visible}
+            onRequestClose={close}
+            createAnimation={this.createAnimation}
+            color="frenchSky"
+            statusBarColor="frenchSky"
+            statusBarStyle="light-content">
+            <View px={3} jc="center" f={1}>
+              
+              <AnimatedView
+                my={2}
+                style={{
+                  transform: [{
+                    translateY: titleAnimation.interpolate({
+                      inputRange: [0, 1],
+                      outputRange: [height * 0.5, 0],
+                    })
+                  }]
+                }}>
+                <Text modifier="large" bold color="white">
+                  Hi there, friend!
+                </Text>
+                <Text color="white">
+                  Who are you?
+                </Text>
+              </AnimatedView>
+              
+              <AnimatedView
+                my={2}
+                style={{
+                  transform: [{
+                    translateY: inputsAnimation.interpolate({
+                      inputRange: [0, 1],
+                      outputRange: [height * 0.5, 0],
+                    })
+                  }]
+                }}>
+                <Text modifier="small" color="white">
+                  E-mail address
+                </Text>
+                <FTextInput
+                  inputRef={emailHelper.ref}
+                  name="email"
+                  value={email}
+                  onChange={setFieldValue}
+                  color="white"
+                  autoCapitalize="none"
+                  keyboardType="email-address"
+                  returnKeyType="next"
+                  onSubmitEditing={passwordHelper.focus}
+                  underlineColorAndroid="white"/>
+              </AnimatedView>
+              <AnimatedView
+                my={2}
+                style={{
+                  transform: [{
+                    translateY: inputsAnimation.interpolate({
+                      inputRange: [0, 1],
+                      outputRange: [height * 0.5, 0],
+                    })
+                  }]
+                }}>
+                <Text modifier="small" color="white">
+                  Password
+                </Text>
+                <FTextInput
+                  secureTextEntry
+                  inputRef={passwordHelper.ref}
+                  name="password"
+                  value={password}
+                  onChange={setFieldValue}
+                  color="white"
+                  autoCapitalize="none"
+                  returnKeyType="send"
+                  onSubmitEditing={handleSubmit}
+                  underlineColorAndroid="white"/>
+              </AnimatedView>
+  
+  
+              <AnimatedView
+                style={{
+                  transform: [{
+                    translateY: submitButtonAnimation.interpolate({
+                      inputRange: [0, 1],
+                      outputRange: [height * 0.5, 0],
+                    })
+                  }]
+                }}>
+                <View
+                  w={200}
+                  as="center"
+                  pt={2} pb={4}>
+                  <Button
+                    color="white" ripple="frenchSky" raised={20}
+                    onPress={handleSubmit}>
+                    {isSubmitting ?
+                      <Spinner color="frenchSky"/> :
+                      <Text color="frenchSky" bold>Sign Up</Text>
+                    }
+                  </Button>
+                </View>
+              </AnimatedView>
+              
+              <AnimatedView
+                as="center"
+                style={{
+                  transform: [{
+                    translateY: closeButtonAnimation.interpolate({
+                      inputRange: [0, 1],
+                      outputRange: [height * 0.5, 0],
+                    })
+                  }]
+                }}>
+                <Base
+                  background={Base.Ripple('white', true)}
+                  onPress={Base.delayHandler(this.props.close)}>
+                  <View w={64} h={64} jc="center" ai="center">
+                    <GIcon name="close" color="white" size={40}/>
+                  </View>
+                </Base>
+              </AnimatedView>
+              <KeyboardAnimatedView/>
+            </View>
+          </FullscreenModal>
+        }
+      </FormHelper>
     )
   }
 }
@@ -96,13 +195,14 @@ const FormikRegisterForm = withFormik({
       await auth.createUserWithEmailAndPassword(values.email, values.password)
       const user = auth.currentUser
       props.close()
-      console.log(user)
     }
-    catch(e) {
+    catch (e) {
       console.log(e)
+      createError({
+        title: e.message,
+      })
     }
     setSubmitting(false)
-    props.close()
   }
 })(RegisterForm)
 

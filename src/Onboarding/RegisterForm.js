@@ -13,6 +13,7 @@ import g from 'glamorous-native'
 import {FormHelper, FullscreenModal, Text} from '../Components'
 import {createError} from '../Utils/messageBar'
 import {Animated, Dimensions} from 'react-native'
+import {isUserUnique, registerUser, writeUserInfo} from '../Firebase/helpers'
 
 const AnimatedView = g(Animated.View)(flex, space)
 const GIcon = g(Icon)(textColor)
@@ -49,18 +50,23 @@ class RegisterForm extends React.Component<Props> {
   }
   
   render() {
-    const {visible, close, setFieldValue, values: {email, password}, handleSubmit, isSubmitting} = this.props
+    const {visible, close, setFieldValue, values: {email, password, username}, handleSubmit, isSubmitting, resetForm} = this.props
     const {titleAnimation, inputsAnimation, submitButtonAnimation, closeButtonAnimation} = this.animations
     const {height} = Dimensions.get('window')
     return (
-      <FormHelper inputNames={['email', 'password']}>
-        {({email: emailHelper, password: passwordHelper}) =>
+      <FormHelper inputNames={['email', 'username', 'password']}>
+        {({email: emailHelper, username: usernameHelper, password: passwordHelper}) =>
           <FullscreenModal
             invertStatusBarStyle
             visible={visible}
             onRequestClose={close}
             createAnimation={this.createAnimation}
             color="frenchSky"
+            onHide={resetForm}
+            screenProps={{
+              dismissKeyboardOnTap: true,
+              ignoredTargets: () => [emailHelper.input, usernameHelper.input, passwordHelper.input],
+            }}
             statusBarColor="frenchSky"
             statusBarStyle="light-content">
             <View px={3} jc="center" f={1}>
@@ -104,6 +110,30 @@ class RegisterForm extends React.Component<Props> {
                   color="white"
                   autoCapitalize="none"
                   keyboardType="email-address"
+                  returnKeyType="next"
+                  onSubmitEditing={usernameHelper.focus}
+                  underlineColorAndroid="white"/>
+              </AnimatedView>
+              <AnimatedView
+                my={2}
+                style={{
+                  transform: [{
+                    translateY: inputsAnimation.interpolate({
+                      inputRange: [0, 1],
+                      outputRange: [height * 0.5, 0],
+                    })
+                  }]
+                }}>
+                <Text modifier="small" color="white">
+                  Username
+                </Text>
+                <FTextInput
+                  inputRef={usernameHelper.ref}
+                  name="username"
+                  value={username}
+                  onChange={setFieldValue}
+                  color="white"
+                  autoCapitalize="none"
                   returnKeyType="next"
                   onSubmitEditing={passwordHelper.focus}
                   underlineColorAndroid="white"/>
@@ -187,13 +217,11 @@ class RegisterForm extends React.Component<Props> {
 }
 
 const FormikRegisterForm = withFormik({
-  mapPropsToValues: props => ({email: '', password: ''}),
-  handleSubmit: async (values, {props, setSubmitting}) => {
+  mapPropsToValues: props => ({email: '', username: '', password: ''}),
+  handleSubmit: async ({username, email, password}, {props, setSubmitting, setErrors}) => {
     setSubmitting(true)
     try {
-      const auth = firebase.auth()
-      await auth.createUserWithEmailAndPassword(values.email, values.password)
-      const user = auth.currentUser
+      await registerUser({username, email, password})
       props.close()
     }
     catch (e) {

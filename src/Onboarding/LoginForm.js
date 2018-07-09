@@ -48,7 +48,7 @@ class LoginForm extends React.Component<Props> {
   }
   
   render() {
-    const {visible, close, setFieldValue, values: {email, password}, handleSubmit, isSubmitting} = this.props
+    const {visible, close, setFieldValue, values: {email, password}, handleSubmit, isSubmitting, resetForm} = this.props
     const {titleAnimation, inputsAnimation, submitButtonAnimation, closeButtonAnimation} = this.animations
     const {height} = Dimensions.get('window')
     return (
@@ -58,6 +58,7 @@ class LoginForm extends React.Component<Props> {
             invertStatusBarStyle
             visible={visible}
             onRequestClose={close}
+            onHide={resetForm}
             createAnimation={this.createAnimation}
             color="ufoGreen"
             statusBarColor="ufoGreen"
@@ -183,11 +184,9 @@ const FormikLoginForm = withFormik({
   handleSubmit: async (values, {props, setSubmitting}) => {
     setSubmitting(true)
     try {
-      const auth = firebase.auth()
-      await auth.signInWithEmailAndPassword(values.email, values.password)
-      const user = auth.currentUser
+      await firebase.auth()
+        .signInWithEmailAndPassword(values.email, values.password)
       props.close()
-      console.log(user)
     }
     catch (e) {
       console.log(e)

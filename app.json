@@ -17,6 +17,9 @@
     "ios": {
       "supportsTablet": false
     },
+    "android": {
+      "package": "com.stinodes.coolio.expo"
+    },
     "androidStatusBar": {
       "barStyle": "dark-content"
     }

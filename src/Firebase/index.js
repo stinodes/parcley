@@ -9,6 +9,4 @@ const config = {
   storageBucket: "coolio-58d55.appspot.com",
   messagingSenderId: "503306606752"
 }
-export const setupFirebase = () => {
-  firebase.initializeApp(config)
-}
+export const setupFirebase = () => firebase.initializeApp(config)

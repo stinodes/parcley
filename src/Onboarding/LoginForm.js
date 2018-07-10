@@ -9,7 +9,6 @@ import type {FormikBag} from 'formik'
 import {withFormik} from 'formik'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import g from 'glamorous-native'
-import * as firebase from 'firebase'
 
 import {FormHelper, FullscreenModal, Text} from '../Components'
 import {createError} from '../Utils/messageBar'
@@ -189,8 +188,7 @@ const FormikLoginForm = withFormik({
     }
     catch (e) {
       console.log(e)
-      
-       createError({
+      createError({
         title: e.message,
       })
       setSubmitting(false)

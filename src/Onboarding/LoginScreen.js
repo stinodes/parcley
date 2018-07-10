@@ -1,10 +1,10 @@
 // @flow
 import * as React from 'react'
-import {View as RNView} from 'react-native'
 import {Button, Screen, SystemView as View} from 'nativesystem'
+import * as firebase from 'firebase'
+
 import {Logo, Modal, Text,} from '../Components'
 import type {Layout} from '../Utils'
-import {measure} from '../Utils'
 import {LoginForm} from './LoginForm'
 import {RegisterForm} from './RegisterForm'
 
@@ -56,6 +56,16 @@ class LoginScreen extends React.Component<Props, State> {
               onPress={this.showRegister}>
               <Text bold color="white">
                 Sign Up
+              </Text>
+            </Button>
+          </View>
+          <View
+            my={2}>
+            <Button
+              color="gunMetal" ripple="white"
+              onPress={() => firebase.auth().signOut()}>
+              <Text bold color="white">
+                Log out
               </Text>
             </Button>
           </View>

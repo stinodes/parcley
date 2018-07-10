@@ -222,7 +222,6 @@ const FormikRegisterForm = withFormik({
     setSubmitting(true)
     try {
       await registerUser({username, email, password})
-      props.close()
     }
     catch (e) {
       console.log(e)

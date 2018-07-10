@@ -186,15 +186,15 @@ const FormikLoginForm = withFormik({
     setSubmitting(true)
     try {
       await login(values)
-      props.close()
     }
     catch (e) {
       console.log(e)
-      createError({
+      
+       createError({
         title: e.message,
       })
+      setSubmitting(false)
     }
-    setSubmitting(false)
   }
 })(LoginForm)
 

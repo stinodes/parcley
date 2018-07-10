@@ -43,5 +43,9 @@ export const registerUser = async ({username, email, password}: RegisterValues) 
   await writeUserInfo(userInformation)
 }
 
-export const login = ({email, password}: LoginValues) =>
-  firebase.auth().signInWithEmailAndPassword(email, password)
+export const login = async ({email, password}: LoginValues) => {
+  console.log('logging in')
+  const result = await firebase.auth().signInWithEmailAndPassword(email, password)
+  console.log('logged in')
+  return result
+}

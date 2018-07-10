@@ -25,28 +25,6 @@ class LoginScreen extends React.Component<Props, State> {
     registerButtonLayout: null,
   }
   
-  loginButtonContainer: ?RNView
-  registerButtonContainer: ?RNView
-  
-  componentDidMount() {
-    setTimeout(
-      this.measureButtons,
-      0,
-    )
-  }
-  
-  measureButtons = async () => {
-    // this.loginButtonContainer.measure(console.warn)
-    let {loginButtonLayout, registerButtonLayout} = this.state
-    
-    if (this.loginButtonContainer)
-      loginButtonLayout = await measure(this.loginButtonContainer)
-    if (this.registerButtonContainer)
-      registerButtonLayout = await measure(this.registerButtonContainer)
-    
-    this.setState({loginButtonLayout, registerButtonLayout})
-  }
-  
   showLogin = () => this.setState({showLogin: true})
   showRegister = () => this.setState({showRegister: true})
   

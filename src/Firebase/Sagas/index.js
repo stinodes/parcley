@@ -19,15 +19,16 @@ const authSaga = function* (): Generator<*, *, *> {
     while (true) {
       try {
         const {user} = yield take(channel)
+        console.log('user', user)
         if (user) {
-          yield put(authChanged(user))
-          const userInfo = yield call(readUserInfo, user.uid)
-          yield put(setUserInformation(userInfo))
+          // yield put(authChanged(user))
+          // const userInfo = yield call(readUserInfo, user.uid)
+          // yield put(setUserInformation(userInfo))
           yield call(NavigationService.dispatch, NavigationActions.navigate({routeName: 'App'}))
         }
         if (!user) {
-          yield put(authChanged(null))
-          yield put(setUserInformation(null))
+          // yield put(authChanged(null))
+          // yield put(setUserInformation(null))
           yield call(NavigationService.dispatch, NavigationActions.navigate({routeName: 'Onboarding'}))
         }
       }

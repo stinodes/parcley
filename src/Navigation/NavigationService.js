@@ -12,6 +12,7 @@ const createNavigationService = (): API => {
   let bufferedActions = []
   
   const setNavigator = (_navigator: Navigator) => {
+    console.log('setting navigator')
     let sendBufferedActions = !navigator
     navigator = _navigator
     if (sendBufferedActions)

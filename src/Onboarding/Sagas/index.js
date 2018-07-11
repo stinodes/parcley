@@ -6,7 +6,7 @@ import {NavigationActions} from 'react-navigation'
 
 import {NavigationService} from '../../Navigation'
 import {authChanged, setUserInformation} from '../Redux'
-import {readUserInfo} from '../helpers/app'
+import {readUserInfo} from '../helpers'
 
 const authChangedChannel = (auth) => eventChannel(emit => {
   auth.onAuthStateChanged((user) => emit({user}))

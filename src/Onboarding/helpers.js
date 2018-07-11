@@ -24,6 +24,9 @@ export const isUserUnique = async (userInfo: UserInformation) => {
   return snapshot.exists()
 }
 
+export const readUserInfo = (userId: string) =>
+  firebase.database().ref(`users/${userId}`).once('value')
+
 export const writeUserInfo = (userInfo: UserInformation) =>
   firebase.database()
     .ref(`users/${userInfo.uid}`)

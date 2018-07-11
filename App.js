@@ -12,9 +12,17 @@ import {MainNavigator, NavigationService} from './src/Navigation'
 import {loadFonts, Logo} from './src/Components'
 import {delay} from './src/Utils'
 import {colors, ratio} from './colors'
-import {setupFirebase} from './src/Firebase'
+import * as firebase from 'firebase'
 
-setupFirebase()
+const config = {
+  apiKey: "AIzaSyDIbjaed8CjPxZsJwUIxE4n3_TzFyAyWjc",
+  authDomain: "coolio-58d55.firebaseapp.com",
+  databaseURL: "https://coolio-58d55.firebaseio.com",
+  projectId: "coolio-58d55",
+  storageBucket: "coolio-58d55.appspot.com",
+  messagingSenderId: "503306606752"
+}
+firebase.initializeApp(config)
 const store = createReduxStore()
 
 type Props = {}

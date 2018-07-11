@@ -12,7 +12,7 @@ import g from 'glamorous-native'
 
 import {FormHelper, FullscreenModal, Text} from '../Components'
 import {createError} from '../Utils/messageBar'
-import {login} from '../Firebase/helpers'
+import {login} from './helpers'
 
 const AnimatedView = g(Animated.View)(flex, space)
 const GIcon = g(Icon)(textColor)

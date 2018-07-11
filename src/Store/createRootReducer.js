@@ -1,7 +1,7 @@
 // @flow
 import {combineReducers} from 'redux'
 
-import {reducer as auth} from '../Firebase/Redux'
+import {reducer as auth} from '../Onboarding/Redux'
 
 import type {Reducer} from 'redux'
 

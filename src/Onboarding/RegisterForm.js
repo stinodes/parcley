@@ -1,6 +1,5 @@
 // @flow
 import * as React from 'react'
-import * as firebase from 'firebase'
 import {
   Base, Button, flex, FTextInput, KeyboardAnimatedView, space, Spinner, SystemView as View,
   textColor
@@ -13,7 +12,7 @@ import g from 'glamorous-native'
 import {FormHelper, FullscreenModal, Text} from '../Components'
 import {createError} from '../Utils/messageBar'
 import {Animated, Dimensions} from 'react-native'
-import {isUserUnique, registerUser, writeUserInfo} from '../Firebase/helpers'
+import {isUserUnique, registerUser, writeUserInfo} from './helpers'
 
 const AnimatedView = g(Animated.View)(flex, space)
 const GIcon = g(Icon)(textColor)

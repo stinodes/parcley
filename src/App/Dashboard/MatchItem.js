@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react'
-import {SystemView as View, space, backgroundColor, Base, flex, raised} from 'nativesystem'
+import {backgroundColor, Base, flex, raised, space, SystemView as View} from 'nativesystem'
 import g from 'glamorous-native'
 
 import type {Match} from 'coolio'
@@ -24,19 +24,22 @@ const MatchItem = ({match, onPress}: Props) => {
   const members = Object.keys(match.members)
     .map(key => match.members[key])
   return (
-    <Base background={Base.Ripple('ufoGreen', true)} onPress={onPress}>
+    <Base background={Base.Ripple('ufoGreen', false)} onPress={onPress}>
       <View py={2}>
-        <View fd="row" ai="center" my={1} px={3} >
+        <View fd="row" ai="center" my={1} px={3}>
           <Circle size={64} color="ufoGreen" mr={2} raised={10}>
             <Text bold modifier="large" color="white">
               {total}
             </Text>
           </Circle>
-          <View fd="column">
+          <View fd="column" f={1}>
             <Text bold modifier="large" color="raisinBlack">
               {match.name}
             </Text>
             <Text color="raisinBlack">
+              By: {match.host.username}
+            </Text>
+            <Text color="raisinBlack" modifier="small">
               {match.startedOn}
             </Text>
           </View>

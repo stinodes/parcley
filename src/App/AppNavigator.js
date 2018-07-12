@@ -16,6 +16,7 @@ const AppNavigator = createBottomTabNavigator(
   },
   {
     initialRouteName: 'Dashboard',
+    order: ['Dashboard', 'NewMatch', 'Settings'],
     tabBarOptions: {
       showLabel: false,
       style: {

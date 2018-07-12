@@ -2749,6 +2749,13 @@ fnional@^0.0.2:
     babel-jest "^23.0.1"
     flow-bin "0.67"
 
+fnional@^0.0.3:
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/fnional/-/fnional-0.0.3.tgz#7521bcf46e43ce90599f158c2fe650feff532110"
+  dependencies:
+    babel-jest "^23.0.1"
+    flow-bin "0.67"
+
 for-in@^1.0.1, for-in@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/for-in/-/for-in-1.0.2.tgz#81068d295a8142ec0ac726c6e2200c30fb6d5e80"

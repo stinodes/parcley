@@ -1,6 +1,6 @@
 // @flow
 import type {User} from 'firebase'
-import type {UserInformation} from '../helpers'
+import type {UserInformation} from 'coolio'
 
 export const actionTypes: {
   'AUTH_CHANGED': 'Auth/AUTH_CHANGED',

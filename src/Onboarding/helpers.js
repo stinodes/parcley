@@ -1,6 +1,8 @@
 // @flow
 import * as firebase from 'firebase'
 
+import type {UserInformation} from 'coolio'
+
 export type LoginValues = {
   email: string,
   password: string,
@@ -9,11 +11,6 @@ export type RegisterValues = {
   email: string,
   username: string,
   password: string,
-}
-export type UserInformation = {
-  username: string,
-  uid: string,
-  email: string,
 }
 
 export const isUserUnique = async (userInfo: UserInformation) => {
@@ -46,6 +43,8 @@ export const registerUser = async ({username, email, password}: RegisterValues) 
   await writeUserInfo(userInformation)
 }
 
-export const login = async ({email, password}: LoginValues) =>
+export const login = ({email, password}: LoginValues) =>
   firebase.auth()
     .signInWithEmailAndPassword(email, password)
+
+export const logout = () => firebase.auth().signOut()

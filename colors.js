@@ -3,6 +3,7 @@ const desWidth = 1080
 export const ratio = baseWidth / desWidth
 export const colors = {
   white: '#fcfcff',
+  gainsBoro: '#d6d9db',
   
   ufoGreen: '#1ece62',
   frenchSky: '#7692ff',

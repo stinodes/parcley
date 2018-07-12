@@ -59,16 +59,6 @@ class LoginScreen extends React.Component<Props, State> {
               </Text>
             </Button>
           </View>
-          <View
-            my={2}>
-            <Button
-              color="gunMetal" ripple="white"
-              onPress={() => firebase.auth().signOut()}>
-              <Text bold color="white">
-                Log out
-              </Text>
-            </Button>
-          </View>
         </View>
         
         <LoginForm visible={this.state.showLogin} close={() => this.setState({showLogin: false})}/>

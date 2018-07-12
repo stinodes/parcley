@@ -1,7 +1,9 @@
 // @flow
 import * as React from 'react'
-import {Base} from 'nativesystem'
-import {createTabBarButton, createTabBarIcon, TabBarIcon} from './TabBar'
+import {Button, Screen, SystemView as View} from 'nativesystem'
+import {createTabBarButton, createTabBarIcon} from './TabBar'
+import {logout} from '../Onboarding/helpers'
+import {Text} from '../Components'
 
 type Props = {
 
@@ -13,7 +15,20 @@ class Settings extends React.Component<Props> {
     tabBarButtonComponent: createTabBarButton('error'),
   }
   render() {
-    return null
+    return (
+      <Screen
+        color="white" f={1}
+        statusBarColor="white"
+        statusBarStyle="dark-content">
+        <View f={1}>
+        </View>
+        <Button color="transparent" onPress={logout}>
+          <Text color="error">
+            Log out
+          </Text>
+        </Button>
+      </Screen>
+    )
   }
 }
 

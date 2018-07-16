@@ -1,19 +1,29 @@
 // @flow
 import * as React from 'react'
 import {Button, Screen, SystemView as View} from 'nativesystem'
-import {createTabBarButton, createTabBarIcon} from './TabBar'
 import {logout} from '../Onboarding/helpers'
 import {Text} from '../Components'
+import {connect} from 'react-redux'
+import {createMatch} from './NewMatch/Redux/actions'
 
 type Props = {
 
 }
+type MappedProps = {
 
-class Settings extends React.Component<Props> {
-  static navigationOptions = {
-    tabBarIcon: createTabBarIcon('sliders', 'error'),
-    tabBarButtonComponent: createTabBarButton('error'),
+}
+
+class Settings extends React.Component<ReduxProps<Props, MappedProps>> {
+  
+  tryOut = async () => {
+    this.props.dispatch(createMatch({
+      name: 'Test Match',
+      description: 'Meh, just testing stuff out',
+      members: 'some username, stinodes',
+      isPrivate: false,
+    }))
   }
+  
   render() {
     return (
       <Screen
@@ -22,6 +32,11 @@ class Settings extends React.Component<Props> {
         statusBarStyle="dark-content">
         <View f={1}>
         </View>
+        <Button color="transparent" onPress={this.tryOut}>
+          <Text color="error">
+            Test
+          </Text>
+        </Button>
         <Button color="transparent" onPress={logout}>
           <Text color="error">
             Log out
@@ -32,4 +47,9 @@ class Settings extends React.Component<Props> {
   }
 }
 
-export {Settings}
+const mapStateToProps = (state): MappedProps => ({
+
+})
+const ConnectedSettings = connect(mapStateToProps)(Settings)
+
+export {ConnectedSettings as Settings}

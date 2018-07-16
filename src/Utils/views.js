@@ -8,7 +8,7 @@ export type Layout = {
   px: number, py: number,
 }
 
-export const measure = (view: View) => new Promise((resolve, reject): Promise<Layout> => {
+export const measure = (view: View): Promise<Layout> => new Promise((resolve, reject) => {
   try {
     view.measure(
       (x, y, w, h, px, py) => resolve({x, y, w, h, px, py,})
@@ -18,7 +18,7 @@ export const measure = (view: View) => new Promise((resolve, reject): Promise<La
     reject(e)
   }
 })
-export const measureInWindow = (view: View) => new Promise((resolve, reject): Promise<Layout> => {
+export const measureInWindow = (view: View): Promise<Layout> => new Promise((resolve, reject) => {
   try {
     view.measureInWindow(
       (x, y, w, h, px, py) => resolve({x, y, w, h, px, py,})

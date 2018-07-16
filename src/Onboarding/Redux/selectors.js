@@ -5,5 +5,9 @@ type Store = {
 }
 
 const reducerState = (state: Store) => state.auth
-export const user = (state: Store) => reducerState(state).user
-export const userInfo = (state: Store) => reducerState(state).userInformation
+export const me = (state: Store) => reducerState(state).user
+export const meInfo = (state: Store) => reducerState(state).userInformation
+export const meId = (state: Store) => {
+  const user = reducerState(state).user
+  return user && user.uid
+}

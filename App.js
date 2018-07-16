@@ -13,6 +13,7 @@ import {loadFonts, Logo} from './src/Components'
 import {delay} from './src/Utils'
 import {colors, ratio} from './colors'
 import * as firebase from 'firebase'
+import * as firestore from 'firebase/firestore'
 
 const config = {
   apiKey: "AIzaSyDIbjaed8CjPxZsJwUIxE4n3_TzFyAyWjc",
@@ -23,12 +24,14 @@ const config = {
   messagingSenderId: "503306606752"
 }
 firebase.initializeApp(config)
+firebase.firestore().settings({timestampsInSnapshots: true})
 const store = createReduxStore()
 
 type Props = {}
 type State = {
   logoAnimation: Animated.Value,
   spinnerAnimation: Animated.Value,
+  navigatorAnimation: Animated.Value,
   theme: Theme,
   loaded: boolean,
 }

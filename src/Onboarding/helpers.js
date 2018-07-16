@@ -14,19 +14,26 @@ export type RegisterValues = {
 }
 
 export const isUserUnique = async (userInfo: UserInformation) => {
-  const snapshot = await firebase.database().ref('users')
-    .orderByChild('username')
-    .equalTo(userInfo.username)
-    .once('value')
-  return snapshot.exists()
+  const usersRef = await firebase.firestore().collection('users')
+  
+  const isEmpty = usersRef
+    .where('username', '==', userInfo.username)
+    .limit(1)
+    .get()
+    .then(snapshot => snapshot.empty())
+  return isEmpty
 }
 
 export const readUserInfo = (userId: string) =>
-  firebase.database().ref(`users/${userId}`).once('value')
+  firebase.firestore().collection('users')
+    .doc(userId)
+    .get()
+    .then(snapshot => snapshot.data())
 
 export const writeUserInfo = (userInfo: UserInformation) =>
-  firebase.database()
-    .ref(`users/${userInfo.uid}`)
+  firebase.firestore()
+    .collection('users')
+    .doc(userInfo.uid)
     .set(userInfo)
 
 export const registerUser = async ({username, email, password}: RegisterValues) => {

@@ -3,7 +3,7 @@ import * as React from 'react'
 import {backgroundColor, Base, flex, raised, space, SystemView as View} from 'nativesystem'
 import g from 'glamorous-native'
 
-import type {Match} from 'coolio'
+import type {Match, Member} from 'coolio'
 import {Text} from '../../Components'
 
 type Props = {
@@ -18,11 +18,11 @@ const Circle = g.view(
   space, backgroundColor, raised
 )
 const MatchItem = ({match, onPress}: Props) => {
-  const total = Object.keys(match.scores)
-    .map(key => match.scores[key])
-    .reduce((prev, score) => prev + score)
-  const members = Object.keys(match.members)
+  const members: Member[] = Object.keys(match.members)
     .map(key => match.members[key])
+  const total = members
+    .map(member => member.score)
+    .reduce((prev, value) => prev + value, 0)
   return (
     <Base background={Base.Ripple('ufoGreen', false)} onPress={onPress}>
       <View py={2}>
@@ -37,7 +37,7 @@ const MatchItem = ({match, onPress}: Props) => {
               {match.name}
             </Text>
             <Text color="raisinBlack">
-              By: {match.host.username}
+              By: [Insert Username]
             </Text>
             <Text color="raisinBlack" modifier="small">
               {match.startedOn}
@@ -45,10 +45,10 @@ const MatchItem = ({match, onPress}: Props) => {
           </View>
         </View>
         <Scroll horizontal contentContainerStyle={{paddingVertical: 8, paddingHorizontal: 32}}>
-          {Object.keys(match.members).map(key => (
-            <Circle color="gunMetal" size={48} mr={1} raised={5}>
+          {members.map(member => (
+            <Circle key={member.uid} color="gunMetal" size={48} mr={1} raised={5}>
               <Text bold color="white" modifier="small">
-                {match.scores[key]}
+                {member.score}
               </Text>
             </Circle>
           ))}

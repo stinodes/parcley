@@ -2,7 +2,7 @@
 import * as React from 'react'
 import {backgroundColor, Button, raised, Screen, Spinner, SystemView as View} from 'nativesystem'
 import {connect} from 'react-redux'
-import type {NavigationProp, NavigationScreenConfigProps, NavigationStateRoute} from 'react-navigation'
+import type {NavigationScreenProp, NavigationStateRoute} from 'react-navigation'
 import {SafeAreaView} from 'react-navigation'
 import g from 'glamorous-native'
 
@@ -13,12 +13,11 @@ import {fetchAllData} from '../Redux/index'
 import {MatchList} from './MatchList'
 import type {Id, Match} from 'coolio'
 import {Logo} from '../../Components'
-import {Separator} from 'nativesystem/src/Components/Separator'
 
 const RaisedView = g(View)(raised, backgroundColor)
 
 type Props = {
-  navigation: NavigationProp<NavigationStateRoute>,
+  navigation: NavigationScreenProp<NavigationStateRoute>,
 }
 type MappedProps = {
   isPending: boolean,
@@ -26,11 +25,7 @@ type MappedProps = {
   matches: { [Id]: Match },
 }
 
-class Dashboard extends React.Component<Props> {
-  static navigationOptions = {
-    tabBarIcon: createTabBarIcon('list', 'ufoGreen'),
-    tabBarButtonComponent: createTabBarButton('ufoGreen'),
-  }
+class Dashboard extends React.Component<ReduxProps<Props, MappedProps>> {
   
   componentDidMount() {
     this.props.dispatch(fetchAllData())

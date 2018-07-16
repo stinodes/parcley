@@ -19,7 +19,7 @@ type MappedProps = {
   matches: {[Id]: Match},
 }
 
-class MatchList extends React.Component<Props> {
+class MatchList extends React.Component<ReduxProps<Props, MappedProps>> {
   render() {
     const {matches} = this.props
     const matchArray: Match[] = Object.keys(matches).map(key => matches[key])
@@ -27,7 +27,7 @@ class MatchList extends React.Component<Props> {
       <Scroll f={1}>
         {
           matchArray.map(match =>
-            <MatchItem match={match} onPress={() => {}}/>
+            <MatchItem key={match.uid} match={match} onPress={() => {}}/>
           )
         }
       </Scroll>

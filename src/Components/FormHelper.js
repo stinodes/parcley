@@ -2,18 +2,18 @@
 import * as React from 'react'
 
 type Name = string
-type Ref = (React.Component) => any
+type Ref = <CompProps>(React.Component<CompProps>) => any
 type Config = {
   [Name]: {
-    input: React.Component,
+    input: React.Component<*>,
     ref: Ref,
     focus: () => any,
     blur: () => any,
   },
-  inputRef: (Name) => (React.Component) => any,
+  inputRef: (Name) => Ref,
   focus: (Name) => () => any,
   blur: (Name) => () => any,
-  inputs: { [Name]: React.Component },
+  inputs: { [Name]: React.Component<*> },
 }
 type Props = {
   inputNames: Name[],
@@ -23,7 +23,7 @@ type Props = {
 class FormHelper extends React.Component<Props> {
   inputs = {}
   
-  inputRef = (name: string) => (component: React.Component) => this.inputs[name] = component
+  inputRef = (name: string) => <CompProps>(component: React.Component<CompProps>) => this.inputs[name] = component
   focus = (name: string) => () => {
     this.inputs[name] && this.inputs[name].focus && this.inputs[name].focus()
   }

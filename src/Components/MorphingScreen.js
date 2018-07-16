@@ -2,10 +2,12 @@
 import * as React from 'react'
 import {Animated, Dimensions, StatusBar} from 'react-native'
 import type {Layout} from '../Utils'
+import type {Styles} from 'nativesystem'
 
 type Props = {
   expanded: boolean,
   morphLayout: Layout,
+  expandedStyle?: Styles,
   
   onAnimationEnd?: () => any,
   children?: React.Node,

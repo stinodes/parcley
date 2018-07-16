@@ -22,7 +22,8 @@ type Props = {
   invertStatusBarStyle?: boolean,
   statusBarColor?: string,
   dismissKeyboardOnTap?: boolean,
-  ignoredTargets: () => React.Node[]
+  ignoredTargets?: () => React.Node[],
+  screenProps?: {},
 }
 type State = {
   isShown: boolean

@@ -1,7 +1,5 @@
 // @flow
-import {Component} from 'react'
-import type {Node, ComponentType} from 'react'
-
 declare var __DEV__: boolean
+// declare var console: console&{disableYellowBox: boolean}
 
-declare var Promise: Promise & {done: (any) => any}
+// declare var Promise: Promise & {done: (any) => any}

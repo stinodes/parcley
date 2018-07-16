@@ -12,23 +12,23 @@ declare module 'coolio' {
       [Id]: boolean
     },
   }
-  
+  declare export type Unsynced<Type> = $Diff<Type, {uid: Id}>
   declare type Host = {
     uid: string,
     username: string,
   }
+  declare export type Member = {
+    score: number,
+    username: string,
+    uid: string,
+  }
   declare export type Match = {
     uid: Id,
-    host: Host,
+    host: Id,
     name: string,
     description: string,
     startedOn: number,
-    private: boolean,
-    scores: {
-      [Id]: Score,
-    },
-    members: {
-      [Id]: boolean,
-    },
+    isPrivate: boolean,
+    members: {[Id]: Member},
   }
 }

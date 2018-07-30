@@ -1,7 +1,8 @@
 // @flow
 import * as firebase from 'firebase'
+import randomWords from 'random-words'
 
-import type {UserInformation, Match, Id} from 'coolio'
+import type {UserInformation, Match, Id, Member} from 'coolio'
 
 export const uidForUsername = async (username: string) => {
   const userIds = await firebase.firestore()
@@ -15,7 +16,28 @@ export const uidForUsername = async (username: string) => {
     )
   
   return userIds[0]
+}
+
+export const uidForMatchCode = async (code: string) => {
+  const matchIds = await firebase.firestore()
+    .collection('matches')
+    .where('code', '==', code)
+    .limit(1)
+    .get()
+    .then(
+      snapshot => snapshot.docs
+        .map(doc => doc.data().uid)
+    )
   
+  return matchIds[0]
+}
+
+export const generateMatchCode = async (numOfWords?: number = 4) => {
+  const code = randomWords({exactly: numOfWords, join: ' '})
+  const result = await uidForMatchCode(code)
+  if (!result)
+    return code
+  return generateMatchCode(numOfWords)
 }
 
 export const readUserInfo = async (userId: Id): Promise<UserInformation> => {
@@ -33,6 +55,7 @@ export const matchExists = async (uid: Id) =>
     .doc(uid)
     .get()
     .then(doc => doc.exists)
+
 export const readMatch = async (uid: Id) =>
   firebase.firestore()
     .collection('matches')
@@ -66,8 +89,14 @@ export const addMatchToUser = (userUid: Id, matchUid: Id) =>
     .doc(userUid)
     .update(`joinedMatches.${matchUid}`, true)
 
+export const joinMatch = async (matchUid: Id, member: Member) =>
+  firebase.firestore()
+    .collection('matches')
+    .doc(matchUid)
+    .update(`members.${member.uid}`, member)
+
 export const createMatch = async (match: Match) => {
-  const uid = match.name.replace(' ', '_').toLowerCase()
+  const uid = `${match.name.split(' ').join('_').toLowerCase()}_${Date.now()}`
   const exists = await matchExists(uid)
   if (exists)
     throw new Error('Match already exists')

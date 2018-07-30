@@ -41,6 +41,7 @@ const AppNavigator = createMaterialTopTabNavigator(
       showIcon: true,
       showLabel: false,
       style: {
+        paddingVertical: 8,
         borderTopWidth: 0,
         backgroundColor: 'white',
         ...elevationStyleFromRaised(10)

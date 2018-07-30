@@ -26,6 +26,7 @@ declare module 'coolio' {
     uid: Id,
     host: Id,
     name: string,
+    code: string,
     description: string,
     startedOn: number,
     isPrivate: boolean,

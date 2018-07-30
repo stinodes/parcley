@@ -13,6 +13,7 @@ import {fetchAllData} from '../Redux/index'
 import {MatchList} from './MatchList'
 import type {Id, Match} from 'coolio'
 import {Logo} from '../../Components'
+import {Header} from '../Header'
 
 const RaisedView = g(View)(raised, backgroundColor)
 
@@ -41,13 +42,7 @@ class Dashboard extends React.Component<ReduxProps<Props, MappedProps>> {
         statusBarColor="white"
         statusBarStyle="dark-content">
         <SafeAreaView style={{flex: 1}}>
-          <View f={1}>
-            
-            <View>
-              <View h={80} jc="center" ai="center" raised={10} color="white">
-                <Logo size={64}/>
-              </View>
-            </View>
+          <View f={1} pt={80}>
             
             {isPending && <View jc="center" f={1}><Spinner color="ufoGreen" size="large"/></View>}
             {!isPending && !hasMatches &&
@@ -75,6 +70,7 @@ class Dashboard extends React.Component<ReduxProps<Props, MappedProps>> {
             <MatchList/>
             }
           </View>
+          <Header/>
         </SafeAreaView>
       </Screen>
     )

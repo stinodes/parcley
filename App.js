@@ -1,10 +1,11 @@
 // @flow
 import React from 'react'
-import {Dimensions, Animated, UIManager} from 'react-native'
+import {Animated, Dimensions, UIManager, Platform, StyleSheet} from 'react-native'
 import {ThemeProvider} from 'glamorous-native'
 import {Provider} from 'react-redux'
 import type {Theme} from 'nativesystem'
-import {createSubTheme, createTheme, getColor, Screen, Spinner, subTheme, SystemView as View} from 'nativesystem'
+import {createSubTheme, createTheme, Screen, Spinner, subTheme} from 'nativesystem'
+import {SafeAreaView} from 'react-navigation'
 import {MessageBar, MessageBarManager} from 'react-native-message-bar'
 
 import {createReduxStore} from './src/Store'
@@ -16,12 +17,12 @@ import * as firebase from 'firebase'
 import * as firestore from 'firebase/firestore'
 
 const config = {
-  apiKey: "AIzaSyDIbjaed8CjPxZsJwUIxE4n3_TzFyAyWjc",
-  authDomain: "coolio-58d55.firebaseapp.com",
-  databaseURL: "https://coolio-58d55.firebaseio.com",
-  projectId: "coolio-58d55",
-  storageBucket: "coolio-58d55.appspot.com",
-  messagingSenderId: "503306606752"
+  apiKey: 'AIzaSyDIbjaed8CjPxZsJwUIxE4n3_TzFyAyWjc',
+  authDomain: 'coolio-58d55.firebaseapp.com',
+  databaseURL: 'https://coolio-58d55.firebaseio.com',
+  projectId: 'coolio-58d55',
+  storageBucket: 'coolio-58d55.appspot.com',
+  messagingSenderId: '503306606752'
 }
 firebase.initializeApp(config)
 firebase.firestore().settings({timestampsInSnapshots: true})
@@ -43,7 +44,7 @@ class App extends React.Component<Props, State> {
   constructor(...args: any) {
     super(...args)
     
-    UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true);
+    UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true)
     
     const theme = createTheme()
       .useDefault()
@@ -64,6 +65,8 @@ class App extends React.Component<Props, State> {
           fontSize: 48 * ratio,
           paddingHorizontal: 4,
           paddingVertical: 8,
+          ...(Platform.OS === 'ios' ? {borderBottomWidth: StyleSheet.hairlineWidth}: {}),
+          borderBottomColor: colors.arsenic,
         })
           .done()
       )
@@ -152,43 +155,45 @@ class App extends React.Component<Props, State> {
     const inputRange = [0, 1, 2]
     const outputRange = [height, 0, -height]
     return (
-      <Provider store={store}>
-        <ThemeProvider theme={theme}>
-          {this.state.loaded ?
-            <Animated.View
-              style={{flex: 1, opacity: navigatorAnimation}}>
-              <MainNavigator ref={NavigationService.ref}/>
-              <MessageBar
-                ref={this.messageBarRef}
-                position="top"
-                messageBarPadding={16}
-                titleStyle={{...subTheme('text')({theme, modifier: 'small'}), fontFamily: 'Montserrat Bold'}}
-                messageStyle={subTheme('text')({theme, modifier: 'small'})}
-                stylesheetSuccess={subTheme('messageBar')({theme, modifier: 'success'})}
-                stylesheetError={subTheme('messageBar')({theme, modifier: 'error'})}
-                stylesheetInfo={subTheme('messageBar')({theme})}/>
-            </Animated.View>:
-            
-            <Screen
-              f={1} jc="space-around" ai="center"
-              color="white" statusBarColor="white" statusBarStyle="dark-content">
+      <SafeAreaView style={{flex: 1}}>
+        <Provider store={store}>
+          <ThemeProvider theme={theme}>
+            {this.state.loaded ?
               <Animated.View
-                style={{
-                  transform: [{translateY: logoAnimation.interpolate({inputRange, outputRange})}]
-                }}>
-                <Logo size={120}/>
-              </Animated.View>
-              <Animated.View
-                style={{
-                  transform: [{translateY: spinnerAnimation.interpolate({inputRange, outputRange})}]
-                }}>
-                <Spinner color="ufoGreen" size="large"/>
-              </Animated.View>
-            </Screen>
-            
-          }
-        </ThemeProvider>
-      </Provider>
+                style={{flex: 1, opacity: navigatorAnimation}}>
+                <MainNavigator ref={NavigationService.ref}/>
+                <MessageBar
+                  ref={this.messageBarRef}
+                  position="top"
+                  messageBarPadding={16}
+                  titleStyle={{...subTheme('text')({theme, modifier: 'small'}), fontFamily: 'Montserrat Bold'}}
+                  messageStyle={subTheme('text')({theme, modifier: 'small'})}
+                  stylesheetSuccess={subTheme('messageBar')({theme, modifier: 'success'})}
+                  stylesheetError={subTheme('messageBar')({theme, modifier: 'error'})}
+                  stylesheetInfo={subTheme('messageBar')({theme})}/>
+              </Animated.View> :
+              
+              <Screen
+                f={1} jc="space-around" ai="center"
+                color="white" statusBarColor="white" statusBarStyle="dark-content">
+                <Animated.View
+                  style={{
+                    transform: [{translateY: logoAnimation.interpolate({inputRange, outputRange})}]
+                  }}>
+                  <Logo size={120}/>
+                </Animated.View>
+                <Animated.View
+                  style={{
+                    transform: [{translateY: spinnerAnimation.interpolate({inputRange, outputRange})}]
+                  }}>
+                  <Spinner color="ufoGreen" size="large"/>
+                </Animated.View>
+              </Screen>
+              
+            }
+          </ThemeProvider>
+        </Provider>
+      </SafeAreaView>
     )
   }
 }

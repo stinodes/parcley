@@ -9,9 +9,9 @@ export const colors = {
   frenchSky: '#7692ff',
   gunMetal: '#2d3047',
   
-  black: '#000000',
-  raisinBlack: '#212121',
-  arsenic: '#424242',
+  black: '#040206',
+  raisinBlack: '#242124',
+  arsenic: '#373e49',
   sonicSilver: '#757575',
   
   error: '#ff8090',

@@ -9,13 +9,14 @@ import {ScrollView, Animated} from 'react-native'
 import g from 'glamorous-native'
 import Icon from 'react-native-vector-icons/Feather'
 
-import {CreateMatchForm} from './CreateMatchForm'
-import {JoinMatchForm} from './JoinMatchForm'
+import {CreateOrderForm} from './CreateOrderForm'
+import {JoinOrderForm} from './JoinOrderForm'
 import {Header} from '../Header'
 import {Text} from '../../Components'
 import {connect} from 'react-redux'
-import {createMatch} from './Redux'
-import type {CreateMatchValues} from './Saga'
+import {createOrder, isPending, isSuccessful} from './Redux'
+import type {CreateOrderValues} from './Saga'
+import {SuccessAlert} from './SuccessAlert'
 
 const absolute = {position: 'absolute', top: 0, left: 0, right: 0}
 const AbsoluteAnimate = g(Animated.View)(
@@ -33,13 +34,22 @@ type State = {
   joinHeight: ?number,
   joinAnimation: Animated.Value,
   isJoinCollapsed: boolean,
+  showSuccess: boolean,
 }
 
-class NewMatch extends React.Component<ReduxProps<Props, MappedProps>, State> {
+class NewOrder extends React.Component<ReduxProps<Props, MappedProps>, State> {
   state = {
     joinHeight: null,
     joinAnimation: new Animated.Value(0),
     isJoinCollapsed: false,
+    showSuccess: false,
+  }
+  
+  static getDerivedStateFromProps(props, state) {
+    console.log('pending', props.pending, 'successfull', props.isSuccessful, 'showSuccess', state.showSuccess)
+    if (!props.pending && props.isSuccessful && !state.showSuccess)
+      return {showSuccess: true}
+    return null
   }
   
   showJoin = () => {
@@ -81,11 +91,11 @@ class NewMatch extends React.Component<ReduxProps<Props, MappedProps>, State> {
             <View alignItems="stretch">
               <Base background={Base.Ripple('frenchSky', true)} onPress={Base.delayHandler(this.showJoin)}>
                 <View py={2} px={3}>
-                  <Text bold modifier="large">Join a match</Text>
+                  <Text bold modifier="large">Join an Order</Text>
                 </View>
               </Base>
             </View>
-            <CreateMatchForm/>
+            <CreateOrderForm/>
           </ScrollView>
         </View>
         <AbsoluteAnimate
@@ -100,15 +110,19 @@ class NewMatch extends React.Component<ReduxProps<Props, MappedProps>, State> {
             }]
           }}>
           <RaisedView raised={19} pt={3} color="white">
-            <JoinMatchForm close={this.hideJoin}/>
+            <JoinOrderForm close={this.hideJoin}/>
           </RaisedView>
         </AbsoluteAnimate>
         <Header/>
+        <SuccessAlert isVisible={this.state.showSuccess} onHide={() => this.setState({showSuccess: false})}/>
       </Screen>
     )
   }
 }
 
-const mapStateToProps = (state): MappedProps => ({})
-const ConnectedNewMatch = connect(mapStateToProps)(NewMatch)
-export {ConnectedNewMatch as NewMatch}
+const mapStateToProps = (state): MappedProps => ({
+  isPending: isPending(state),
+  isSuccessful: isSuccessful(state),
+})
+const ConnectedNewOrder = connect(mapStateToProps)(NewOrder)
+export {ConnectedNewOrder as NewOrder}

@@ -3,7 +3,8 @@ import {createMaterialTopTabNavigator} from 'react-navigation'
 import {elevationStyleFromRaised, getColor} from 'nativesystem'
 import {Dashboard} from './Dashboard'
 import {Settings} from './Settings'
-import {NewMatch} from './NewMatch'
+import {NewOrder} from './NewOrder'
+import {OrderDetail} from './OrderDetail'
 import {createTabBarButton, createTabBarIcon, createTabBarLabel,} from './TabBar'
 import {colors} from '../../colors'
 
@@ -23,17 +24,20 @@ const AppNavigator = createMaterialTopTabNavigator(
         // tabBarButtonComponent: createTabBarButton('error'),
       }
     },
-    NewMatch: {
-      screen: NewMatch,
+    NewOrder: {
+      screen: NewOrder,
       navigationOptions: {
         tabBarIcon: createTabBarIcon('plus', 'frenchSky'),
         // tabBarButtonComponent: createTabBarButton('frenchSky'),
       }
+    },
+    Detail: {
+      screen: OrderDetail,
     }
   },
   {
     initialRouteName: 'Dashboard',
-    order: ['Dashboard', 'NewMatch', 'Settings'],
+    order: ['Dashboard', 'NewOrder', 'Settings'],
     tabBarPosition: 'bottom',
     // lazy: false,
     tabBarOptions: {

@@ -7,7 +7,7 @@ import Icon from 'react-native-vector-icons/Feather'
 import {Button, Screen, Spinner, SystemView as View, text} from 'nativesystem'
 
 import {Text, FTextInput} from '../../Components'
-import {isPending, isSuccessful, joinMatch} from './Redux'
+import {isPending, isSuccessful, joinOrder} from './Redux'
 import {connect} from 'react-redux'
 
 const GIcon = g(Icon)(text, {fontSize: 34})
@@ -23,11 +23,10 @@ type MappedProps = {
 }
 type State = {}
 
-class JoinMatchForm extends React.Component<ReduxProps<Props, MappedProps>> {
+class JoinOrderForm extends React.Component<ReduxProps<Props, MappedProps>> {
   
   componentDidUpdate(prevProps, prevState) {
     if (this.props.isSubmitting && prevProps.isPending !== this.props.isPending && !this.props.isPending) {
-      console.log('success?', this.props.isSuccessful)
       if (this.props.isSuccessful)
         this.onSuccess()
       else
@@ -36,7 +35,7 @@ class JoinMatchForm extends React.Component<ReduxProps<Props, MappedProps>> {
   }
   
   onSuccess() {
-    this.props.resetForm({})
+    this.props.resetForm({code: ''})
     this.props.onSuccess && this.props.onSuccess()
   }
   
@@ -46,7 +45,7 @@ class JoinMatchForm extends React.Component<ReduxProps<Props, MappedProps>> {
       <Screen dismissKeyboardOnTap>
         <View mt={2} px={3}>
           <Text modifier="large" bold>
-            Join a match
+            Join a order
           </Text>
         </View>
         <View f={1} pt={1} px={3}>
@@ -55,7 +54,7 @@ class JoinMatchForm extends React.Component<ReduxProps<Props, MappedProps>> {
             accentColor="frenchSky"
             name="code"
             value={values.code}
-            placeholder="Match code"
+            placeholder="Order code"
             onChange={setFieldValue}/>
         </View>
         {isSubmitting ?
@@ -81,25 +80,25 @@ class JoinMatchForm extends React.Component<ReduxProps<Props, MappedProps>> {
   }
 }
 
-const FormikJoinMatchForm = withFormik({
+const FormikJoinOrderForm = withFormik({
   mapPropsToValues: () => ({code: ''}),
   validate: (values) => {
     const errors = {}
     if (!values.code)
-      errors.name = 'Match code is required'
+      errors.name = 'Order code is required'
     return errors
   },
   handleSubmit:
     (values, {props}) =>
       props.dispatch(
-        joinMatch(values)
+        joinOrder(values)
       ),
-})(JoinMatchForm)
+})(JoinOrderForm)
 
 const mapStateToProps = (state): MappedProps => ({
   isPending: isPending(state),
   isSuccessful: isSuccessful(state),
 })
-const ConnectedFormikJoinMatchForm  = connect(mapStateToProps)(FormikJoinMatchForm)
+const ConnectedFormikJoinOrderForm  = connect(mapStateToProps)(FormikJoinOrderForm)
 
-export {ConnectedFormikJoinMatchForm as JoinMatchForm}
+export {ConnectedFormikJoinOrderForm as JoinOrderForm}

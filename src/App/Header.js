@@ -16,7 +16,7 @@ type Props = {}
 
 const Header = (props: Props) => (
   <AbsoluteView h={80} jc="center" ai="center" color="white">
-    <Logo size={64}/>
+    <Logo size={80}/>
   </AbsoluteView>
 )
 

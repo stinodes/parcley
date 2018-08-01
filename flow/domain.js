@@ -8,7 +8,7 @@ declare module 'coolio' {
     email: string,
     username: string,
     uid: Id,
-    joinedMatches?: {
+    joinedOrders?: {
       [Id]: boolean
     },
   }
@@ -22,7 +22,7 @@ declare module 'coolio' {
     username: string,
     uid: string,
   }
-  declare export type Match = {
+  declare export type Order = {
     uid: Id,
     host: Id,
     name: string,

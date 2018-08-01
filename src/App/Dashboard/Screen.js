@@ -7,11 +7,11 @@ import {SafeAreaView} from 'react-navigation'
 import g from 'glamorous-native'
 
 import {createTabBarButton, createTabBarIcon} from '../TabBar/index'
-import {hasMatches, isPending, matches} from '../Redux/selectors'
+import {hasOrders, isPending, orders} from '../Redux/selectors'
 import {Text} from '../../Components/index'
 import {fetchAllData} from '../Redux/index'
-import {MatchList} from './MatchList'
-import type {Id, Match} from 'coolio'
+import {OrderList} from './OrderList'
+import type {Id, Order} from 'coolio'
 import {Logo} from '../../Components'
 import {Header} from '../Header'
 
@@ -22,8 +22,8 @@ type Props = {
 }
 type MappedProps = {
   isPending: boolean,
-  hasMatches: boolean,
-  matches: { [Id]: Match },
+  hasOrders: boolean,
+  orders: { [Id]: Order },
 }
 
 class Dashboard extends React.Component<ReduxProps<Props, MappedProps>> {
@@ -32,10 +32,10 @@ class Dashboard extends React.Component<ReduxProps<Props, MappedProps>> {
     this.props.dispatch(fetchAllData())
   }
   
-  toNewMatch = () => this.props.navigation.navigate('NewMatch')
+  toNewOrder = () => this.props.navigation.navigate('NewOrder')
   
   render() {
-    const {hasMatches, isPending} = this.props
+    const {hasOrders, isPending} = this.props
     return (
       <Screen
         color="white" f={1} jc="center"
@@ -45,11 +45,11 @@ class Dashboard extends React.Component<ReduxProps<Props, MappedProps>> {
           <View f={1} pt={80}>
             
             {isPending && <View jc="center" f={1}><Spinner color="ufoGreen" size="large"/></View>}
-            {!isPending && !hasMatches &&
+            {!isPending && !hasOrders &&
             <View f={1} px={3} jc="center">
               <View my={1}>
                 <Text bold modifier="large" color="raisinBlack">
-                  You don't have any joined matches yet!
+                  You don't have any joined orders yet!
                 </Text>
               </View>
               <View>
@@ -58,7 +58,7 @@ class Dashboard extends React.Component<ReduxProps<Props, MappedProps>> {
                 </Text>
               </View>
               <View as="center" w={200} my={4}>
-                <Button raised={20} color="ufoGreen" onPress={this.toNewMatch}>
+                <Button raised={20} color="ufoGreen" onPress={this.toNewOrder}>
                   <Text color="white">
                     Go!
                   </Text>
@@ -66,8 +66,8 @@ class Dashboard extends React.Component<ReduxProps<Props, MappedProps>> {
               </View>
             </View>
             }
-            {!isPending && hasMatches &&
-            <MatchList/>
+            {!isPending && hasOrders &&
+            <OrderList/>
             }
           </View>
           <Header/>
@@ -79,8 +79,8 @@ class Dashboard extends React.Component<ReduxProps<Props, MappedProps>> {
 
 const mapStateToProps = (state): MappedProps => ({
   isPending: isPending(state),
-  matches: matches(state),
-  hasMatches: hasMatches(state),
+  orders: orders(state),
+  hasOrders: hasOrders(state),
 })
 const ConnectedDashboard = connect(mapStateToProps)(Dashboard)
 export {ConnectedDashboard as Dashboard}

@@ -3,11 +3,11 @@ import * as React from 'react'
 import {backgroundColor, Base, flex, raised, space, SystemView as View} from 'nativesystem'
 import g from 'glamorous-native'
 
-import type {Match, Member} from 'coolio'
+import type {Order, Member} from 'coolio'
 import {Text} from '../../Components'
 
 type Props = {
-  match: Match,
+  order: Order,
   onPress: () => any,
 }
 
@@ -17,9 +17,9 @@ const Circle = g.view(
   ({size}) => ({width: size, height: size, borderRadius: size * 0.5}),
   space, backgroundColor, raised
 )
-const MatchItem = ({match, onPress}: Props) => {
-  const members: Member[] = Object.keys(match.members)
-    .map(key => match.members[key])
+const OrderItem = ({order, onPress}: Props) => {
+  const members: Member[] = Object.keys(order.members)
+    .map(key => order.members[key])
   const total = members
     .map(member => member.score)
     .reduce((prev, value) => prev + value, 0)
@@ -34,13 +34,13 @@ const MatchItem = ({match, onPress}: Props) => {
           </Circle>
           <View fd="column" f={1}>
             <Text bold modifier="large" color="raisinBlack">
-              {match.name}
+              {order.name}
             </Text>
             <Text color="raisinBlack">
               By: [Insert Username]
             </Text>
             <Text color="raisinBlack" modifier="small">
-              {match.startedOn}
+              {order.startedOn}
             </Text>
           </View>
         </View>
@@ -58,4 +58,4 @@ const MatchItem = ({match, onPress}: Props) => {
   )
 }
 
-export {MatchItem}
+export {OrderItem}

@@ -11,7 +11,7 @@ type Props = {
   baseColor: Color,
 }
 
-const TextInput = ({theme, color, baseColor, accentColor, ...props}) => {
+const TextInput = ({theme, color, baseColor, accentColor, inputRef, ...props}) => {
   const parsedProps = {
     textColor: getColor(theme, color),
     tintColor: getColor(theme, accentColor),
@@ -23,7 +23,9 @@ const TextInput = ({theme, color, baseColor, accentColor, ...props}) => {
   return (
     <TextField
       labelTextStyle={subTheme('text')({theme, modifier: 'small'})}
-      titleTextStyle={subTheme('text')({theme})}
+      titleTextStyle={subTheme('text')({theme, modifier: 'small'})}
+      style={[subTheme('text')({theme}), {color: parsedProps.textColor}]}
+      ref={inputRef && (comp => inputRef(comp))}
       {...props}
       {...parsedProps}/>
   )

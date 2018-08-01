@@ -1,9 +1,9 @@
 // @flow
 import {all, call, put, select, takeLatest} from 'redux-saga/effects'
-import {setMatches, setPending, setUsers} from '../Redux'
-import {readMatch, readMatches, readUserInfo} from '../helpers'
+import {setOrders, setPending, setUsers} from '../Redux'
+import {readOrder, readOrders, readUserInfo} from '../helpers'
 
-import type {Id, Match, Unsynced, UserInformation} from 'coolio'
+import type {Id, Order, Unsynced, UserInformation} from 'coolio'
 import {user} from '../Redux/selectors'
 import {actionTypes} from '../Redux/actions'
 import {meId} from '../../Onboarding/Redux/selectors'
@@ -16,34 +16,34 @@ export const readUserIfNecessary = function* (uid: Id, returnAll?: boolean): Gen
   userInfo = yield call(readUserInfo, uid)
   return userInfo
 }
-const readUsersForMatch = function* (match: Match) {
-  const hostUid = match.host
-  const memberUids = Object.keys(match.members)
+const readUsersForOrder = function* (order: Order) {
+  const hostUid = order.host
+  const memberUids = Object.keys(order.members)
   const users = yield all(
     memberUids
-      .filter(uid => !!uid && match.members[uid])
+      .filter(uid => !!uid && order.members[uid])
       .map(uid => call(readUserIfNecessary, uid))
   )
   const userMap = users.filter(user => !!user).reduce((prev, user) => ({...prev, [user.uid]: user}), {})
   yield put(setUsers(userMap))
 }
-const readMatchData = function* () {
+const readOrderData = function* () {
   try {
     yield put(setPending(true))
     const meUid = yield select(meId)
     const meInfo = yield call(readUserIfNecessary, meUid, true)
-    const matchUids = Object.keys(meInfo.joinedMatches)
+    const orderUids = Object.keys(meInfo.joinedOrders)
     
-    const matches = yield all(
-      matchUids.map( uid =>
-        call(readMatch, uid)
+    const orders = yield all(
+      orderUids.map( uid =>
+        call(readOrder, uid)
       )
     )
-    // TODO: remove non-existent matches from own user
-    const matchMap = toEntityMap(matches)
-    yield put(setMatches(matchMap))
+    // TODO: remove non-existent orders from own user
+    const orderMap = toEntityMap(orders)
+    yield put(setOrders(orderMap))
     
-    const userUidMap = matches.reduce((prev, match) => ({...prev, ...match.members}), {})
+    const userUidMap = orders.reduce((prev, order) => ({...prev, ...order.members}), {})
     const userUids = Object.keys(userUidMap)
     const users = yield all(
       userUids
@@ -61,7 +61,7 @@ const readMatchData = function* () {
 }
 
 const dataSaga = function* (): Generator<*, *, *> {
-  yield takeLatest([actionTypes.FETCH_ALL_DATA], readMatchData)
+  yield takeLatest([actionTypes.FETCH_ALL_DATA], readOrderData)
 }
 
 export {dataSaga}

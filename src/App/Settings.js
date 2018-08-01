@@ -4,7 +4,7 @@ import {Button, Screen, SystemView as View} from 'nativesystem'
 import {logout} from '../Onboarding/helpers'
 import {Text} from '../Components'
 import {connect} from 'react-redux'
-import {createMatch} from './NewMatch/Redux/actions'
+import {createOrder} from './NewOrder/Redux/actions'
 
 type Props = {
 
@@ -16,7 +16,7 @@ type MappedProps = {
 class Settings extends React.Component<ReduxProps<Props, MappedProps>> {
   
   tryOut = async () => {
-    this.props.dispatch(createMatch({
+    this.props.dispatch(createOrder({
       name: 'Test Match',
       description: 'Meh, just testing stuff out',
       members: 'some username, stinodes',

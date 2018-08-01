@@ -2,7 +2,8 @@
 import * as firebase from 'firebase'
 import randomWords from 'random-words'
 
-import type {UserInformation, Match, Id, Member} from 'coolio'
+import type {UserInformation, Order, Id, Member} from 'coolio'
+import {toEntityMap} from '../Utils'
 
 export const uidForUsername = async (username: string) => {
   const userIds = await firebase.firestore()
@@ -18,9 +19,9 @@ export const uidForUsername = async (username: string) => {
   return userIds[0]
 }
 
-export const uidForMatchCode = async (code: string) => {
-  const matchIds = await firebase.firestore()
-    .collection('matches')
+export const uidForOrderCode = async (code: string) => {
+  const orderIds = await firebase.firestore()
+    .collection('orders')
     .where('code', '==', code)
     .limit(1)
     .get()
@@ -29,15 +30,15 @@ export const uidForMatchCode = async (code: string) => {
         .map(doc => doc.data().uid)
     )
   
-  return matchIds[0]
+  return orderIds[0]
 }
 
-export const generateMatchCode = async (numOfWords?: number = 4) => {
+export const generateOrderCode = async (numOfWords?: number = 4) => {
   const code = randomWords({exactly: numOfWords, join: ' '})
-  const result = await uidForMatchCode(code)
+  const result = await uidForOrderCode(code)
   if (!result)
     return code
-  return generateMatchCode(numOfWords)
+  return generateOrderCode(numOfWords)
 }
 
 export const readUserInfo = async (userId: Id): Promise<UserInformation> => {
@@ -49,21 +50,21 @@ export const readUserInfo = async (userId: Id): Promise<UserInformation> => {
     .then(doc => doc.data())
 }
 
-export const matchExists = async (uid: Id) =>
+export const orderExists = async (uid: Id) =>
   firebase.firestore()
-    .collection('matches')
+    .collection('orders')
     .doc(uid)
     .get()
     .then(doc => doc.exists)
 
-export const readMatch = async (uid: Id) =>
+export const readOrder = async (uid: Id) =>
   firebase.firestore()
-    .collection('matches')
+    .collection('orders')
     .doc(uid)
     .get()
     .then(doc => doc.data())
 
-export const readMatches = async () => {
+export const readOrders = async () => {
   const db = firebase.firestore()
   const user = firebase.auth().currentUser
   
@@ -72,40 +73,39 @@ export const readMatches = async () => {
     .get()
     .then(doc => doc.data())
   
-  const joinedMatchesId = userInfo.joinedMatches ? Object.keys(userInfo.joinedMatches) : []
+  const joinedOrdersId = userInfo.joinedOrders ? Object.keys(userInfo.joinedOrders) : []
   
-  console.log(joinedMatchesId)
+  console.log(joinedOrdersId)
   
-  const joinedMatches = await Promise.all(
-    joinedMatchesId.map(readMatch)
+  const joinedOrders = await Promise.all(
+    joinedOrdersId.map(readOrder)
   )
-  const joinedMatchesMap = joinedMatches.reduce((prev, match) => ({...prev, [match.uid]: match}), {})
-  return joinedMatchesMap
+  return toEntityMap(joinedOrders)
 }
 
-export const addMatchToUser = (userUid: Id, matchUid: Id) =>
+export const addOrderToUser = (userUid: Id, orderUid: Id) =>
   firebase.firestore()
     .collection('users')
     .doc(userUid)
-    .update(`joinedMatches.${matchUid}`, true)
+    .update(`joinedOrders.${orderUid}`, true)
 
-export const joinMatch = async (matchUid: Id, member: Member) =>
+export const joinOrder = async (orderUid: Id, member: Member) =>
   firebase.firestore()
-    .collection('matches')
-    .doc(matchUid)
+    .collection('orders')
+    .doc(orderUid)
     .update(`members.${member.uid}`, member)
 
-export const createMatch = async (match: Match) => {
-  const uid = `${match.name.split(' ').join('_').toLowerCase()}_${Date.now()}`
-  const exists = await matchExists(uid)
+export const createOrder = async (order: Order) => {
+  const uid = `${order.name.split(' ').join('_').toLowerCase()}_${Date.now()}`
+  const exists = await orderExists(uid)
   if (exists)
-    throw new Error('Match already exists')
+    throw new Error('Order already exists')
   
-  const matchWithUid = {...match, uid}
+  const orderWithUid = {...order, uid}
   
-  await firebase.firestore().collection('matches')
+  await firebase.firestore().collection('orders')
     .doc(uid)
-    .set(matchWithUid)
+    .set(orderWithUid)
   
-  return matchWithUid
+  return orderWithUid
 }

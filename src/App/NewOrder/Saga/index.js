@@ -2,35 +2,35 @@
 import {all, call, put, select, takeLatest} from 'redux-saga/effects'
 
 import {meInfo} from '../../../Onboarding/Redux/selectors'
-import {addMatchToUser, createMatch, generateMatchCode, joinMatch, uidForMatchCode, uidForUsername} from '../../helpers'
+import {addOrderToUser, createOrder, generateOrderCode, joinOrder, uidForOrderCode, uidForUsername} from '../../helpers'
 import {readUserIfNecessary} from '../../Saga'
 
-import type {Match, Unsynced} from 'coolio'
-import {setMatch} from '../../Redux'
+import type {Order, Unsynced} from 'coolio'
+import {setOrder} from '../../Redux'
 import {actionTypes} from '../Redux/actions'
 import {setIsPending, setIsSuccessful} from '../Redux'
 import {createError} from '../../../Utils/messageBar'
 
-export type CreateMatchValues = {
+export type CreateOrderValues = {
   name: string,
   description: string,
   members: string | string[],
   isPrivate: boolean,
 }
-export type JoinMatchValues = {
+export type JoinOrderValues = {
   code: string,
 }
 
-const createMatchSaga = function* (action) {
+const createOrderSaga = function* (action) {
   try {
     yield put(setIsPending(true))
     
-    const match = action.payload
+    const order = action.payload
     const me = yield select(meInfo)
     
-    const memberUsernameArray: string[] = !Array.isArray(match.members) ?
-      match.members.split(', ') :
-      match.members
+    const memberUsernameArray: string[] = !Array.isArray(order.members) ?
+      order.members.split(', ') :
+      order.members
     const membersWithoutMe = memberUsernameArray.filter(username => username !== me.username)
     const membersUidArray = yield all(
       membersWithoutMe.map(
@@ -45,12 +45,12 @@ const createMatchSaga = function* (action) {
     )
     members = [me, ...members]
     
-    const code = yield call(generateMatchCode)
+    const code = yield call(generateOrderCode)
     
-    const matchValues: Unsynced<Match> = {
+    const orderValues: Unsynced<Order> = {
       code,
-      name: match.name,
-      description: match.description,
+      name: order.name,
+      description: order.description,
       isPrivate: false,
       host: me.uid,
       startedOn: Date.now(),
@@ -60,11 +60,11 @@ const createMatchSaga = function* (action) {
         uid: member.uid,
       })),
     }
-    const result = yield call(createMatch, matchValues)
-    yield put(setMatch(result))
+    const result = yield call(createOrder, orderValues)
+    yield put(setOrder(result))
     yield all(
       members.map(member =>
-        call(addMatchToUser, member.uid, result.uid)
+        call(addOrderToUser, member.uid, result.uid)
       )
     )
     
@@ -84,15 +84,15 @@ const createMatchSaga = function* (action) {
   }
 }
 
-const joinMatchSaga = function* (action) {
+const joinOrderSaga = function* (action) {
   try {
     yield put(setIsPending(true))
     
     const {code} = action.payload
-    const matchUid = yield call(uidForMatchCode, code)
+    const orderUid = yield call(uidForOrderCode, code)
     
-    if (!matchUid)
-      throw new Error('Not an existing match')
+    if (!orderUid)
+      throw new Error('Not an existing order')
     
     const userInfo = yield select(meInfo)
     
@@ -101,8 +101,8 @@ const joinMatchSaga = function* (action) {
       username: userInfo.username,
       score: null,
     }
-    yield call(joinMatch, matchUid, member)
-    yield call(addMatchToUser, member.uid, matchUid)
+    yield call(joinOrder, orderUid, member)
+    yield call(addOrderToUser, member.uid, orderUid)
     
     yield put(setIsSuccessful(true))
     yield put(setIsPending(false))
@@ -120,7 +120,7 @@ const joinMatchSaga = function* (action) {
   }
 }
 
-export const newMatchSaga = function* (): Generator<*, *, *> {
-  yield takeLatest([actionTypes.CREATE_MATCH], createMatchSaga)
-  yield takeLatest([actionTypes.JOIN_MATCH], joinMatchSaga)
+export const newOrderSaga = function* (): Generator<*, *, *> {
+  yield takeLatest([actionTypes.CREATE_ORDER], createOrderSaga)
+  yield takeLatest([actionTypes.JOIN_ORDER], joinOrderSaga)
 }

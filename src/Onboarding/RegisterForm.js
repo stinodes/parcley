@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react'
 import {
-  Base, Button, flex, FTextInput, KeyboardAnimatedView, space, Spinner, SystemView as View,
+  Base, Button, flex, KeyboardAnimatedView, space, Spinner, SystemView as View,
   textColor
 } from 'nativesystem'
 import type {FormikBag} from 'formik'
@@ -9,7 +9,7 @@ import {withFormik} from 'formik'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import g from 'glamorous-native'
 
-import {FormHelper, FullscreenModal, Text} from '../Components'
+import {FormHelper, FTextInput, FullscreenModal, Text} from '../Components'
 import {createError} from '../Utils/messageBar'
 import {Animated, Dimensions} from 'react-native'
 import {isUserUnique, registerUser, writeUserInfo} from './helpers'
@@ -89,7 +89,6 @@ class RegisterForm extends React.Component<Props> {
               </AnimatedView>
               
               <AnimatedView
-                my={2}
                 style={{
                   transform: [{
                     translateY: inputsAnimation.interpolate({
@@ -98,15 +97,15 @@ class RegisterForm extends React.Component<Props> {
                     })
                   }]
                 }}>
-                <Text modifier="small" color="white">
-                  E-mail address
-                </Text>
                 <FTextInput
                   inputRef={emailHelper.ref}
                   name="email"
                   value={email}
                   onChange={setFieldValue}
+                  label="E-mail address"
                   color="white"
+                  baseColor="white"
+                  accentColor="white"
                   autoCapitalize="none"
                   keyboardType="email-address"
                   returnKeyType="next"
@@ -114,7 +113,6 @@ class RegisterForm extends React.Component<Props> {
                   underlineColorAndroid="white"/>
               </AnimatedView>
               <AnimatedView
-                my={2}
                 style={{
                   transform: [{
                     translateY: inputsAnimation.interpolate({
@@ -123,22 +121,21 @@ class RegisterForm extends React.Component<Props> {
                     })
                   }]
                 }}>
-                <Text modifier="small" color="white">
-                  Username
-                </Text>
                 <FTextInput
                   inputRef={usernameHelper.ref}
                   name="username"
+                  label="Username"
                   value={username}
                   onChange={setFieldValue}
                   color="white"
+                  baseColor="white"
+                  accentColor="white"
                   autoCapitalize="none"
                   returnKeyType="next"
                   onSubmitEditing={passwordHelper.focus}
                   underlineColorAndroid="white"/>
               </AnimatedView>
               <AnimatedView
-                my={2}
                 style={{
                   transform: [{
                     translateY: inputsAnimation.interpolate({
@@ -147,16 +144,16 @@ class RegisterForm extends React.Component<Props> {
                     })
                   }]
                 }}>
-                <Text modifier="small" color="white">
-                  Password
-                </Text>
                 <FTextInput
                   secureTextEntry
                   inputRef={passwordHelper.ref}
+                  label="Password"
                   name="password"
                   value={password}
                   onChange={setFieldValue}
                   color="white"
+                  baseColor="white"
+                  accentColor="white"
                   autoCapitalize="none"
                   returnKeyType="send"
                   onSubmitEditing={handleSubmit}

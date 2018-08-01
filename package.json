@@ -17,6 +17,7 @@
     "react-native": "https://github.com/expo/react-native/archive/sdk-29.0.0.tar.gz",
     "react-native-material-textfield": "https://github.com/timwangdev/react-native-material-textfield.git",
     "react-native-message-bar": "^2.0.10",
+    "react-native-safe-area-view": "^0.9.0",
     "react-native-vector-icons": "^4.6.0",
     "react-navigation": "~2.3.1",
     "react-navigation-material-bottom-tabs": "^0.3.0",

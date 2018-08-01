@@ -20,7 +20,7 @@ export const isUserUnique = async (userInfo: UserInformation) => {
     .where('username', '==', userInfo.username)
     .limit(1)
     .get()
-    .then(snapshot => snapshot.empty())
+    .then(snapshot => snapshot.empty)
   return isEmpty
 }
 
@@ -37,7 +37,8 @@ export const writeUserInfo = (userInfo: UserInformation) =>
     .set(userInfo)
 
 export const registerUser = async ({username, email, password}: RegisterValues) => {
-  if (await isUserUnique({username, email, uid: ''})) {
+  const isUnique = await isUserUnique({username, email, uid: ''})
+  if (!isUnique) {
     throw new Error('Username already taken')
   }
   
@@ -45,7 +46,10 @@ export const registerUser = async ({username, email, password}: RegisterValues) 
   const user = firebase.auth().currentUser
   
   const userInformation = {
-    username: username, email: email, uid: user.uid,
+    username: username,
+    email: email,
+    uid: user.uid,
+    joinedMatches: {},
   }
   await writeUserInfo(userInformation)
 }

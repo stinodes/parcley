@@ -2,7 +2,7 @@
 import * as React from 'react'
 import {Animated, Dimensions} from 'react-native'
 import {
-  Base, Button, flex, FTextInput, KeyboardAnimatedView, space, Spinner, SystemView as View,
+  Base, Button, flex, KeyboardAnimatedView, space, Spinner, SystemView as View,
   textColor
 } from 'nativesystem'
 import type {FormikBag} from 'formik'
@@ -10,7 +10,7 @@ import {withFormik} from 'formik'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import g from 'glamorous-native'
 
-import {FormHelper, FullscreenModal, Text} from '../Components'
+import {FormHelper, FTextInput, FullscreenModal, Text} from '../Components'
 import {createError} from '../Utils/messageBar'
 import {login} from './helpers'
 
@@ -79,7 +79,6 @@ class LoginForm extends React.Component<Props> {
               </AnimatedView>
               
               <AnimatedView
-                my={2}
                 style={{
                   transform: [{
                     translateY: inputsAnimation.interpolate({
@@ -88,24 +87,22 @@ class LoginForm extends React.Component<Props> {
                     })
                   }]
                 }}>
-                <Text modifier="small" color="white">
-                  E-mail address
-                </Text>
                 <FTextInput
+                  label="E-mail address"
                   inputRef={emailHelper.ref}
                   name="email"
                   value={email}
                   onChange={setFieldValue}
                   color="white"
+                  accentColor="white"
+                  baseColor="white"
                   autoCapitalize="none"
                   keyboardType="email-address"
                   returnKeyType="next"
                   underlineColorAndroid="white"
-                  
                   onSubmitEditing={passwordHelper.focus}/>
               </AnimatedView>
               <AnimatedView
-                my={2}
                 style={{
                   transform: [{
                     translateY: inputsAnimation.interpolate({
@@ -114,16 +111,16 @@ class LoginForm extends React.Component<Props> {
                     })
                   }]
                 }}>
-                <Text modifier="small" color="white">
-                  Password
-                </Text>
                 <FTextInput
+                  label="Password"
                   secureTextEntry
                   inputRef={passwordHelper.ref}
                   name="password"
                   value={password}
                   onChange={setFieldValue}
                   color="white"
+                  accentColor="white"
+                  baseColor="white"
                   autoCapitalize="none"
                   underlineColorAndroid="white"
                   returnKeyType="send"

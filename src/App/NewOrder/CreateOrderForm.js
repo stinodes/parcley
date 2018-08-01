@@ -2,11 +2,11 @@
 import * as React from 'react'
 import type {FormikBag} from 'formik'
 import {withFormik} from 'formik'
-import {FTextInput, Screen, SystemView as View, Button, KeyboardAnimatedView, Spinner} from 'nativesystem'
-import {Text} from '../../Components'
-import type {CreateMatchValues} from './Saga'
+import {Screen, SystemView as View, Button, KeyboardAnimatedView, Spinner} from 'nativesystem'
+import {FTextInput, Text} from '../../Components'
+import type {CreateOrderValues} from './Saga'
 import {connect} from 'react-redux'
-import {createMatch, isPending, isSuccessful} from './Redux'
+import {createOrder, isPending, isSuccessful} from './Redux'
 
 type Props = {
   ...FormikBag,
@@ -18,7 +18,7 @@ type MappedProps = {
 }
 
 type State = {}
-class CreateMatchForm extends React.Component<ReduxProps<Props, MappedProps>> {
+class CreateOrderForm extends React.Component<ReduxProps<Props, MappedProps>> {
   
   componentDidUpdate(prevProps, prevState) {
     if (this.props.isSubmitting && prevProps.isPending !== this.props.isPending && !this.props.isPending) {
@@ -30,7 +30,8 @@ class CreateMatchForm extends React.Component<ReduxProps<Props, MappedProps>> {
   }
   
   onSuccess() {
-    this.props.resetForm({})
+    console.log('on success')
+    this.props.resetForm({name: '', description: '', members: '', isPrivate: false})
     this.props.onSuccess && this.props.onSuccess()
   }
   
@@ -42,35 +43,39 @@ class CreateMatchForm extends React.Component<ReduxProps<Props, MappedProps>> {
         color="white">
         <View px={3}>
           <View py={2}>
-            <Text modifier="large" bold>
-              Or create a match
+            <Text modifier="large" bold color="black">
+              Or create a order
             </Text>
           </View>
           
-          <View my={2}>
-            <Text>Match name</Text>
+          <View>
             <FTextInput
+              baseColor="black"
+              label="Order name"
+              accentColor="frenchSky"
               name="name"
               value={values.name}
               onChange={setFieldValue}/>
           </View>
-          <View my={2}>
-            <Text>Description</Text>
+          <View>
             <FTextInput
+              baseColor="black"
+              accentColor="frenchSky"
+              label="Description"
               name="description"
               value={values.description}
               onChange={setFieldValue}/>
           </View>
-          <View my={2}>
-            <Text>Members</Text>
+          <View>
             <FTextInput
+              baseColor="black"
+              label="Members"
+              accentColor="frenchSky"
               autoCapitalize="none"
               name="members"
+              title="Enter members' usernames split by commas"
               value={values.members}
               onChange={setFieldValue}/>
-            <Text modifier="small" color="sonicSilver">
-              Enter members' usernames split by commas
-            </Text>
           </View>
           <View mt={2} w={200} as="center" mb={4}>
             <Button
@@ -91,7 +96,7 @@ class CreateMatchForm extends React.Component<ReduxProps<Props, MappedProps>> {
   }
 }
 
-const FormikCreateMatchForm = withFormik({
+const FormikCreateOrderForm = withFormik({
   mapPropsToValues: () => ({name: '', description: '', members: '', isPrivate: false}),
   validate: (values) => {
     const errors = {}
@@ -100,16 +105,16 @@ const FormikCreateMatchForm = withFormik({
     return errors
   },
   handleSubmit:
-    (values: CreateMatchValues, {props}) =>
+    (values: CreateOrderValues, {props}) =>
       props.dispatch(
-        createMatch(values)
+        createOrder(values)
       ),
-})(CreateMatchForm)
+})(CreateOrderForm)
 
 const mapStateToProps = (state): MappedProps => ({
   isPending: isPending(state),
   isSuccessful: isSuccessful(state),
 })
-const ConnectedFormikCreateMatchForm = connect(mapStateToProps)(FormikCreateMatchForm)
+const ConnectedFormikCreateOrderForm = connect(mapStateToProps)(FormikCreateOrderForm)
 
-export {ConnectedFormikCreateMatchForm as CreateMatchForm}
+export {ConnectedFormikCreateOrderForm as CreateOrderForm}

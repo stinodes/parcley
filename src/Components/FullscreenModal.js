@@ -1,8 +1,11 @@
 // @flow
 import * as React from 'react'
-import {StatusBar} from 'react-native'
-import {Screen} from 'nativesystem'
+import {backgroundColor, flex, Screen} from 'nativesystem'
 import {Modal} from './Modal'
+import {SafeAreaView} from 'react-navigation'
+import g from 'glamorous-native'
+
+const GSafeArea = g(SafeAreaView)(flex, backgroundColor)
 
 type Props = {
   onRequestClose: () => any,
@@ -33,18 +36,20 @@ class FullscreenModal extends React.Component<Props, State> {
   state = {
     isShown: false,
   }
+  
   static getDerivedStateFromProps(props: Props, state: State) {
     if (state.isShown && !props.visible)
       return {isShown: false}
     return null
   }
+  
   onModalAnimate = (value: number) => {
     if (value >= 1 && !this.state.isShown && this.props.visible)
       this.setState({isShown: true})
     this.props.onAnimate && this.props.onAnimate(value)
   }
   
-  get statusBarStyle(): ?'light-content'|'dark-content' {
+  get statusBarStyle(): ?'light-content' | 'dark-content' {
     const {statusBarStyle, invertStatusBarStyle} = this.props
     const {isShown} = this.state
     if (!statusBarStyle)
@@ -70,13 +75,15 @@ class FullscreenModal extends React.Component<Props, State> {
       <Modal
         onAnimate={this.onModalAnimate}
         {...props}>
-        <Screen
-          statusBarColor={isShown ? statusBarColor : undefined}
-          statusBarStyle={isShown ? statusBarStyle : undefined}
-          color={color} f={1}
-          {...screenProps}>
-          {children}
-        </Screen>
+        <GSafeArea color={color} backgroundColor="black" f={1} forceInset={{vertical: 'never'}}>
+          <Screen
+            statusBarColor={isShown ? statusBarColor : undefined}
+            statusBarStyle={isShown ? statusBarStyle : undefined}
+            color={color} f={1}
+            {...screenProps}>
+            {children}
+          </Screen>
+        </GSafeArea>
       </Modal>
     )
   }

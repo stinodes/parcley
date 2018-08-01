@@ -11,7 +11,7 @@ import {hasOrders, isPending, orders} from '../Redux/selectors'
 import {Text} from '../../Components/index'
 import {fetchAllData} from '../Redux/index'
 import {OrderList} from './OrderList'
-import type {Id, Order} from 'coolio'
+import type {Id, Order} from 'parcley'
 import {Logo} from '../../Components'
 import {Header} from '../Header'
 

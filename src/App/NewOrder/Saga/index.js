@@ -5,7 +5,7 @@ import {meInfo} from '../../../Onboarding/Redux/selectors'
 import {addOrderToUser, createOrder, generateOrderCode, joinOrder, uidForOrderCode, uidForUsername} from '../../helpers'
 import {readUserIfNecessary} from '../../Saga'
 
-import type {Order, Unsynced} from 'coolio'
+import type {Order, Unsynced} from 'parcley'
 import {setOrder} from '../../Redux'
 import {actionTypes} from '../Redux/actions'
 import {setIsPending, setIsSuccessful} from '../Redux'

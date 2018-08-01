@@ -1,5 +1,5 @@
 // @flow
-import type {Order, UserInformation, Id} from 'coolio'
+import type {Order, UserInformation, Id} from 'parcley'
 
 export const actionTypes: {
   SET_PENDING: 'Data/SET_PENDING',

@@ -6,7 +6,7 @@ import {SystemView as View, flex} from 'nativesystem'
 import {orders} from '../Redux/selectors'
 import {connect} from 'react-redux'
 
-import type {Order, Id} from 'coolio'
+import type {Order, Id} from 'parcley'
 import {Text} from '../../Components'
 import {OrderItem} from './OrderItem'
 

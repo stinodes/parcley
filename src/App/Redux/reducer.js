@@ -1,6 +1,6 @@
 // @flow
 import type {Reducer} from 'redux'
-import type {Id, Order, UserInformation} from 'coolio'
+import type {Id, Order, UserInformation} from 'parcley'
 import type {DataReducerActions} from './actions'
 import {actionTypes} from './actions'
 import {setIn, shallowMerge} from 'fnional'

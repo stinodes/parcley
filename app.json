@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "coolio",
+    "name": "parcley",
     "description": "This project is really great.",
-    "slug": "coolio",
+    "slug": "parcley",
     "privacy": "public",
     "sdkVersion": "29.0.0",
     "platforms": ["ios", "android"],
@@ -18,7 +18,7 @@
       "supportsTablet": false
     },
     "android": {
-      "package": "com.stinodes.coolio.expo"
+      "package": "com.stinodes.parcley.expo"
     },
     "androidStatusBar": {
       "barStyle": "dark-content"

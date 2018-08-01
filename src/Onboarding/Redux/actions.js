@@ -1,6 +1,6 @@
 // @flow
 import type {User} from 'firebase'
-import type {UserInformation} from 'coolio'
+import type {UserInformation} from 'parcley'
 
 export const actionTypes: {
   'AUTH_CHANGED': 'Auth/AUTH_CHANGED',

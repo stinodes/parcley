@@ -1,7 +1,7 @@
 // @flow
 import * as firebase from 'firebase'
 
-import type {UserInformation} from 'coolio'
+import type {UserInformation} from 'parcley'
 
 export type LoginValues = {
   email: string,

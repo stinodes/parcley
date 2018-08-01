@@ -3,7 +3,7 @@ import {all, call, put, select, takeLatest} from 'redux-saga/effects'
 import {setOrders, setPending, setUsers} from '../Redux'
 import {readOrder, readOrders, readUserInfo} from '../helpers'
 
-import type {Id, Order, Unsynced, UserInformation} from 'coolio'
+import type {Id, Order, Unsynced, UserInformation} from 'parcley'
 import {user} from '../Redux/selectors'
 import {actionTypes} from '../Redux/actions'
 import {meId} from '../../Onboarding/Redux/selectors'

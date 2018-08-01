@@ -2,7 +2,7 @@
 import * as firebase from 'firebase'
 import randomWords from 'random-words'
 
-import type {UserInformation, Order, Id, Member} from 'coolio'
+import type {UserInformation, Order, Id, Member} from 'parcley'
 import {toEntityMap} from '../Utils'
 
 export const uidForUsername = async (username: string) => {

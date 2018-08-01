@@ -3,7 +3,7 @@ import * as React from 'react'
 import {connect} from 'react-redux'
 import {order} from './Redux/selectors'
 
-import type {Order} from 'coolio'
+import type {Order} from 'parcley'
 
 type Props = {
 

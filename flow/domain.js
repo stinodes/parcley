@@ -1,5 +1,5 @@
 // @flow
-declare module 'coolio' {
+declare module 'parcley' {
   
   declare export type Id = string
   declare export type Score = number

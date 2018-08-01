@@ -1,5 +1,5 @@
 // @flow
-import type {Id} from 'coolio'
+import type {Id} from 'parcley'
 
 export const toEntityMap = <Obj: {uid: Id}>(objects: Obj[]): {[Id]: Obj} =>
   objects

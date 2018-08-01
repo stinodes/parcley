@@ -3,7 +3,7 @@ import * as React from 'react'
 import {backgroundColor, Base, flex, raised, space, SystemView as View} from 'nativesystem'
 import g from 'glamorous-native'
 
-import type {Order, Member} from 'coolio'
+import type {Order, Member} from 'parcley'
 import {Text} from '../../Components'
 
 type Props = {

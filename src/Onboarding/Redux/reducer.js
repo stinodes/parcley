@@ -4,7 +4,7 @@ import {actionTypes} from './actions'
 import type {User} from 'firebase'
 import type {Reducer} from 'redux'
 import type {ReducerAction} from './actions'
-import type {UserInformation} from 'coolio'
+import type {UserInformation} from 'parcley'
 
 export type State = {
   user: ?User,

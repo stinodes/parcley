@@ -65,8 +65,6 @@ class App extends React.Component<Props, State> {
           fontSize: 48 * ratio,
           paddingHorizontal: 4,
           paddingVertical: 8,
-          ...(Platform.OS === 'ios' ? {borderBottomWidth: StyleSheet.hairlineWidth} : {}),
-          borderBottomColor: colors.arsenic,
         })
           .done()
       )

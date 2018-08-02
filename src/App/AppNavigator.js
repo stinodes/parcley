@@ -31,9 +31,9 @@ const AppNavigator = createMaterialTopTabNavigator(
         // tabBarButtonComponent: createTabBarButton('frenchSky'),
       }
     },
-    Detail: {
-      screen: OrderDetail,
-    }
+    // Detail: {
+    //   screen: OrderDetail,
+    // }
   },
   {
     initialRouteName: 'Dashboard',

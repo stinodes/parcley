@@ -110,7 +110,7 @@ class RegisterForm extends React.Component<Props> {
                   keyboardType="email-address"
                   returnKeyType="next"
                   onSubmitEditing={usernameHelper.focus}
-                  underlineColorAndroid="white"/>
+                  />
               </AnimatedView>
               <AnimatedView
                 style={{
@@ -133,7 +133,7 @@ class RegisterForm extends React.Component<Props> {
                   autoCapitalize="none"
                   returnKeyType="next"
                   onSubmitEditing={passwordHelper.focus}
-                  underlineColorAndroid="white"/>
+                  />
               </AnimatedView>
               <AnimatedView
                 style={{
@@ -157,7 +157,7 @@ class RegisterForm extends React.Component<Props> {
                   autoCapitalize="none"
                   returnKeyType="send"
                   onSubmitEditing={handleSubmit}
-                  underlineColorAndroid="white"/>
+                  />
               </AnimatedView>
   
   

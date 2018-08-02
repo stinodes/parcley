@@ -99,7 +99,6 @@ class LoginForm extends React.Component<Props> {
                   autoCapitalize="none"
                   keyboardType="email-address"
                   returnKeyType="next"
-                  underlineColorAndroid="white"
                   onSubmitEditing={passwordHelper.focus}/>
               </AnimatedView>
               <AnimatedView
@@ -122,7 +121,6 @@ class LoginForm extends React.Component<Props> {
                   accentColor="white"
                   baseColor="white"
                   autoCapitalize="none"
-                  underlineColorAndroid="white"
                   returnKeyType="send"
                   onSubmitEditing={handleSubmit}/>
               </AnimatedView>

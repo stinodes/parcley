@@ -7,7 +7,9 @@ import {AppNavigator} from '../App'
 
 const MainNavigator = createSwitchNavigator({
   Onboarding: {screen: LoginScreen},
-  App: {screen: withSafeArea()(AppNavigator)}
+  App: {
+    screen: withSafeArea({})(AppNavigator)
+  }
 }, {
   initialRouteName: 'Onboarding',
 })

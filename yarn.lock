@@ -5432,9 +5432,9 @@ react-native-safe-area-view@^0.8.0:
   dependencies:
     hoist-non-react-statics "^2.3.1"
 
-react-native-safe-area-view@^0.9.0:
+"react-native-safe-area-view@https://github.com/react-community/react-native-safe-area-view.git":
   version "0.9.0"
-  resolved "https://registry.yarnpkg.com/react-native-safe-area-view/-/react-native-safe-area-view-0.9.0.tgz#10ece2ecac70e7005a5b0b3f06c8833060e6d21f"
+  resolved "https://github.com/react-community/react-native-safe-area-view.git#1132007ab9173bcb60c2141570f95030b3a4038b"
   dependencies:
     hoist-non-react-statics "^2.3.1"
 

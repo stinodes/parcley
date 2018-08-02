@@ -152,7 +152,6 @@ class App extends React.Component<Props, State> {
       return Constants.statusBarHeight
     return undefined
   }
-
   
   render() {
     const {theme, logoAnimation, spinnerAnimation, navigatorAnimation} = this.state

@@ -1,17 +1,15 @@
 // @flow
 import {createMaterialTopTabNavigator} from 'react-navigation'
-import {elevationStyleFromRaised, getColor} from 'nativesystem'
-import {Dashboard} from './Dashboard'
+import {elevationStyleFromRaised} from 'nativesystem'
+import {DashboardNavigator} from './Dashboard'
 import {Settings} from './Settings'
 import {NewOrder} from './NewOrder'
-import {OrderDetail} from './OrderDetail'
-import {createTabBarButton, createTabBarIcon, createTabBarLabel,} from './TabBar'
-import {colors} from '../../colors'
+import { createTabBarIcon} from './TabBar'
 
 const AppNavigator = createMaterialTopTabNavigator(
   {
     Dashboard: {
-      screen: Dashboard,
+      screen: DashboardNavigator,
       navigationOptions: {
         tabBarIcon: createTabBarIcon('list', 'ufoGreen'),
         // tabBarButtonComponent: createTabBarButton('ufoGreen'),
@@ -31,9 +29,6 @@ const AppNavigator = createMaterialTopTabNavigator(
         // tabBarButtonComponent: createTabBarButton('frenchSky'),
       }
     },
-    // Detail: {
-    //   screen: OrderDetail,
-    // }
   },
   {
     initialRouteName: 'Dashboard',

@@ -26,13 +26,14 @@ type MappedProps = {
   orders: { [Id]: Order },
 }
 
-class Dashboard extends React.Component<ReduxProps<Props, MappedProps>> {
+class DashboardList extends React.Component<ReduxProps<Props, MappedProps>> {
   
   componentDidMount() {
     this.props.dispatch(fetchAllData())
   }
   
   toNewOrder = () => this.props.navigation.navigate('NewOrder')
+  toDetail = (uid) => this.props.navigation.navigate('Detail', {uid})
   
   render() {
     const {hasOrders, isPending} = this.props
@@ -41,7 +42,6 @@ class Dashboard extends React.Component<ReduxProps<Props, MappedProps>> {
         color="white" f={1} jc="center"
         statusBarColor="white"
         statusBarStyle="dark-content">
-        <SafeAreaView style={{flex: 1}}>
           <View f={1} pt={80}>
             
             {isPending && <View jc="center" f={1}><Spinner color="ufoGreen" size="large"/></View>}
@@ -67,11 +67,11 @@ class Dashboard extends React.Component<ReduxProps<Props, MappedProps>> {
             </View>
             }
             {!isPending && hasOrders &&
-            <OrderList/>
+            <OrderList
+              onItemPress={this.toDetail}/>
             }
           </View>
           <Header/>
-        </SafeAreaView>
       </Screen>
     )
   }
@@ -82,5 +82,5 @@ const mapStateToProps = (state): MappedProps => ({
   orders: orders(state),
   hasOrders: hasOrders(state),
 })
-const ConnectedDashboard = connect(mapStateToProps)(Dashboard)
-export {ConnectedDashboard as Dashboard}
+const ConnectedDashboard = connect(mapStateToProps)(DashboardList)
+export {ConnectedDashboard as DashboardList}

@@ -10,6 +10,7 @@ import {setOrder} from '../../Redux'
 import {actionTypes} from '../Redux/actions'
 import {setIsPending, setIsSuccessful} from '../Redux'
 import {createError} from '../../../Utils/messageBar'
+import {toEntityMap} from '../../../Utils'
 
 export type CreateOrderValues = {
   name: string,
@@ -54,11 +55,13 @@ const createOrderSaga = function* (action) {
       isPrivate: false,
       host: me.uid,
       startedOn: Date.now(),
-      members: members.map(member => ({
-        username: member.username,
-        score: 0,
-        uid: member.uid,
-      })),
+      members: toEntityMap(
+          members.map(member => ({
+          username: member.username,
+          score: 0,
+          uid: member.uid,
+        }))
+      ),
     }
     const result = yield call(createOrder, orderValues)
     yield put(setOrder(result))

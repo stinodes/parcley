@@ -2,8 +2,8 @@
 import * as firebase from 'firebase'
 import randomWords from 'random-words'
 
-import type {UserInformation, Order, Id, Member} from 'parcley'
-import {toEntityMap} from '../Utils'
+import type {UserInformation, Order, Id, Member, ThrowableRead} from 'parcley'
+import {createReadError, toEntityMap} from '../Utils'
 
 export const uidForUsername = async (username: string) => {
   const userIds = await firebase.firestore()
@@ -57,30 +57,16 @@ export const orderExists = async (uid: Id) =>
     .get()
     .then(doc => doc.exists)
 
-export const readOrder = async (uid: Id) =>
-  firebase.firestore()
-    .collection('orders')
-    .doc(uid)
-    .get()
-    .then(doc => doc.data())
-
-export const readOrders = async () => {
-  const db = firebase.firestore()
-  const user = firebase.auth().currentUser
+export const readOrder = async (uid: Id): Promise<ThrowableRead<Order>> => {
+    const order = await firebase.firestore()
+      .collection('orders')
+      .doc(uid)
+      .get()
+      .then(doc => doc.data())
   
-  const userInfo: UserInformation = await db.collection('users')
-    .doc(user.uid)
-    .get()
-    .then(doc => doc.data())
-  
-  const joinedOrdersId = userInfo.joinedOrders ? Object.keys(userInfo.joinedOrders) : []
-  
-  console.log(joinedOrdersId)
-  
-  const joinedOrders = await Promise.all(
-    joinedOrdersId.map(readOrder)
-  )
-  return toEntityMap(joinedOrders)
+  if (!order)
+    return createReadError(uid)
+  return order
 }
 
 export const addOrderToUser = (userUid: Id, orderUid: Id) =>
@@ -88,6 +74,11 @@ export const addOrderToUser = (userUid: Id, orderUid: Id) =>
     .collection('users')
     .doc(userUid)
     .update(`joinedOrders.${orderUid}`, true)
+export const removeOrderFromUser = (userUid: Id, orderUid: Id) =>
+  firebase.firestore()
+    .collection('users')
+    .doc(userUid)
+    .update(`joinedOrders.${orderUid}`, firebase.firestore.FieldValue.delete())
 
 export const joinOrder = async (orderUid: Id, member: Member) =>
   firebase.firestore()

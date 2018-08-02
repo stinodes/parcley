@@ -1,6 +1,13 @@
 // @flow
 declare module 'parcley' {
   
+  declare export interface ReadError<Data = Id> {
+    error: true,
+    data: Data,
+  }
+  
+  declare export type ThrowableRead<Entity, Data = Id> = Entity|ReadError<Id>
+  
   declare export type Id = string
   declare export type Score = number
   

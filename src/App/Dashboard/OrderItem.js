@@ -23,6 +23,7 @@ const OrderItem = ({order, onPress}: Props) => {
   const total = members
     .map(member => member.score)
     .reduce((prev, value) => prev + value, 0)
+  const host = order.members[order.host]
   return (
     <Base background={Base.Ripple('ufoGreen', false)} onPress={onPress}>
       <View py={2}>
@@ -37,7 +38,7 @@ const OrderItem = ({order, onPress}: Props) => {
               {order.name}
             </Text>
             <Text color="raisinBlack">
-              By: [Insert Username]
+              By {host.username}
             </Text>
             <Text color="raisinBlack" modifier="small">
               {order.startedOn}

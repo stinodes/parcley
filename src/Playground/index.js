@@ -1,2 +1,2 @@
 // @flow
-export * from './PlaygroundScreen'
+export * from './PlaygroundScreen';

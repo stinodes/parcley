@@ -1,5 +1,5 @@
 // @flow
-import g from 'glamorous-native'
-import {backgroundColor, SystemView} from 'nativesystem'
+import g from 'glamorous-native';
+import { backgroundColor, SystemView } from 'nativesystem';
 
-export const Background = g(SystemView)(backgroundColor)
+export const Background = g(SystemView)(backgroundColor);

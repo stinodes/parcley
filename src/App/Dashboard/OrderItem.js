@@ -1,29 +1,39 @@
 // @flow
-import * as React from 'react'
-import {backgroundColor, Base, flex, raised, space, SystemView as View} from 'nativesystem'
-import g from 'glamorous-native'
+import * as React from 'react';
+import {
+  backgroundColor,
+  Base,
+  flex,
+  raised,
+  space,
+  SystemView as View,
+} from 'nativesystem';
+import g from 'glamorous-native';
 
-import type {Order, Member} from 'parcley'
-import {Text} from '../../Components'
+import type { Order, Member } from 'parcley';
+import { Text } from '../../Components';
 
 type Props = {
   order: Order,
   onPress: () => any,
-}
+};
 
-const Scroll = g.scrollView(flex, space)
+const Scroll = g.scrollView(flex, space);
 const Circle = g.view(
-  {justifyContent: 'center', alignItems: 'center'},
-  ({size}) => ({width: size, height: size, borderRadius: size * 0.5}),
-  space, backgroundColor, raised
-)
-const OrderItem = ({order, onPress}: Props) => {
-  const members: Member[] = Object.keys(order.members)
-    .map(key => order.members[key])
+  { justifyContent: 'center', alignItems: 'center' },
+  ({ size }) => ({ width: size, height: size, borderRadius: size * 0.5 }),
+  space,
+  backgroundColor,
+  raised,
+);
+const OrderItem = ({ order, onPress }: Props) => {
+  const members: Member[] = Object.keys(order.members).map(
+    key => order.members[key],
+  );
   const total = members
     .map(member => member.score)
-    .reduce((prev, value) => prev + value, 0)
-  const host = order.members[order.host]
+    .reduce((prev, value) => prev + value, 0);
+  const host = order.members[order.host];
   return (
     <Base background={Base.Ripple('ufoGreen', false)} onPress={onPress}>
       <View py={2}>
@@ -37,17 +47,22 @@ const OrderItem = ({order, onPress}: Props) => {
             <Text bold modifier="large" color="raisinBlack">
               {order.name}
             </Text>
-            <Text color="raisinBlack">
-              By {host.username}
-            </Text>
+            <Text color="raisinBlack">By {host.username}</Text>
             <Text color="raisinBlack" modifier="small">
               {order.startedOn}
             </Text>
           </View>
         </View>
-        <Scroll horizontal contentContainerStyle={{paddingVertical: 8, paddingHorizontal: 32}}>
+        <Scroll
+          horizontal
+          contentContainerStyle={{ paddingVertical: 8, paddingHorizontal: 32 }}>
           {members.map(member => (
-            <Circle key={member.uid} color="gunMetal" size={48} mr={1} raised={5}>
+            <Circle
+              key={member.uid}
+              color="gunMetal"
+              size={48}
+              mr={1}
+              raised={5}>
               <Text bold color="white" modifier="small">
                 {member.score}
               </Text>
@@ -56,7 +71,7 @@ const OrderItem = ({order, onPress}: Props) => {
         </Scroll>
       </View>
     </Base>
-  )
-}
+  );
+};
 
-export {OrderItem}
+export { OrderItem };

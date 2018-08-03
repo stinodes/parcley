@@ -1,10 +1,10 @@
 // @flow
-import {createMaterialTopTabNavigator} from 'react-navigation'
-import {elevationStyleFromRaised} from 'nativesystem'
-import {DashboardNavigator} from './Dashboard'
-import {Settings} from './Settings'
-import {NewOrder} from './NewOrder'
-import { createTabBarIcon} from './TabBar'
+import { createMaterialTopTabNavigator } from 'react-navigation';
+import { elevationStyleFromRaised } from 'nativesystem';
+import { DashboardNavigator } from './Dashboard';
+import { Settings } from './Settings';
+import { NewOrder } from './NewOrder';
+import { createTabBarIcon } from './TabBar';
 
 const AppNavigator = createMaterialTopTabNavigator(
   {
@@ -13,21 +13,21 @@ const AppNavigator = createMaterialTopTabNavigator(
       navigationOptions: {
         tabBarIcon: createTabBarIcon('list', 'ufoGreen'),
         // tabBarButtonComponent: createTabBarButton('ufoGreen'),
-      }
+      },
     },
     Settings: {
       screen: Settings,
       navigationOptions: {
         tabBarIcon: createTabBarIcon('sliders', 'error'),
         // tabBarButtonComponent: createTabBarButton('error'),
-      }
+      },
     },
     NewOrder: {
       screen: NewOrder,
       navigationOptions: {
         tabBarIcon: createTabBarIcon('plus', 'frenchSky'),
         // tabBarButtonComponent: createTabBarButton('frenchSky'),
-      }
+      },
     },
   },
   {
@@ -43,11 +43,11 @@ const AppNavigator = createMaterialTopTabNavigator(
         paddingVertical: 8,
         borderTopWidth: 0,
         backgroundColor: 'white',
-        ...elevationStyleFromRaised(10)
+        ...elevationStyleFromRaised(10),
       },
-      indicatorStyle: {height: 0},
-    }
-  }
-)
+      indicatorStyle: { height: 0 },
+    },
+  },
+);
 
-export {AppNavigator}
+export { AppNavigator };

@@ -1,2 +1,2 @@
 // @flow
-export * from './AppNavigator'
+export * from './AppNavigator';

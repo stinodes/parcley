@@ -1,2 +1,2 @@
 // @flow
-export * from './DashboardNavigator'
+export * from './DashboardNavigator';

@@ -1,20 +1,23 @@
 // @flow
-import {createStackNavigator} from 'react-navigation'
-import {OrderDetail} from './OrderDetail'
-import {DashboardList} from './DashboardList'
+import { createStackNavigator } from 'react-navigation';
+import { OrderDetail } from './OrderDetail';
+import { DashboardList } from './DashboardList';
 
-const DashboardNavigator = createStackNavigator({
-  List: {
-    screen: DashboardList,
+const DashboardNavigator = createStackNavigator(
+  {
+    List: {
+      screen: DashboardList,
+    },
+    Detail: {
+      screen: OrderDetail,
+    },
   },
-  Detail: {
-    screen: OrderDetail,
-  }
-}, {
-  initialRouteName: 'List',
-  navigationOptions: {
-    header: null,
-  }
-})
+  {
+    initialRouteName: 'List',
+    navigationOptions: {
+      header: null,
+    },
+  },
+);
 
-export {DashboardNavigator}
+export { DashboardNavigator };

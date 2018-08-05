@@ -9,9 +9,10 @@ import {
   SystemView as View,
 } from 'nativesystem';
 import g from 'glamorous-native';
+import moment from 'moment'
 
 import type { Order, Member } from 'parcley';
-import { Text } from '../../Components';
+import {Circle, Text} from '../../Components'
 
 type Props = {
   order: Order,
@@ -19,13 +20,6 @@ type Props = {
 };
 
 const Scroll = g.scrollView(flex, space);
-const Circle = g.view(
-  { justifyContent: 'center', alignItems: 'center' },
-  ({ size }) => ({ width: size, height: size, borderRadius: size * 0.5 }),
-  space,
-  backgroundColor,
-  raised,
-);
 const OrderItem = ({ order, onPress }: Props) => {
   const members: Member[] = Object.keys(order.members).map(
     key => order.members[key],
@@ -49,7 +43,7 @@ const OrderItem = ({ order, onPress }: Props) => {
             </Text>
             <Text color="raisinBlack">By {host.username}</Text>
             <Text color="raisinBlack" modifier="small">
-              {order.startedOn}
+              {moment(order.startedOn).format('dddd DD MMMM')}
             </Text>
           </View>
         </View>

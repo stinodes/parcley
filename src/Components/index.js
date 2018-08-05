@@ -9,3 +9,4 @@ export * from './Modal';
 export * from './Background';
 export * from './FullscreenModal';
 export * from './TextInput';
+export * from './Circle';

@@ -1046,13 +1046,6 @@ babel-helpers@^6.24.1:
     babel-runtime "^6.22.0"
     babel-template "^6.24.1"
 
-babel-jest@^23.0.1:
-  version "23.4.0"
-  resolved "https://registry.yarnpkg.com/babel-jest/-/babel-jest-23.4.0.tgz#22c34c392e2176f6a4c367992a7fcff69d2e8557"
-  dependencies:
-    babel-plugin-istanbul "^4.1.6"
-    babel-preset-jest "^23.2.0"
-
 babel-jest@^23.4.0, babel-jest@^23.4.2:
   version "23.4.2"
   resolved "https://registry.yarnpkg.com/babel-jest/-/babel-jest-23.4.2.tgz#f276de67798a5d68f2d6e87ff518c2f6e1609877"
@@ -2872,16 +2865,9 @@ firebase@^5.2.0:
     "@firebase/polyfill" "0.3.3"
     "@firebase/storage" "0.2.3"
 
-flow-bin@0.67, flow-bin@0.67.1:
+flow-bin@0.67.1:
   version "0.67.1"
   resolved "https://registry.yarnpkg.com/flow-bin/-/flow-bin-0.67.1.tgz#eabb7197cce870ac9442cfd04251c7ddc30377db"
-
-fnional@^0.0.2:
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/fnional/-/fnional-0.0.2.tgz#cef56e10a621d63afa89e2f958c1e2a18466d715"
-  dependencies:
-    babel-jest "^23.0.1"
-    flow-bin "0.67"
 
 fnional@^0.0.5:
   version "0.0.5"
@@ -4702,6 +4688,10 @@ mixin-deep@^1.2.0:
   dependencies:
     minimist "0.0.8"
 
+moment@^2.22.2:
+  version "2.22.2"
+  resolved "https://registry.yarnpkg.com/moment/-/moment-2.22.2.tgz#3c257f9839fc0e93ff53149632239eb90783ff66"
+
 morgan@^1.9.0:
   version "1.9.0"
   resolved "https://registry.yarnpkg.com/morgan/-/morgan-1.9.0.tgz#d01fa6c65859b76fcf31b3cb53a3821a311d8051"
@@ -4751,11 +4741,11 @@ nanomatch@^1.2.9:
     snapdragon "^0.8.1"
     to-regex "^3.0.1"
 
-nativesystem@^0.0.15:
-  version "0.0.15"
-  resolved "https://registry.yarnpkg.com/nativesystem/-/nativesystem-0.0.15.tgz#1d7fb35fe4140c311e79b02d186d511c000f664b"
+nativesystem@^0.0.19:
+  version "0.0.19"
+  resolved "https://registry.yarnpkg.com/nativesystem/-/nativesystem-0.0.19.tgz#09d3b668415d0c75eef21f8a44376955cc4662be"
   dependencies:
-    fnional "^0.0.2"
+    fnional "^0.0.5"
     glamorous-native "^1.4.0"
     polished "^1.9.2"
 

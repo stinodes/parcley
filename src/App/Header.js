@@ -15,11 +15,20 @@ const AbsoluteView = g(View)(
   backgroundColor,
 );
 
-type Props = {};
+type Props = {
+  left?: React.Node,
+  right?: React.Node,
+};
 
 const Header = (props: Props) => (
-  <AbsoluteView h={80} jc="center" ai="center" color="white">
+  <AbsoluteView h={80} jc="center" ai="center" color="white" fd="row">
+    <View f={1} fd="row">
+      {props.left}
+    </View>
     <Logo size={80} />
+    <View f={1} fd="row-reverse">
+      {props.right}
+    </View>
   </AbsoluteView>
 );
 

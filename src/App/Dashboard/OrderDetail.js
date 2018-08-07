@@ -1,70 +1,152 @@
 // @flow
 import * as React from 'react';
-import { Screen, SystemView as View, Base, getSpacing } from 'nativesystem';
-import { Separator } from 'nativesystem/lib/Components/Separator';
+import {
+  Base,
+  getSpacing,
+  Screen,
+  SystemView as View,
+  flex,
+  space,
+  size,
+} from 'nativesystem';
+import { Animated, Dimensions } from 'react-native';
 import { connect } from 'react-redux';
 import g from 'glamorous-native';
 
+import { Absolute, Circle, Icon, Text, absolute } from '../../Components';
 import { order } from '../Redux/selectors';
 
-import type { Order } from 'parcley';
-import { Circle, Text } from '../../Components';
-import { ScrollView } from 'react-native';
+import type { Member, Order } from 'parcley';
+import type {
+  NavigationScreenProp,
+  NavigationStateRoute,
+} from 'react-navigation';
 import { Header } from '../Header';
-import moment from 'moment/moment';
+import { MemberItem } from './MemberItem';
+import { OrderInformation } from './OrderInformation';
 
-type Props = {};
+const AnimatedView = g(Animated.View)(flex, space, size);
+
+type Props = {
+  navigation: NavigationScreenProp<NavigationStateRoute>,
+};
 type MappedProps = {
   order: Order,
 };
+type State = {
+  infoHeight: number,
+  entryOpacityAnimation: Animated.Value,
+  entryPositionAnimation: Animated.Value,
+  scrollAnimation: Animated.Value,
+};
 
-const TopLeft = g(View)(
-  {
-    position: 'absolute',
-  },
-  ({ theme }) => ({
-    top: getSpacing(theme, 3),
-    left: getSpacing(theme, 3),
-  }),
-);
+class OrderDetail extends React.Component<
+  ReduxProps<Props, MappedProps>,
+  State,
+> {
+  state = {
+    infoHeight: 1,
+    entryOpacityAnimation: new Animated.Value(0),
+    entryPositionAnimation: new Animated.Value(0),
+    scrollAnimation: new Animated.Value(0),
+  };
 
-class OrderDetail extends React.Component<Props> {
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.infoHeight !== prevState.infoHeight) this.entryAnimation();
+  }
+
+  entryAnimation = () => {
+    Animated.parallel([
+      Animated.timing(this.state.entryOpacityAnimation, { toValue: 1 }),
+      Animated.spring(this.state.entryPositionAnimation, { toValue: 1 }),
+    ]).start();
+  };
+
+  onInfoLayout = event => {
+    this.setState({
+      infoHeight: event.nativeEvent.layout.height,
+    });
+  };
+
   render() {
+    const {
+      entryOpacityAnimation,
+      entryPositionAnimation,
+      infoHeight,
+      scrollAnimation,
+    } = this.state;
     const { order } = this.props;
+    const members: Member[] = Object.keys(order.members).map(
+      key => order.members[key],
+    );
+    const host = members.find(member => member.uid === order.host);
+
+    const entryOpacity = entryOpacityAnimation.interpolate({
+      inputRange: [0, 1],
+      outputRange: [0, 1],
+    });
     return (
       <Screen f={1} color="white">
-        <View pt={80} px={3}>
-          <View>
-            <Text align="center" bold modifier="large" color="arsenic">
-              {order.name}
-            </Text>
-
-            <Text modifier="small" align="center">
-              {moment(order.startedOn).format('dddd DD MMMM')}
-            </Text>
-          </View>
-          <View ai="center" py={2}>
-            <Circle color="ufoGreen" size={100} raised={10} />
-          </View>
-          <Separator color="gainsBoro" />
-        </View>
-        <ScrollView
-          style={{ flex: 1 }}
+        <Animated.ScrollView
+          style={{
+            flex: 1,
+            opacity: entryOpacity,
+            transform: [
+              {
+                translateY: entryPositionAnimation.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [Dimensions.get('window').height * 0.33, 0],
+                }),
+              },
+            ],
+          }}
           contentContainerStyle={{
             flexGrow: 1,
-          }}>
-          <View px={3} />
-        </ScrollView>
+            paddingTop: infoHeight + 80,
+          }}
+          scrollEventThrottle={16}
+          onScroll={Animated.event(
+            [
+              {
+                nativeEvent: {
+                  contentOffset: { y: this.state.scrollAnimation },
+                },
+              },
+            ],
+            {
+              useNativeDriver: true,
+            },
+          )}>
+          <View>
+            {host && <MemberItem member={host} host />}
+            {members.map(
+              member =>
+                member.uid !== order.host && <MemberItem member={member} />,
+            )}
+          </View>
+          <View h={1000} />
+        </Animated.ScrollView>
 
+        <Absolute t={80} r={0} l={0}>
+          <AnimatedView
+            style={{
+              opacity: entryOpacity,
+            }}
+            onLayout={this.onInfoLayout}>
+            <OrderInformation
+              height={infoHeight}
+              order={order}
+              scrollAnimation={scrollAnimation}
+            />
+          </AnimatedView>
+        </Absolute>
         <Header
           left={
             <Base
               onPress={() => this.props.navigation.goBack()}
               background={Base.Ripple('ufoGreen', true)}>
               <View p={2}>
-                <Text color="ufoGreen" bold>
-                  Back
-                </Text>
+                <Icon name="arrow-left" color="ufoGreen" size={24} />
               </View>
             </Base>
           }

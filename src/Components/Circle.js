@@ -1,6 +1,6 @@
 // @flow
-import g from 'glamorous-native'
-import {backgroundColor, raised, space} from 'nativesystem'
+import g from 'glamorous-native';
+import { backgroundColor, raised, space } from 'nativesystem';
 
 const Circle = g.view(
   { justifyContent: 'center', alignItems: 'center' },
@@ -10,4 +10,4 @@ const Circle = g.view(
   raised,
 );
 
-export {Circle}
+export { Circle };

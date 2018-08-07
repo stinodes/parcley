@@ -9,10 +9,10 @@ import {
   SystemView as View,
 } from 'nativesystem';
 import g from 'glamorous-native';
-import moment from 'moment'
+import moment from 'moment';
 
 import type { Order, Member } from 'parcley';
-import {Circle, Text} from '../../Components'
+import { Circle, Text } from '../../Components';
 
 type Props = {
   order: Order,

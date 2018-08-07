@@ -1,4 +1,5 @@
-const baseWidth = 375;
+import { Platform } from 'react-native';
+const baseWidth = Platform.OS === 'ios' ? 475 : 375;
 const desWidth = 1080;
 export const ratio = baseWidth / desWidth;
 export const colors = {

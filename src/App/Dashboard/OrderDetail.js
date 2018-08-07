@@ -2,18 +2,18 @@
 import * as React from 'react';
 import {
   Base,
+  flex,
   getSpacing,
   Screen,
-  SystemView as View,
-  flex,
-  space,
   size,
+  space,
+  SystemView as View,
 } from 'nativesystem';
 import { Animated, Dimensions } from 'react-native';
 import { connect } from 'react-redux';
 import g from 'glamorous-native';
 
-import { Absolute, Circle, Icon, Text, absolute } from '../../Components';
+import { Icon } from '../../Components';
 import { order } from '../Redux/selectors';
 
 import type { Member, Order } from 'parcley';
@@ -45,11 +45,15 @@ class OrderDetail extends React.Component<
   State,
 > {
   state = {
-    infoHeight: 1,
+    infoHeight: 220,
     entryOpacityAnimation: new Animated.Value(0),
     entryPositionAnimation: new Animated.Value(0),
     scrollAnimation: new Animated.Value(0),
   };
+
+  componentDidMount() {
+    if (this.state.infoHeight !== 1) this.entryAnimation();
+  }
 
   componentDidUpdate(prevProps, prevState) {
     if (this.state.infoHeight !== prevState.infoHeight) this.entryAnimation();
@@ -126,20 +130,11 @@ class OrderDetail extends React.Component<
           </View>
           <View h={1000} />
         </Animated.ScrollView>
-
-        <Absolute t={80} r={0} l={0}>
-          <AnimatedView
-            style={{
-              opacity: entryOpacity,
-            }}
-            onLayout={this.onInfoLayout}>
-            <OrderInformation
-              height={infoHeight}
-              order={order}
-              scrollAnimation={scrollAnimation}
-            />
-          </AnimatedView>
-        </Absolute>
+        <OrderInformation
+          height={infoHeight}
+          order={order}
+          scrollAnimation={scrollAnimation}
+        />
         <Header
           left={
             <Base

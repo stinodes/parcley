@@ -15,15 +15,17 @@ import g from 'glamorous-native';
 
 import { Icon } from '../../Components';
 import { order } from '../Redux/selectors';
+import { meId } from '../../Onboarding/Redux/selectors';
+import { Header } from '../Header';
+import { MemberItem } from './MemberItem';
+import { OrderInformation } from './OrderInformation';
+import { ScoreForm } from './ScoreForm';
 
 import type { Member, Order } from 'parcley';
 import type {
   NavigationScreenProp,
   NavigationStateRoute,
 } from 'react-navigation';
-import { Header } from '../Header';
-import { MemberItem } from './MemberItem';
-import { OrderInformation } from './OrderInformation';
 
 const AnimatedView = g(Animated.View)(flex, space, size);
 
@@ -32,6 +34,7 @@ type Props = {
 };
 type MappedProps = {
   order: Order,
+  meUid: string,
 };
 type State = {
   infoHeight: number,
@@ -79,11 +82,14 @@ class OrderDetail extends React.Component<
       infoHeight,
       scrollAnimation,
     } = this.state;
-    const { order } = this.props;
+    const { order, meUid } = this.props;
     const members: Member[] = Object.keys(order.members).map(
       key => order.members[key],
     );
     const host = members.find(member => member.uid === order.host);
+    const ownMember = Object.keys(order.members)
+      .map(key => order.members[key])
+      .find(member => member.uid === meUid);
 
     const entryOpacity = entryOpacityAnimation.interpolate({
       inputRange: [0, 1],
@@ -122,10 +128,17 @@ class OrderDetail extends React.Component<
             },
           )}>
           <View>
+            {ownMember &&
+              (ownMember.score === null || ownMember.score === undefined) && (
+                <ScoreForm ownMember={ownMember} />
+              )}
             {host && <MemberItem member={host} host />}
+            {ownMember &&
+              ownMember.uid !== order.host && <MemberItem member={ownMember} />}
             {members.map(
               member =>
-                member.uid !== order.host && <MemberItem member={member} />,
+                member.uid !== order.host &&
+                member.uid !== meUid && <MemberItem member={member} />,
             )}
           </View>
           <View h={1000} />
@@ -145,6 +158,13 @@ class OrderDetail extends React.Component<
               </View>
             </Base>
           }
+          right={
+            <Base onPress={() => {}} background={Base.Ripple('ufoGreen', true)}>
+              <View p={2}>
+                <Icon name="edit" color="ufoGreen" size={24} />
+              </View>
+            </Base>
+          }
         />
       </Screen>
     );
@@ -153,6 +173,7 @@ class OrderDetail extends React.Component<
 
 const mapStateToProps = (state, ownProps): MappedProps => ({
   order: order(state, ownProps.navigation.getParam('uid')),
+  meUid: meId(state) || '',
 });
 const ConnectedOrderDetail = connect(mapStateToProps)(OrderDetail);
 export { ConnectedOrderDetail as OrderDetail };

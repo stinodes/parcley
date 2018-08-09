@@ -26,6 +26,7 @@ const OrderItem = ({ order, onPress }: Props) => {
   );
   const total = members
     .map(member => member.score)
+    .filter(score => score)
     .reduce((prev, value) => prev + value, 0);
   const host = order.members[order.host];
   return (
@@ -58,7 +59,7 @@ const OrderItem = ({ order, onPress }: Props) => {
               mr={1}
               raised={5}>
               <Text bold color="white" modifier="small">
-                {member.score}
+                {member.score === 0 ? 0 : member.score || '-'}
               </Text>
             </Circle>
           ))}

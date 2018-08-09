@@ -38,6 +38,7 @@ class OrderInformation extends React.Component<Props> {
 
     const total = members
       .map(member => member.score)
+      .filter(score => score)
       .reduce((prev, value) => prev + value, 0);
 
     const heightOrMin = Math.max(
@@ -115,15 +116,6 @@ class OrderInformation extends React.Component<Props> {
               <Text modifier="small" align="center">
                 Started on {moment(order.startedOn).format('dddd DD MMMM')}
               </Text>
-            </Element>
-            <Element
-              positioning={{ top: 0, right: 0 }}
-              start={{ y: 0 }}
-              end={{ y: heightOrMin + 20 }}
-              extrapolate="clamp">
-              <View h={40} w={40} jc="center" ai="center">
-                <Icon name="settings" color="gainsBoro" size={26} />
-              </View>
             </Element>
           </Coordinator>
         </View>

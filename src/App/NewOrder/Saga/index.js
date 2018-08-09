@@ -65,7 +65,7 @@ const createOrderSaga = function*(action) {
       members: toEntityMap(
         members.map(member => ({
           username: member.username,
-          score: 0,
+          score: null,
           uid: member.uid,
         })),
       ),

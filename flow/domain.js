@@ -24,7 +24,7 @@ declare module 'parcley' {
     username: string,
   };
   declare export type Member = {
-    score: number,
+    score: ?number,
     username: string,
     uid: string,
   };

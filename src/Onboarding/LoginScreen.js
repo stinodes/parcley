@@ -1,7 +1,6 @@
 // @flow
 import * as React from 'react';
 import { Button, Screen, SystemView as View } from 'nativesystem';
-import * as firebase from 'firebase';
 
 import { Logo, Modal, Text } from '../Components';
 import type { Layout } from '../Utils';

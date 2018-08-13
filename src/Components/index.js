@@ -11,4 +11,3 @@ export * from './FullscreenModal';
 export * from './TextInput';
 export * from './Circle';
 export * from './Icon';
-export * from './Absolute';

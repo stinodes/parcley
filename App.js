@@ -25,7 +25,8 @@ import { MainNavigator, NavigationService } from './src/Navigation';
 import { loadFonts, Logo } from './src/Components';
 import { delay } from './src/Utils';
 import { colors, ratio } from './colors';
-import * as firebase from 'firebase';
+import firebase from '@firebase/app';
+import 'firebase/auth';
 import 'firebase/firestore';
 
 const config = {

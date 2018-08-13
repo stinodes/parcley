@@ -9,7 +9,7 @@ import {
   space,
   SystemView as View,
 } from 'nativesystem';
-import { Animated, Dimensions } from 'react-native';
+import { Animated, Dimensions, ScrollView } from 'react-native';
 import { connect } from 'react-redux';
 import g from 'glamorous-native';
 
@@ -37,7 +37,8 @@ type MappedProps = {
   meUid: string,
 };
 type State = {
-  infoHeight: number,
+  infoExpandedHeight: number,
+  infoCollapsedHeight: number,
   entryOpacityAnimation: Animated.Value,
   entryPositionAnimation: Animated.Value,
   scrollAnimation: Animated.Value,
@@ -48,18 +49,22 @@ class OrderDetail extends React.Component<
   State,
 > {
   state = {
-    infoHeight: 220,
+    infoExpandedHeight: 220,
+    infoCollapsedHeight: 80,
     entryOpacityAnimation: new Animated.Value(0),
     entryPositionAnimation: new Animated.Value(0),
     scrollAnimation: new Animated.Value(0),
   };
 
+  scrollView: ScrollView;
+
   componentDidMount() {
-    if (this.state.infoHeight !== 1) this.entryAnimation();
+    if (this.state.infoExpandedHeight !== 1) this.entryAnimation();
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (this.state.infoHeight !== prevState.infoHeight) this.entryAnimation();
+    if (this.state.infoHeight !== prevState.infoExpandedHeight)
+      this.entryAnimation();
   }
 
   entryAnimation = () => {
@@ -71,15 +76,30 @@ class OrderDetail extends React.Component<
 
   onInfoLayout = event => {
     this.setState({
-      infoHeight: event.nativeEvent.layout.height,
+      infoExpandedHeight: event.nativeEvent.layout.height,
     });
+  };
+
+  onScrollEnd = e => {
+    const { infoCollapsedHeight, infoExpandedHeight } = this.state;
+    const interval = infoExpandedHeight - infoCollapsedHeight;
+    const velocity = e.nativeEvent.velocity.y;
+    const offset = e.nativeEvent.contentOffset.y;
+    console.log(velocity, e.nativeEvent.velocity);
+    if (offset <= interval) {
+      if (velocity > 0)
+        this.scrollView.getNode().scrollTo({ y: 0, animated: true });
+      if (velocity <= 0)
+        this.scrollView.getNode().scrollTo({ y: interval, animated: true });
+    }
   };
 
   render() {
     const {
       entryOpacityAnimation,
       entryPositionAnimation,
-      infoHeight,
+      infoExpandedHeight,
+      infoCollapsedHeight,
       scrollAnimation,
     } = this.state;
     const { order, meUid } = this.props;
@@ -110,11 +130,13 @@ class OrderDetail extends React.Component<
               },
             ],
           }}
+          ref={comp => (this.scrollView = comp)}
           contentContainerStyle={{
             flexGrow: 1,
-            paddingTop: infoHeight + 80,
+            paddingTop: infoExpandedHeight + 80,
           }}
           scrollEventThrottle={16}
+          onScrollEndDrag={this.onScrollEnd}
           onScroll={Animated.event(
             [
               {
@@ -144,7 +166,8 @@ class OrderDetail extends React.Component<
           <View h={1000} />
         </Animated.ScrollView>
         <OrderInformation
-          height={infoHeight}
+          height={infoExpandedHeight}
+          collapsedHeight={infoCollapsedHeight}
           order={order}
           scrollAnimation={scrollAnimation}
         />

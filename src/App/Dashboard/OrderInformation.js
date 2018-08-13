@@ -7,6 +7,8 @@ import {
   size,
   space,
   SystemView as View,
+  Coordinator,
+  Element,
 } from 'nativesystem';
 import moment from 'moment';
 import { Animated, Dimensions } from 'react-native';
@@ -15,7 +17,6 @@ import g from 'glamorous-native';
 import { Circle, Icon, Text } from '../../Components';
 
 import type { Member, Order } from 'parcley';
-import { Coordinator, Element } from '../../Components/AnimationCoordinator';
 
 const AnimatedView = g(Animated.View)(flex, space, size, backgroundColor);
 
@@ -23,13 +24,12 @@ type Props = {
   order: Order,
   scrollAnimation: Animated.Value,
   height: number,
+  collapsedHeight: number,
 };
 
 class OrderInformation extends React.Component<Props> {
-  collapsedHeight = 80;
-
   render() {
-    const { order, height, scrollAnimation } = this.props;
+    const { order, height, scrollAnimation, collapsedHeight } = this.props;
     const width = Dimensions.get('window').width;
 
     const members: Member[] = Object.keys(order.members).map(
@@ -41,10 +41,7 @@ class OrderInformation extends React.Component<Props> {
       .filter(score => score)
       .reduce((prev, value) => prev + value, 0);
 
-    const heightOrMin = Math.max(
-      this.collapsedHeight,
-      height - this.collapsedHeight,
-    );
+    const heightOrMin = Math.max(collapsedHeight, height - collapsedHeight);
     const inputRange = [0, heightOrMin];
 
     return (

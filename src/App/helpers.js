@@ -1,5 +1,7 @@
 // @flow
-import * as firebase from 'firebase';
+import firebase from '@firebase/app';
+import 'firebase/auth';
+import 'firebase/firestore';
 import randomWords from 'random-words';
 
 import type {

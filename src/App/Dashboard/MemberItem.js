@@ -1,35 +1,38 @@
 // @flow
 import * as React from 'react';
-import { SystemView as View } from 'nativesystem';
+import { View, Base } from 'nativesystem';
 
-import { Circle, Icon, Text } from '../../Components';
+import { Circle, Icon, Text, Background } from '../../Components';
 
 import type { Member } from 'parcley';
 
 type Props = {
   member: Member,
   host?: boolean,
+  onPress?: () => any,
 };
-const MemberItem = ({ host, member }: Props) => (
-  <View py={2}>
-    <View fd="row" ai="center" my={1} px={3}>
-      <Circle size={64} color="gunMetal" mr={2} raised={10}>
-        <Text bold modifier="large" color="white">
-          {member.score === 0 ? 0 : member.score || '-'}
-        </Text>
-      </Circle>
-      <View fd="column" f={1}>
-        <Text bold modifier="large">
-          {member.username}
-        </Text>
-      </View>
-      {host && (
-        <View>
-          <Icon name="home" size={28} color="ufoGreen" />
+const MemberItem = ({ host, member, onPress }: Props) => (
+  <Base onPress={onPress} background={Base.Ripple('ufoGreen', false)}>
+    <Background color="white" py={2}>
+      <View fd="row" ai="center" my={1} px={3}>
+        <Circle size={64} color="gunMetal" mr={2} raised={10}>
+          <Text bold modifier="large" color="white">
+            {member.score === 0 ? 0 : member.score || '-'}
+          </Text>
+        </Circle>
+        <View fd="column" f={1}>
+          <Text bold modifier="large">
+            {member.username}
+          </Text>
         </View>
-      )}
-    </View>
-  </View>
+        {host && (
+          <View>
+            <Icon name="home" size={28} color="ufoGreen" />
+          </View>
+        )}
+      </View>
+    </Background>
+  </Base>
 );
 
 export { MemberItem };

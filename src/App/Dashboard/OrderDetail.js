@@ -11,7 +11,6 @@ import {
 } from 'nativesystem';
 import { Animated, Dimensions, ScrollView } from 'react-native';
 import { connect } from 'react-redux';
-import g from 'glamorous-native';
 
 import { Icon } from '../../Components';
 import { order } from '../Redux/selectors';
@@ -26,8 +25,10 @@ import type {
   NavigationScreenProp,
   NavigationStateRoute,
 } from 'react-navigation';
-
-const AnimatedView = g(Animated.View)(flex, space, size);
+import { AskScoreItem } from './AskScoreItem';
+import { SwipeItem } from './SwipeItem';
+import { UserDetailModal } from './UserDetailModal';
+import { measureInWindow } from '../../Utils';
 
 type Props = {
   navigation: NavigationScreenProp<NavigationStateRoute>,
@@ -42,6 +43,14 @@ type State = {
   entryOpacityAnimation: Animated.Value,
   entryPositionAnimation: Animated.Value,
   scrollAnimation: Animated.Value,
+  userDetailModalStartPosition: {
+    x: number,
+    y: number,
+    w: number,
+    h: number,
+  },
+  userDetailModalMember: ?string,
+  userDetailModalVisible: boolean,
 };
 
 class OrderDetail extends React.Component<
@@ -54,8 +63,19 @@ class OrderDetail extends React.Component<
     entryOpacityAnimation: new Animated.Value(0),
     entryPositionAnimation: new Animated.Value(0),
     scrollAnimation: new Animated.Value(0),
+    userDetailModalStartPosition: {
+      x: 0,
+      y: 0,
+      w: 0,
+      h: 0,
+    },
+    userDetailModalMember: null,
+    userDetailModalVisible: false,
   };
 
+  itemRefs: {
+    [string]: ?View,
+  } = {};
   scrollView: ScrollView;
 
   componentDidMount() {
@@ -85,13 +105,28 @@ class OrderDetail extends React.Component<
     const interval = infoExpandedHeight - infoCollapsedHeight;
     const velocity = e.nativeEvent.velocity.y;
     const offset = e.nativeEvent.contentOffset.y;
-    console.log(velocity, e.nativeEvent.velocity);
     if (offset <= interval) {
       if (velocity > 0)
         this.scrollView.getNode().scrollTo({ y: 0, animated: true });
       if (velocity <= 0)
         this.scrollView.getNode().scrollTo({ y: interval, animated: true });
     }
+  };
+
+  showUserDetailModal = async (uid: string) => {
+    const ref = this.itemRefs[uid];
+    if (!ref) return;
+    const { x, y, w, h } = await measureInWindow(ref);
+    this.setState({
+      userDetailModalStartPosition: {
+        y,
+        x,
+        w,
+        h,
+      },
+      userDetailModalMember: uid,
+      userDetailModalVisible: true,
+    });
   };
 
   render() {
@@ -101,6 +136,9 @@ class OrderDetail extends React.Component<
       infoExpandedHeight,
       infoCollapsedHeight,
       scrollAnimation,
+      userDetailModalMember,
+      userDetailModalVisible,
+      userDetailModalStartPosition,
     } = this.state;
     const { order, meUid } = this.props;
     const members: Member[] = Object.keys(order.members).map(
@@ -152,24 +190,76 @@ class OrderDetail extends React.Component<
           <View>
             {ownMember &&
               (ownMember.score === null || ownMember.score === undefined) && (
-                <ScoreForm ownMember={ownMember} />
+                <AskScoreItem
+                  onPress={() => this.showUserDetailModal(ownMember.uid)}
+                />
               )}
-            {host && <MemberItem member={host} host />}
+            {host && (
+              <View
+                onLayout={() => {}}
+                innerRef={component => (this.itemRefs[host.uid] = component)}>
+                <MemberItem
+                  member={host}
+                  host
+                  onPress={() => this.showUserDetailModal(host.uid)}
+                />
+              </View>
+            )}
             {ownMember &&
-              ownMember.uid !== order.host && <MemberItem member={ownMember} />}
+              ownMember.uid !== order.host && (
+                <View
+                  onLayout={() => {}}
+                  innerRef={component =>
+                    (this.itemRefs[ownMember.uid] = component)
+                  }>
+                  <MemberItem
+                    member={ownMember}
+                    onPress={() => this.showUserDetailModal(ownMember.uid)}
+                  />
+                </View>
+              )}
             {members.map(
               member =>
                 member.uid !== order.host &&
-                member.uid !== meUid && <MemberItem member={member} />,
+                member.uid !== meUid && (
+                  <View
+                    onLayout={() => {}}
+                    innerRef={component =>
+                      (this.itemRefs[member.uid] = component)
+                    }>
+                    <MemberItem
+                      member={member}
+                      onPress={() => this.showUserDetailModal(member.uid)}
+                    />
+                  </View>
+                ),
             )}
           </View>
-          <View h={1000} />
         </Animated.ScrollView>
         <OrderInformation
           height={infoExpandedHeight}
           collapsedHeight={infoCollapsedHeight}
           order={order}
           scrollAnimation={scrollAnimation}
+        />
+        <UserDetailModal
+          onRequestClose={() =>
+            this.setState({ userDetailModalVisible: false })
+          }
+          visible={!!userDetailModalVisible}
+          startPosition={userDetailModalStartPosition}
+          sharedNode={(() => {
+            const member = members.find(
+              member => member.uid === userDetailModalMember,
+            );
+            if (!member) return null;
+            return (
+              <MemberItem
+                member={member}
+                host={host && host.uid === userDetailModalMember}
+              />
+            );
+          })()}
         />
         <Header
           left={

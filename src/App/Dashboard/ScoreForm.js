@@ -1,37 +1,70 @@
 // @flow
 import * as React from 'react';
-import { SystemView as View, Base } from 'nativesystem';
+import { withFormik } from 'formik';
+import { Screen, View, flex, space, size } from 'nativesystem';
+import { Animated, Dimensions } from 'react-native';
+import g from 'glamorous-native';
 
-import { Text } from '../../Components';
+import { Modal, Text } from '../../Components';
 
-import type { Member } from 'parcley';
-import { Separator } from 'nativesystem/lib/Components/Separator';
+const AnimatedView = g(Animated.View)(flex, space, size);
 
 type Props = {
-  ownMember: Member,
+  visible: boolean,
+  width?: number,
+  onRequestClose: () => any,
+  children: React.Node,
 };
-class ScoreForm extends React.Component<Props> {
+type State = {
+  animation: Animated.Value,
+};
+
+class ScoreForm extends React.Component<Props, State> {
+  state = {
+    animation: new Animated.Value(0),
+  };
+  componentDidUpdate(prevProps) {
+    if (prevProps.visible && !this.props.visible) this.animate(0);
+    if (this.props.visible && !prevProps.visible) this.animate(1);
+  }
+  animate = (toValue: number) => {
+    Animated.spring(this.state.animation, {
+      toValue,
+      useNativeDriver: true,
+    }).start();
+  };
+
   render() {
+    const {
+      onRequestClose,
+      children,
+      width = Dimensions.get('window').width,
+    } = this.props;
+    const { animation } = this.state;
+
     return (
-      <View px={3}>
-        <View fd="row" ai="center" my={1} py={2}>
-          <View f={1} pr={3}>
-            <Text numberOfLines={2}>
-              You haven't replied to this order yet!
-            </Text>
-          </View>
-          <Base onPress={() => {}} background={Base.Ripple('gainsBoro', true)}>
-            <View py={1}>
-              <Text bold color="ufoGreen">
-                Reply now!
-              </Text>
-            </View>
-          </Base>
-        </View>
-        <Separator color="gainsBoro" />
-      </View>
+      <AnimatedView
+        fd="row"
+        w={width * 2}
+        style={{
+          transform: [
+            {
+              translateX: animation.interpolate({
+                inputRange: [0, 1],
+                outputRange: [0, -width],
+              }),
+            },
+          ],
+        }}>
+        <View w={width}>{children}</View>
+        <View w={width} />
+      </AnimatedView>
     );
   }
 }
 
-export { ScoreForm };
+const FScoreForm = withFormik({
+  mapPropsToValues: () => ({ score: '' }),
+})(ScoreForm);
+
+export { FScoreForm as ScoreForm };

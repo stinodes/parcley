@@ -1,22 +1,36 @@
 // @flow
 import * as React from 'react';
 import { Animated, Dimensions } from 'react-native';
-import { Coordinator, Element, View } from 'nativesystem';
+import { Coordinator, Element, View, Button } from 'nativesystem';
 import { PanGestureHandler, State } from 'react-native-gesture-handler';
+import { connect } from 'react-redux';
 
-import { Background, Modal } from '../../Components';
+import { Background, Modal, Text } from '../../Components';
+import { Separator } from 'nativesystem/lib/Components/Separator';
+import { meId } from '../../Onboarding/Redux/selectors';
+import { createError } from '../../Utils/messageBar';
+
+import type { Member, Order } from 'parcley';
+import { MemberItem } from './MemberItem';
 
 type Props = {
   visible: boolean,
-  sharedNode: React.Node,
   startPosition: { x: number, y: number, w: number, h: number },
   onRequestClose: () => any,
+  member: ?Member,
+  order: ?Order,
+};
+type MappedProps = {
+  meUid: ?string,
 };
 type ComponentState = {
   animation: Animated.Value,
 };
 
-class UserDetailModal extends React.Component<Props, ComponentState> {
+class UserDetailModal extends React.Component<
+  ReduxProps<Props, MappedProps>,
+  ComponentState,
+> {
   state = {
     animation: new Animated.Value(Dimensions.get('window').height),
   };
@@ -26,8 +40,6 @@ class UserDetailModal extends React.Component<Props, ComponentState> {
     [{ nativeEvent: { translationY: this.state.animation } }],
     { userNativeDriver: true },
   );
-
-  static getDerivedStateFromProps() {}
 
   gestureEventStateChange = ({
     nativeEvent: { state, translationY, velocityY },
@@ -66,6 +78,7 @@ class UserDetailModal extends React.Component<Props, ComponentState> {
         }),
         Animated.spring(this.state.animation, {
           toValue,
+          overshootClamping: false,
           useNativeDriver: true,
         }),
       ]);
@@ -82,11 +95,24 @@ class UserDetailModal extends React.Component<Props, ComponentState> {
     ]);
   };
 
+  addFriend = () => {
+    if (!this.props.member) return;
+    if (this.props.member.uid === this.props.meUid)
+      return createError({
+        message: "You can't add yourself as a friend, dumbass.",
+      });
+
+    createError({
+      message: 'Not yet implemented.',
+    });
+  };
+
   render() {
     const {
       visible,
       startPosition: { x, y, w, h },
-      sharedNode,
+      member,
+      order,
     } = this.props;
     const height = this.height;
     return (
@@ -94,38 +120,55 @@ class UserDetailModal extends React.Component<Props, ComponentState> {
         visible={visible}
         onRequestClose={this.props.onRequestClose}
         createAnimation={this.createAnimation}>
-        <View f={1}>
-          <Coordinator
-            f={1}
-            animation={this.state.animation.interpolate({
-              inputRange: [0, height],
-              outputRange: [height, 0],
-              extrapolate: 'clamp',
-            })}
-            inputRange={[0, height]}>
-            <Element
-              positioning={{ top: 0, bottom: 0, left: 0, right: 0 }}
-              start={{ opacity: 0 }}
-              end={{ opacity: 1 }}>
-              <Background f={1} color="white" />
-            </Element>
-            <Element
-              positioning={{ top: 0, left: 0 }}
-              start={{ x, y }}
-              end={{ x: 0, y: 80 }}>
-              <PanGestureHandler
-                onHandlerStateChange={this.gestureEventStateChange}
-                onGestureEvent={this.gestureEvent}>
+        <PanGestureHandler
+          onHandlerStateChange={this.gestureEventStateChange}
+          onGestureEvent={this.gestureEvent}>
+          <View f={1}>
+            <Coordinator
+              f={1}
+              animation={this.state.animation.interpolate({
+                inputRange: [0, height],
+                outputRange: [height, 0],
+                extrapolate: 'clamp',
+              })}
+              inputRange={[0, height]}>
+              <Element
+                positioning={{ top: 0, bottom: 0, left: 0, right: 0 }}
+                start={{ opacity: 0 }}
+                end={{ opacity: 1 }}>
+                <Background f={1} color="white" pt={80 + h + 1} px={3}>
+                  <Separator color="gainsBoro" />
+                  <View py={2} fd="row" jc="space-around">
+                    <Button ripple="white" onPress={this.addFriend}>
+                      <Text color="white">Add Friend</Text>
+                    </Button>
+                  </View>
+                </Background>
+              </Element>
+              <Element
+                positioning={{ top: 0, left: 0 }}
+                start={{ x, y }}
+                end={{ x: 0, y: 80 }}>
                 <View w={w} h={h}>
-                  {sharedNode}
+                  {member && (
+                    <MemberItem
+                      member={member}
+                      host={!!order && member.uid === order.host}
+                    />
+                  )}
                 </View>
-              </PanGestureHandler>
-            </Element>
-          </Coordinator>
-        </View>
+              </Element>
+            </Coordinator>
+          </View>
+        </PanGestureHandler>
       </Modal>
     );
   }
 }
 
-export { UserDetailModal };
+const mapStateToProps = (state): MappedProps => ({
+  meUid: meId(state),
+});
+const ConnectedUserDetailModal = connect(mapStateToProps)(UserDetailModal);
+
+export { ConnectedUserDetailModal as UserDetailModal };

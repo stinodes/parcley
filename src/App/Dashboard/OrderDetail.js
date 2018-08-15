@@ -248,18 +248,8 @@ class OrderDetail extends React.Component<
           }
           visible={!!userDetailModalVisible}
           startPosition={userDetailModalStartPosition}
-          sharedNode={(() => {
-            const member = members.find(
-              member => member.uid === userDetailModalMember,
-            );
-            if (!member) return null;
-            return (
-              <MemberItem
-                member={member}
-                host={host && host.uid === userDetailModalMember}
-              />
-            );
-          })()}
+          order={order}
+          member={members.find(member => member.uid === userDetailModalMember)}
         />
         <Header
           left={

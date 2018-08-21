@@ -58,7 +58,6 @@ export const registerUser = async ({
     username: username,
     email: email,
     uid: user.uid,
-    joinedMatches: {},
   };
   await writeUserInfo(userInformation);
 };

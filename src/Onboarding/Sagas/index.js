@@ -37,7 +37,7 @@ const authSaga = function*(): Generator<*, *, *> {
           yield call(NavigationService.dispatch, action);
         }
       } catch (e) {
-        console.log(e);
+        console.log('error in auth', e);
       }
     }
   } catch (e) {

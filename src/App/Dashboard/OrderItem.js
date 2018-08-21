@@ -28,6 +28,7 @@ const OrderItem = ({ order, onPress }: Props) => {
     .map(member => member.score)
     .filter(score => score)
     .reduce((prev, value) => prev + value, 0);
+  console.log(order);
   const host = order.members[order.host];
   return (
     <Base background={Base.Ripple('ufoGreen', false)} onPress={onPress}>

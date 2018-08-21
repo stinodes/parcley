@@ -48,13 +48,11 @@ const readOrderData = function*() {
     const ordersResult: ThrowableRead<Order>[] = yield all(
       orderUids.map(uid => call(readOrder, uid)),
     );
-
     const failedOrders: ReadError<>[] = (ordersResult.filter(
       ReadError.isError,
     ): any[]);
     const orders: Order[] = (ordersResult.filter(ReadError.isNotError): any[]);
 
-    // TODO: remove non-existent orders from own user
     yield all(
       failedOrders.map(error => call(removeOrderFromUser, meUid, error.data)),
     );

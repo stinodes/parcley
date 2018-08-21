@@ -12,7 +12,7 @@ import {
 } from '../../helpers';
 import { readUserIfNecessary } from '../../Saga';
 
-import type { Order, Unsynced } from 'parcley';
+import type { Order, Unsynced, Member, Id } from 'parcley';
 import { setOrder } from '../../Redux';
 import { actionTypes } from '../Redux/actions';
 import { setIsPending, setIsSuccessful } from '../Redux';
@@ -37,7 +37,7 @@ const createOrderSaga = function*(action) {
     const me = yield select(meInfo);
 
     const memberUsernameArray: string[] = !Array.isArray(order.members)
-      ? order.members.split(', ')
+      ? order.members.split(', ').filter(username => username)
       : order.members;
     const membersWithoutMe = memberUsernameArray.filter(
       username => username !== me.username,
@@ -48,29 +48,28 @@ const createOrderSaga = function*(action) {
 
     const filteredUidArray = membersUidArray.filter(uid => !!uid);
 
+    console.log('getting members', filteredUidArray);
     let members = yield all(
       filteredUidArray.map(uid => call(readUserIfNecessary, uid, true)),
     );
     members = [me, ...members];
+    console.log('members', members);
 
     const code = yield call(generateOrderCode);
+    console.log('code', code);
 
-    const orderValues: Unsynced<Order> = {
+    const orderValues: Unsynced<$Diff<Order, { members: { [Id]: Member } }>> = {
       code,
       name: order.name,
       description: order.description,
       isPrivate: false,
       host: me.uid,
       startedOn: Date.now(),
-      members: toEntityMap(
-        members.map(member => ({
-          username: member.username,
-          score: null,
-          uid: member.uid,
-        })),
-      ),
     };
+    console.log('creating order', orderValues);
     const result = yield call(createOrder, orderValues);
+    console.log('created order', result);
+    yield all(members.map(member => call(joinOrder, result.uid, member)));
     yield put(setOrder(result));
     yield all(
       members.map(member => call(addOrderToUser, member.uid, result.uid)),

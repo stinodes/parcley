@@ -14,7 +14,9 @@ const AskScoreItem = ({ onPress }: Props) => (
   <View px={3}>
     <View fd="row" ai="center" my={1} py={2}>
       <View f={1} pr={3}>
-        <Text numberOfLines={2}>You haven't replied to this order yet!</Text>
+        <Text modifier="small" numberOfLines={2}>
+          You haven't replied to this order yet!
+        </Text>
       </View>
       <Base onPress={onPress} background={Base.Ripple('gainsBoro', true)}>
         <View py={1}>

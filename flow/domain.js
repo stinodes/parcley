@@ -8,23 +8,23 @@ declare module 'parcley' {
   declare export type ThrowableRead<Entity, Data = Id> = Entity | ReadError<Id>;
 
   declare export type Id = string;
-  declare export type Score = number;
+  declare export type Score = ?number;
+  declare export type FriendRank = 'just buds' | 'good pals' | 'best mates';
 
   declare export type UserInformation = {
     email: string,
     username: string,
     uid: Id,
-    joinedOrders?: {
-      [Id]: boolean,
-    },
+  };
+  declare export type FriendInformation = {
+    friend: boolean,
+    rankIndex: number,
+    rank: FriendRank,
+    uid: Id,
   };
   declare export type Unsynced<Type> = $Diff<Type, { uid: Id }>;
-  declare type Host = {
-    uid: string,
-    username: string,
-  };
   declare export type Member = {
-    score: ?number,
+    score: Score,
     username: string,
     uid: string,
   };
@@ -36,6 +36,5 @@ declare module 'parcley' {
     description: string,
     startedOn: number,
     isPrivate: boolean,
-    members: { [Id]: Member },
   };
 }

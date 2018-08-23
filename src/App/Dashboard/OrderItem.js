@@ -10,26 +10,33 @@ import {
 } from 'nativesystem';
 import g from 'glamorous-native';
 import moment from 'moment';
+import { connect } from 'react-redux';
 
-import type { Order, Member } from 'parcley';
+import type { Order, Member, Id } from 'parcley';
 import { Circle, Text } from '../../Components';
+import { members } from '../Redux/selectors';
 
 type Props = {
   order: Order,
   onPress: () => any,
 };
+type MappedProps = {
+  members: { [Id]: Member },
+};
 
 const Scroll = g.scrollView(flex, space);
-const OrderItem = ({ order, onPress }: Props) => {
-  const members: Member[] = Object.keys(order.members).map(
-    key => order.members[key],
-  );
-  const total = members
+const OrderItem = ({
+  order,
+  onPress,
+  members,
+}: ReduxProps<Props, MappedProps>) => {
+  const membersArray: Member[] = Object.keys(members).map(key => members[key]);
+  const total = membersArray
     .map(member => member.score)
     .filter(score => score)
     .reduce((prev, value) => prev + value, 0);
   console.log(order);
-  const host = order.members[order.host];
+  const host = members[order.host];
   return (
     <Base background={Base.Ripple('ufoGreen', false)} onPress={onPress}>
       <View py={2}>
@@ -43,7 +50,11 @@ const OrderItem = ({ order, onPress }: Props) => {
             <Text bold modifier="large" color="raisinBlack">
               {order.name}
             </Text>
-            <Text color="raisinBlack">By {host.username}</Text>
+            {host ? (
+              <Text color="raisinBlack">By {host.username}</Text>
+            ) : (
+              <Text color="raisinBlack">-</Text>
+            )}
             <Text color="raisinBlack" modifier="small">
               {moment(order.startedOn).format('dddd DD MMMM')}
             </Text>
@@ -52,7 +63,7 @@ const OrderItem = ({ order, onPress }: Props) => {
         <Scroll
           horizontal
           contentContainerStyle={{ paddingVertical: 8, paddingHorizontal: 32 }}>
-          {members.map(member => (
+          {membersArray.map(member => (
             <Circle
               key={member.uid}
               color="gunMetal"
@@ -70,4 +81,8 @@ const OrderItem = ({ order, onPress }: Props) => {
   );
 };
 
-export { OrderItem };
+const mapStateToProps = (state, props: Props): MappedProps => ({
+  members: members(state, props.order.uid),
+});
+const ConnectedOrderItem = connect(mapStateToProps)(OrderItem);
+export { ConnectedOrderItem as OrderItem };

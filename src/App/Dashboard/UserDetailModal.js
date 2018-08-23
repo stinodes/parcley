@@ -10,8 +10,10 @@ import { Separator } from 'nativesystem/lib/Components/Separator';
 import { meId } from '../../Onboarding/Redux/selectors';
 import { createError } from '../../Utils/messageBar';
 
-import type { Member, Order } from 'parcley';
+import type { Member, Order, FriendInformation } from 'parcley';
 import { MemberItem } from './MemberItem';
+import { friend } from '../Redux/selectors';
+import { addFriend } from '../helpers';
 
 type Props = {
   visible: boolean,
@@ -22,6 +24,7 @@ type Props = {
 };
 type MappedProps = {
   meUid: ?string,
+  friendInfo: ?FriendInformation,
 };
 type ComponentState = {
   animation: Animated.Value,
@@ -95,16 +98,19 @@ class UserDetailModal extends React.Component<
     ]);
   };
 
-  addFriend = () => {
-    if (!this.props.member) return;
+  addFriend = async () => {
+    if (!this.props.member || !this.props.meUid) return;
     if (this.props.member.uid === this.props.meUid)
       return createError({
         message: "You can't add yourself as a friend, dumbass.",
       });
 
-    createError({
-      message: 'Not yet implemented.',
-    });
+    if (this.props.friendInfo)
+      createError({
+        message: 'Already friends!',
+      });
+
+    await addFriend(this.props.meUid, this.props.member.uid);
   };
 
   render() {
@@ -113,6 +119,7 @@ class UserDetailModal extends React.Component<
       startPosition: { x, y, w, h },
       member,
       order,
+      friendInfo,
     } = this.props;
     const height = this.height;
     return (
@@ -166,8 +173,9 @@ class UserDetailModal extends React.Component<
   }
 }
 
-const mapStateToProps = (state): MappedProps => ({
+const mapStateToProps = (state, ownProps: Props): MappedProps => ({
   meUid: meId(state),
+  friendInfo: ownProps.member ? friend(state, ownProps.member.uid) : null,
 });
 const ConnectedUserDetailModal = connect(mapStateToProps)(UserDetailModal);
 

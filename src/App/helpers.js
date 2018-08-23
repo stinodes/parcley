@@ -59,7 +59,24 @@ export const readUserInfo = async (userId: Id): Promise<UserInformation> => {
     );
   return { ...userInfo, joinedOrders };
 };
-
+export const readFriends = async (userId: Id) =>
+  firebase
+    .firestore()
+    .collection(`users/${userId}/friends`)
+    .where('friend', '==', true)
+    .orderBy('rankIndex', 'asc')
+    .get()
+    .then(snapshot => snapshot.docs.data());
+export const addFriend = (userId: Id, friendId: Id) =>
+  firebase
+    .firestore()
+    .doc(`users/${userId}/friends/${friendId}`)
+    .set({
+      friend: true,
+      rankIndex: 0,
+      rank: 'buds',
+      uid: friendId,
+    });
 export const orderExists = async (uid: Id) =>
   firebase
     .firestore()
@@ -67,8 +84,15 @@ export const orderExists = async (uid: Id) =>
     .where('uid', '==', uid)
     .get()
     .then(snapshot => !snapshot.empty);
-
-export const readOrder = async (uid: Id): Promise<ThrowableRead<Order>> => {
+export const readOrder = (uid: Id) =>
+  firebase
+    .firestore()
+    .doc(`orders/${uid}`)
+    .get()
+    .then(doc => doc.data());
+export const readOrderAndMembers = async (
+  uid: Id,
+): Promise<ThrowableRead<Order>> => {
   const firestore = firebase.firestore();
   const orderDoc = firestore.collection('orders').doc(uid);
   const order = await orderDoc.get().then(doc => doc.data());
@@ -85,34 +109,28 @@ export const readOrder = async (uid: Id): Promise<ThrowableRead<Order>> => {
         {},
       ),
     );
-  console.log('members', members);
   return { ...order, members };
 };
-
+export const setScoreOnOrder = (userUid: Id, orderUid: Id, score: number) =>
+  firebase
+    .firestore()
+    .doc(`orders/${orderUid}/users/${userUid}`)
+    .update('score', score);
 export const addOrderToUser = (userUid: Id, orderUid: Id) =>
   firebase
     .firestore()
-    .collection('users')
-    .doc(userUid)
-    .collection('orders')
-    .doc(orderUid)
+    .doc(`users/${userUid}/orders/${orderUid}`)
     .set({ joined: true });
 export const removeOrderFromUser = (userUid: Id, orderUid: Id) =>
   firebase
     .firestore()
-    .collection('users')
-    .doc(userUid)
-    .collection('orders')
-    .doc(orderUid)
+    .doc(`users/${userUid}/orders/${orderUid}`)
     .delete();
 
 export const joinOrder = async (orderUid: Id, member: Member) =>
   firebase
     .firestore()
-    .collection('orders')
-    .doc(orderUid)
-    .collection('members')
-    .doc(member.uid)
+    .doc(`orders/${orderUid}/members/${member.uid}`)
     .set(member);
 
 export const createOrder = async (order: Order) => {
@@ -126,8 +144,7 @@ export const createOrder = async (order: Order) => {
   const orderWithUid = { ...order, uid };
   await firebase
     .firestore()
-    .collection('orders')
-    .doc(uid)
+    .doc(`orders/${uid}`)
     .set(orderWithUid);
 
   return orderWithUid;

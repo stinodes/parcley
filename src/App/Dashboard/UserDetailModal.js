@@ -1,11 +1,17 @@
 // @flow
 import * as React from 'react';
-import { Animated, Dimensions } from 'react-native';
-import { Coordinator, Element, View, Button } from 'nativesystem';
+import { Animated, Dimensions, Keyboard } from 'react-native';
+import { Coordinator, Element, View, Button, Spinner } from 'nativesystem';
 import { PanGestureHandler, State } from 'react-native-gesture-handler';
 import { connect } from 'react-redux';
 
-import { Background, Modal, Text } from '../../Components';
+import {
+  Background,
+  FTextInput,
+  Modal,
+  Text,
+  TextInput,
+} from '../../Components';
 import { Separator } from 'nativesystem/lib/Components/Separator';
 import { meId } from '../../Onboarding/Redux/selectors';
 import { createError } from '../../Utils/messageBar';
@@ -13,7 +19,8 @@ import { createError } from '../../Utils/messageBar';
 import type { Member, Order, FriendInformation } from 'parcley';
 import { MemberItem } from './MemberItem';
 import { friend } from '../Redux/selectors';
-import { addFriend } from '../helpers';
+import { addFriend, setQuantityOnOrder } from '../helpers';
+import { Formik } from 'formik';
 
 type Props = {
   visible: boolean,
@@ -112,6 +119,19 @@ class UserDetailModal extends React.Component<
 
     await addFriend(this.props.meUid, this.props.member.uid);
   };
+  submitQuantity = async ({ quantity }, { setSubmitting }) => {
+    try {
+      const { member, order } = this.props;
+      if (member && order) {
+        await setQuantityOnOrder(order.uid, member.uid, quantity);
+      }
+      Keyboard.dismiss();
+    } catch (e) {
+      console.log(e);
+      createError({ message: e.message });
+    }
+    setSubmitting(false);
+  };
 
   render() {
     const {
@@ -119,6 +139,7 @@ class UserDetailModal extends React.Component<
       startPosition: { x, y, w, h },
       member,
       order,
+      meUid,
       friendInfo,
     } = this.props;
     const height = this.height;
@@ -144,6 +165,45 @@ class UserDetailModal extends React.Component<
                 start={{ opacity: 0 }}
                 end={{ opacity: 1 }}>
                 <Background f={1} color="white" pt={80 + h + 1} px={3}>
+                  {order &&
+                    member &&
+                    (meUid === member.uid || order.host === meUid) && (
+                      <Formik onSubmit={this.submitQuantity}>
+                        {({
+                          values: { quantity },
+                          setFieldValue,
+                          isSubmitting,
+                          handleSubmit,
+                        }) => (
+                          <View fd="column">
+                            <Separator color="gainsBoro" />
+                            <View fd="row" py={1} ai="center">
+                              <View f={1}>
+                                <FTextInput
+                                  baseColor="black"
+                                  label="Quantity"
+                                  accentColor="ufoGreen"
+                                  autoCapitalize="none"
+                                  keyboardType="number-pad"
+                                  name="quantity"
+                                  value={quantity}
+                                  onChange={setFieldValue}
+                                />
+                              </View>
+                              <View pl={1}>
+                                <Button color="ufoGreen" onPress={handleSubmit}>
+                                  {isSubmitting ? (
+                                    <Spinner color="white" />
+                                  ) : (
+                                    <Text color="white"> OK </Text>
+                                  )}
+                                </Button>
+                              </View>
+                            </View>
+                          </View>
+                        )}
+                      </Formik>
+                    )}
                   <Separator color="gainsBoro" />
                   <View py={2} fd="row" jc="space-around">
                     <Button ripple="white" onPress={this.addFriend}>
@@ -159,8 +219,9 @@ class UserDetailModal extends React.Component<
                 <View w={w} h={h}>
                   {member && (
                     <MemberItem
-                      member={member}
                       host={!!order && member.uid === order.host}
+                      self={meUid === member.uid}
+                      member={member}
                     />
                   )}
                 </View>

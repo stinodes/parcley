@@ -10,14 +10,13 @@ import {
   uidForOrderCode,
   uidForUsername,
 } from '../../helpers';
-import { readUserIfNecessary } from '../../Saga';
 
-import type { Order, Unsynced, Member, Id } from 'parcley';
+import type { Order, Unsynced } from 'parcley';
 import { setOrder } from '../../Redux';
 import { actionTypes } from '../Redux/actions';
 import { setIsPending, setIsSuccessful } from '../Redux';
 import { createError } from '../../../Utils/messageBar';
-import { toEntityMap } from '../../../Utils';
+import { fetchUserSaga } from '../../Saga';
 
 export type CreateOrderValues = {
   name: string,
@@ -48,17 +47,14 @@ const createOrderSaga = function*(action) {
 
     const filteredUidArray = membersUidArray.filter(uid => !!uid);
 
-    console.log('getting members', filteredUidArray);
     let members = yield all(
-      filteredUidArray.map(uid => call(readUserIfNecessary, uid, true)),
+      filteredUidArray.map(uid => call(fetchUserSaga, uid)),
     );
     members = [me, ...members];
-    console.log('members', members);
 
     const code = yield call(generateOrderCode);
-    console.log('code', code);
 
-    const orderValues: Unsynced<$Diff<Order, { members: { [Id]: Member } }>> = {
+    const orderValues: Unsynced<Order> = {
       code,
       name: order.name,
       description: order.description,
@@ -66,10 +62,15 @@ const createOrderSaga = function*(action) {
       host: me.uid,
       startedOn: Date.now(),
     };
-    console.log('creating order', orderValues);
     const result = yield call(createOrder, orderValues);
-    console.log('created order', result);
-    yield all(members.map(member => call(joinOrder, result.uid, member)));
+    yield all(
+      members.map(member =>
+        call(joinOrder, result.uid, {
+          username: member.username,
+          uid: member.uid,
+        }),
+      ),
+    );
     yield put(setOrder(result));
     yield all(
       members.map(member => call(addOrderToUser, member.uid, result.uid)),
@@ -101,7 +102,7 @@ const joinOrderSaga = function*(action) {
     const member = {
       uid: userInfo.uid,
       username: userInfo.username,
-      score: null,
+      quantity: null,
     };
     yield call(joinOrder, orderUid, member);
     yield call(addOrderToUser, member.uid, orderUid);

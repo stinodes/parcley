@@ -13,14 +13,14 @@ import { Animated, Dimensions, ScrollView } from 'react-native';
 import { connect } from 'react-redux';
 
 import { Icon } from '../../Components';
-import { order } from '../Redux/selectors';
+import { members, order } from '../Redux/selectors';
 import { meId } from '../../Onboarding/Redux/selectors';
 import { Header } from '../Header';
 import { MemberItem } from './MemberItem';
 import { OrderInformation } from './OrderInformation';
 import { ScoreForm } from './ScoreForm';
 
-import type { Member, Order } from 'parcley';
+import type { Member, Order, Id } from 'parcley';
 import type {
   NavigationScreenProp,
   NavigationStateRoute,
@@ -36,6 +36,7 @@ type Props = {
 type MappedProps = {
   order: Order,
   meUid: string,
+  members: { [Id]: Member },
 };
 type State = {
   infoExpandedHeight: number,
@@ -140,13 +141,13 @@ class OrderDetail extends React.Component<
       userDetailModalVisible,
       userDetailModalStartPosition,
     } = this.state;
-    const { order, meUid } = this.props;
-    const members: Member[] = Object.keys(order.members).map(
-      key => order.members[key],
+    const { order, meUid, members } = this.props;
+    const membersArray: Member[] = Object.keys(members).map(
+      key => members[key],
     );
-    const host = members.find(member => member.uid === order.host);
-    const ownMember = Object.keys(order.members)
-      .map(key => order.members[key])
+    const host = membersArray.find(member => member.uid === order.host);
+    const ownMember = Object.keys(members)
+      .map(key => members[key])
       .find(member => member.uid === meUid);
 
     const entryOpacity = entryOpacityAnimation.interpolate({
@@ -189,7 +190,8 @@ class OrderDetail extends React.Component<
           )}>
           <View>
             {ownMember &&
-              (ownMember.score === null || ownMember.score === undefined) && (
+              (ownMember.quantity === null ||
+                ownMember.quantity === undefined) && (
                 <AskScoreItem
                   onPress={() => this.showUserDetailModal(ownMember.uid)}
                 />
@@ -200,6 +202,7 @@ class OrderDetail extends React.Component<
                 innerRef={component => (this.itemRefs[host.uid] = component)}>
                 <MemberItem
                   member={host}
+                  self={order.host === meUid}
                   host
                   onPress={() => this.showUserDetailModal(host.uid)}
                 />
@@ -213,12 +216,13 @@ class OrderDetail extends React.Component<
                     (this.itemRefs[ownMember.uid] = component)
                   }>
                   <MemberItem
+                    self
                     member={ownMember}
                     onPress={() => this.showUserDetailModal(ownMember.uid)}
                   />
                 </View>
               )}
-            {members.map(
+            {membersArray.map(
               member =>
                 member.uid !== order.host &&
                 member.uid !== meUid && (
@@ -240,6 +244,7 @@ class OrderDetail extends React.Component<
           height={infoExpandedHeight}
           collapsedHeight={infoCollapsedHeight}
           order={order}
+          members={members}
           scrollAnimation={scrollAnimation}
         />
         <UserDetailModal
@@ -249,7 +254,9 @@ class OrderDetail extends React.Component<
           visible={!!userDetailModalVisible}
           startPosition={userDetailModalStartPosition}
           order={order}
-          member={members.find(member => member.uid === userDetailModalMember)}
+          member={membersArray.find(
+            member => member.uid === userDetailModalMember,
+          )}
         />
         <Header
           left={
@@ -276,6 +283,7 @@ class OrderDetail extends React.Component<
 
 const mapStateToProps = (state, ownProps): MappedProps => ({
   order: order(state, ownProps.navigation.getParam('uid')),
+  members: members(state, ownProps.navigation.getParam('uid')),
   meUid: meId(state) || '',
 });
 const ConnectedOrderDetail = connect(mapStateToProps)(OrderDetail);

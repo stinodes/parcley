@@ -24,7 +24,7 @@ declare module 'parcley' {
   };
   declare export type Unsynced<Type> = $Diff<Type, { uid: Id }>;
   declare export type Member = {
-    score: Score,
+    quantity: number,
     username: string,
     uid: string,
   };

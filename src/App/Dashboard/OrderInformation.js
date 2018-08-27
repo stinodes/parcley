@@ -16,12 +16,13 @@ import g from 'glamorous-native';
 
 import { Circle, Icon, Text } from '../../Components';
 
-import type { Member, Order } from 'parcley';
+import type { Member, Order, Id } from 'parcley';
 
 const AnimatedView = g(Animated.View)(flex, space, size, backgroundColor);
 
 type Props = {
   order: Order,
+  members: { [Id]: Member },
   scrollAnimation: Animated.Value,
   height: number,
   collapsedHeight: number,
@@ -29,17 +30,23 @@ type Props = {
 
 class OrderInformation extends React.Component<Props> {
   render() {
-    const { order, height, scrollAnimation, collapsedHeight } = this.props;
+    const {
+      order,
+      height,
+      scrollAnimation,
+      collapsedHeight,
+      members,
+    } = this.props;
     const width = Dimensions.get('window').width;
 
-    const members: Member[] = Object.keys(order.members).map(
-      key => order.members[key],
+    const membersArray: Member[] = Object.keys(members).map(
+      key => members[key],
     );
 
-    const total = members
-      .map(member => member.score)
-      .filter(score => score)
-      .reduce((prev, value) => prev + value, 0);
+    const total = membersArray
+      .map(member => member.quantity)
+      .filter(quantity => quantity)
+      .reduce((prev, value) => prev + parseInt(value), 0);
 
     const heightOrMin = Math.max(collapsedHeight, height - collapsedHeight);
     const inputRange = [0, heightOrMin];
@@ -92,9 +99,11 @@ class OrderInformation extends React.Component<Props> {
               <View h={120} w={120} ai="center" jc="center">
                 <Circle size={100} color="ufoGreen" raised={10}>
                   <Element relative start={{ scale: 2 }} end={{ scale: 2 }}>
-                    <Text color="white" bold>
-                      {total}
-                    </Text>
+                    <View px={1}>
+                      <Text color="white" bold numberOfLines={1}>
+                        {total}
+                      </Text>
+                    </View>
                   </Element>
                 </Circle>
               </View>

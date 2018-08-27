@@ -64,7 +64,7 @@ class ScoreForm extends React.Component<Props, State> {
 }
 
 const FScoreForm = withFormik({
-  mapPropsToValues: () => ({ score: '' }),
+  mapPropsToValues: () => ({ quantity: '' }),
 })(ScoreForm);
 
 export { FScoreForm as ScoreForm };

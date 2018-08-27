@@ -10,4 +10,5 @@ export * from './Background';
 export * from './FullscreenModal';
 export * from './TextInput';
 export * from './Circle';
+export * from './ScoreCircle';
 export * from './Icon';

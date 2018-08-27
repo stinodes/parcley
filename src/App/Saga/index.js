@@ -18,6 +18,7 @@ import {
   setOrder,
   setOrders,
   setPending,
+  setUser,
   setUsers,
 } from '../Redux';
 import {
@@ -41,7 +42,7 @@ import { meId } from '../../Onboarding/Redux/selectors';
 import { toEntityMap } from '../../Utils';
 import { ReadError } from '../../Utils/firebase';
 
-export const readUserIfNecessary = function*(
+export const _readUserIfNecessary = function*(
   uid: Id,
   alwaysReturn?: boolean,
 ): Generator<*, *, *> {
@@ -49,6 +50,19 @@ export const readUserIfNecessary = function*(
   if (userInfo) return alwaysReturn ? userInfo : null;
   userInfo = yield call(readUserInfo, uid);
   return userInfo;
+};
+
+export const fetchUserSaga = function*(userId: string): Generator<*, *, *> {
+  try {
+    let userInfo = yield select(user, userId);
+    if (!userInfo) {
+      userInfo = yield call(readUserInfo, userId);
+      yield put(setUser(userInfo));
+    }
+    return userInfo;
+  } catch (e) {
+    console.log('error', userId, e);
+  }
 };
 
 /**
@@ -70,14 +84,17 @@ const createMembersChannel = (orderUid: Id) =>
       .orderBy('username', 'asc')
       .onSnapshot(querySnapshot => emit({ querySnapshot })),
   );
-
-const fetchDataForOrderSaga = function*(orderId: Id) {
-  let membersChannel;
+const createFriendsChannel = (userId: Id) =>
+  eventChannel(emit =>
+    firebase
+      .firestore()
+      .collection(`users/${userId}/friends`)
+      .orderBy('rankIndex', 'desc')
+      .onSnapshot(querySnapshot => emit({ querySnapshot })),
+  );
+const listenToMembersSaga = function*(orderId: Id) {
+  const membersChannel = yield call(createMembersChannel, orderId);
   try {
-    const order = yield call(readOrder, orderId);
-    yield put(setOrder(order));
-    membersChannel = yield call(createMembersChannel, orderId);
-
     while (true) {
       const { querySnapshot } = yield take(membersChannel);
       const members = querySnapshot.docs.reduce(
@@ -85,7 +102,20 @@ const fetchDataForOrderSaga = function*(orderId: Id) {
         {},
       );
       yield put(setMembers(orderId, members));
+      yield all(querySnapshot.docs.map(doc => call(fetchUserSaga, doc.id)));
     }
+  } catch (e) {
+    console.log('error', e);
+  } finally {
+    membersChannel.close();
+  }
+};
+const fetchDataForOrderSaga = function*(orderId: Id) {
+  let membersChannel;
+  try {
+    const order = yield call(readOrder, orderId);
+    yield put(setOrder(order));
+    yield call(listenToMembersSaga, orderId);
   } catch (e) {
     console.log('error', e);
   } finally {
@@ -99,7 +129,6 @@ const listenToOrdersSaga = function*() {
   try {
     while (true) {
       const { querySnapshot } = yield take(channel);
-      console.log(querySnapshot.docs.map(doc => doc.id));
       const newTasks = yield all(
         querySnapshot.docs.map(doc => fork(fetchDataForOrderSaga, doc.id)),
       );
@@ -112,61 +141,31 @@ const listenToOrdersSaga = function*() {
     yield all(Object.keys(tasks).map(key => cancel(tasks[key])));
   }
 };
-
-const readOrdersSaga = function*() {
+const listenToFriendsSaga = function*() {
+  const myId = yield select(meId);
+  const channel = yield call(createFriendsChannel, myId);
   try {
-    yield put(setPending(true));
-    const meUid = yield select(meId);
-    const meInfo = yield call(readUserIfNecessary, meUid, true);
-    const orderUids = Object.keys(meInfo.joinedOrders);
-
-    const ordersResult: ThrowableRead<Order>[] = yield all(
-      orderUids.map(uid => call(readOrder, uid)),
-    );
-    const failedOrders: ReadError<>[] = (ordersResult.filter(
-      ReadError.isError,
-    ): any[]);
-    const orders: Order[] = (ordersResult.filter(ReadError.isNotError): any[]);
-
-    yield all(
-      failedOrders.map(error => call(removeOrderFromUser, meUid, error.data)),
-    );
-
-    const orderMap = toEntityMap(orders);
-    yield put(setOrders(orderMap));
-
-    const userUidMap = orders.reduce(
-      (prev, order) => ({ ...prev, ...order.members }),
-      {},
-    );
-    const userUids = Object.keys(userUidMap);
-    const users = yield all(
-      userUids.map(uid => call(readUserIfNecessary, uid, true)),
-    );
-    const userMap = toEntityMap(users);
-    yield put(setUsers(userMap));
-    yield put(setPending(false));
+    while (true) {
+      const { querySnapshot } = yield take(channel);
+      const friends = querySnapshot.docs.reduce(
+        (prev, doc) => ({
+          ...prev,
+          [doc.id]: doc.data(),
+        }),
+        {},
+      );
+      yield put(setFriends(friends));
+      yield all(querySnapshot.docs.map(doc => call(fetchUserSaga, doc.id)));
+    }
   } catch (e) {
-    console.log(e);
+    console.log('friends error', e);
+  } finally {
+    channel.close();
   }
-};
-const readFriendsSaga = function*() {
-  try {
-    const myUid = yield select(meId);
-    const friends = yield call(readFriends, myUid);
-    yield put(setFriends(friends));
-    const users = yield all(
-      friends.map(friendInfo => call(readUserIfNecessary, friendInfo.uid)),
-    );
-    yield put(setUsers(users));
-  } catch (e) {}
 };
 
 const listenForAllDataSaga = function*() {
-  yield all([fork(listenToOrdersSaga)]);
-};
-const readAllDataSaga = function*() {
-  yield all([call(readFriendsSaga), call(readOrdersSaga)]);
+  yield all([fork(listenToOrdersSaga), fork(listenToFriendsSaga)]);
 };
 
 const dataSaga = function*(): Generator<*, *, *> {

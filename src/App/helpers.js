@@ -44,26 +44,18 @@ export const generateOrderCode = async (numOfWords?: number = 4) => {
   return generateOrderCode(numOfWords);
 };
 
-export const readUserInfo = async (userId: Id): Promise<UserInformation> => {
-  const firestore = firebase.firestore();
-  const userDoc = firestore.collection('users').doc(userId);
-  const userInfo = await userDoc.get().then(doc => doc.data());
-  const joinedOrders = await userDoc
-    .collection('orders')
-    .where('joined', '==', true)
+export const readUserInfo = async (userId: Id): Promise<UserInformation> =>
+  firebase
+    .firestore()
+    .doc(`users/${userId}`)
     .get()
-    .then(snapshot =>
-      snapshot.docs
-        .filter(doc => doc.data().joined)
-        .reduce((prev, doc) => ({ ...prev, [doc.id]: true }), {}),
-    );
-  return { ...userInfo, joinedOrders };
-};
+    .then(doc => doc.data());
+
 export const readFriends = async (userId: Id) =>
   firebase
     .firestore()
     .collection(`users/${userId}/friends`)
-    .where('friend', '==', true)
+    // .where('rankIndex', '>', 0)
     .orderBy('rankIndex', 'asc')
     .get()
     .then(snapshot => snapshot.docs.data());
@@ -111,11 +103,15 @@ export const readOrderAndMembers = async (
     );
   return { ...order, members };
 };
-export const setScoreOnOrder = (userUid: Id, orderUid: Id, score: number) =>
+export const setQuantityOnOrder = (
+  orderUid: Id,
+  userUid: Id,
+  quantity: number,
+) =>
   firebase
     .firestore()
-    .doc(`orders/${orderUid}/users/${userUid}`)
-    .update('score', score);
+    .doc(`orders/${orderUid}/members/${userUid}`)
+    .update({ quantity });
 export const addOrderToUser = (userUid: Id, orderUid: Id) =>
   firebase
     .firestore()

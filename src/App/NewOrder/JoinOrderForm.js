@@ -64,7 +64,7 @@ class JoinOrderForm extends React.Component<ReduxProps<Props, MappedProps>> {
         <View f={1} pt={1} px={3}>
           <FTextInput
             autoCapitalize="none"
-            accentColor="frenchSky"
+            accentColor="gunMetal"
             name="code"
             value={values.code}
             placeholder="Order code"
@@ -73,7 +73,7 @@ class JoinOrderForm extends React.Component<ReduxProps<Props, MappedProps>> {
         </View>
         {isSubmitting ? (
           <View pb={3} pt={2} fd="row" jc="center">
-            <Spinner size="large" color="frenchSky" /> :
+            <Spinner size="large" color="gunMetal" /> :
           </View>
         ) : (
           <View pb={2} pt={1} fd="row" jc="center">
@@ -83,8 +83,8 @@ class JoinOrderForm extends React.Component<ReduxProps<Props, MappedProps>> {
               </Button>
             </View>
             <View ml={1}>
-              <Button color="white" ripple="frenchSky" onPress={handleSubmit}>
-                <GIcon name="check" color="frenchSky" />
+              <Button color="white" ripple="ufoGreen" onPress={handleSubmit}>
+                <GIcon name="check" color="ufoGreen" />
               </Button>
             </View>
           </View>

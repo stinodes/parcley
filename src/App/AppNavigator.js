@@ -25,7 +25,7 @@ const AppNavigator = createMaterialTopTabNavigator(
     NewOrder: {
       screen: NewOrder,
       navigationOptions: {
-        tabBarIcon: createTabBarIcon('plus', 'frenchSky'),
+        tabBarIcon: createTabBarIcon('plus', 'gunMetal'),
         // tabBarButtonComponent: createTabBarButton('frenchSky'),
       },
     },

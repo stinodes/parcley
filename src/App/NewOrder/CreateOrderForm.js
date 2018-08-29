@@ -62,7 +62,7 @@ class CreateOrderForm extends React.Component<ReduxProps<Props, MappedProps>> {
             <FTextInput
               baseColor="black"
               label="Order name"
-              accentColor="frenchSky"
+              accentColor="gunMetal"
               name="name"
               value={values.name}
               onChange={setFieldValue}
@@ -71,7 +71,7 @@ class CreateOrderForm extends React.Component<ReduxProps<Props, MappedProps>> {
           <View>
             <FTextInput
               baseColor="black"
-              accentColor="frenchSky"
+              accentColor="gunMetal"
               label="Description"
               name="description"
               value={values.description}
@@ -82,7 +82,7 @@ class CreateOrderForm extends React.Component<ReduxProps<Props, MappedProps>> {
             <FTextInput
               baseColor="black"
               label="Members"
-              accentColor="frenchSky"
+              accentColor="gunMetal"
               autoCapitalize="none"
               name="members"
               title="Enter members' usernames split by commas"
@@ -93,7 +93,7 @@ class CreateOrderForm extends React.Component<ReduxProps<Props, MappedProps>> {
           <View mt={2} w={200} as="center" mb={4}>
             <Button
               onPress={handleSubmit}
-              color="frenchSky"
+              color="gunMetal"
               raised={20}
               ripple="white">
               {isSubmitting ? (

@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import {
+  Absolute,
   Base,
   Button,
   flex,
@@ -12,16 +13,21 @@ import {
 } from 'nativesystem';
 import type { FormikBag } from 'formik';
 import { withFormik } from 'formik';
-import Icon from 'react-native-vector-icons/MaterialIcons';
 import g from 'glamorous-native';
 
-import { FormHelper, FTextInput, FullscreenModal, Text } from '../Components';
+import {
+  FormHelper,
+  FTextInput,
+  FullscreenModal,
+  Icon,
+  Text,
+} from '../Components';
 import { createError } from '../Utils/messageBar';
-import { Animated, Dimensions } from 'react-native';
+import { Animated, Dimensions, Keyboard } from 'react-native';
 import { isUserUnique, registerUser, writeUserInfo } from './helpers';
+import { Header } from '../App/Header';
 
 const AnimatedView = g(Animated.View)(flex, space);
-const GIcon = g(Icon)(textColor);
 
 type Props = {
   ...FormikBag,
@@ -64,6 +70,11 @@ class RegisterForm extends React.Component<Props> {
     );
   };
 
+  close = () => {
+    Keyboard.dismiss();
+    this.props.close();
+  };
+
   render() {
     const {
       visible,
@@ -89,11 +100,10 @@ class RegisterForm extends React.Component<Props> {
           password: passwordHelper,
         }) => (
           <FullscreenModal
-            invertStatusBarStyle
             visible={visible}
             onRequestClose={close}
             createAnimation={this.createAnimation}
-            color="frenchSky"
+            color="white"
             onHide={resetForm}
             screenProps={{
               dismissKeyboardOnTap: true,
@@ -102,12 +112,10 @@ class RegisterForm extends React.Component<Props> {
                 usernameHelper.input,
                 passwordHelper.input,
               ],
-            }}
-            statusBarColor="frenchSky"
-            statusBarStyle="light-content">
+            }}>
             <View px={3} jc="center" f={1}>
               <AnimatedView
-                my={2}
+                my={1}
                 style={{
                   transform: [
                     {
@@ -118,10 +126,10 @@ class RegisterForm extends React.Component<Props> {
                     },
                   ],
                 }}>
-                <Text modifier="large" bold color="white">
-                  Hi there, friend!
+                <Text color="raisinBlack">Sign Up</Text>
+                <Text modifier="large" bold color="raisinBlack">
+                  Fancy meeting you!
                 </Text>
-                <Text color="white">Who are you?</Text>
               </AnimatedView>
 
               <AnimatedView
@@ -141,9 +149,9 @@ class RegisterForm extends React.Component<Props> {
                   value={email}
                   onChange={setFieldValue}
                   label="E-mail address"
-                  color="white"
-                  baseColor="white"
-                  accentColor="white"
+                  color="raisinBlack"
+                  baseColor="raisinBlack"
+                  accentColor="gunMetal"
                   autoCapitalize="none"
                   keyboardType="email-address"
                   returnKeyType="next"
@@ -167,9 +175,9 @@ class RegisterForm extends React.Component<Props> {
                   label="Username"
                   value={username}
                   onChange={setFieldValue}
-                  color="white"
-                  baseColor="white"
-                  accentColor="white"
+                  color="raisinBlack"
+                  baseColor="raisinBlack"
+                  accentColor="gunMetal"
                   autoCapitalize="none"
                   returnKeyType="next"
                   onSubmitEditing={passwordHelper.focus}
@@ -193,9 +201,9 @@ class RegisterForm extends React.Component<Props> {
                   name="password"
                   value={password}
                   onChange={setFieldValue}
-                  color="white"
-                  baseColor="white"
-                  accentColor="white"
+                  color="raisinBlack"
+                  baseColor="raisinBlack"
+                  accentColor="gunMetal"
                   autoCapitalize="none"
                   returnKeyType="send"
                   onSubmitEditing={handleSubmit}
@@ -215,43 +223,33 @@ class RegisterForm extends React.Component<Props> {
                 }}>
                 <View w={200} as="center" pt={2} pb={4}>
                   <Button
-                    color="white"
-                    ripple="frenchSky"
+                    color="gunMetal"
+                    ripple="white"
                     raised={20}
                     onPress={handleSubmit}>
                     {isSubmitting ? (
-                      <Spinner color="frenchSky" />
+                      <Spinner color="white" />
                     ) : (
-                      <Text color="frenchSky" bold>
+                      <Text color="white" bold>
                         Sign Up
                       </Text>
                     )}
                   </Button>
                 </View>
               </AnimatedView>
-
-              <AnimatedView
-                as="center"
-                style={{
-                  transform: [
-                    {
-                      translateY: closeButtonAnimation.interpolate({
-                        inputRange: [0, 1],
-                        outputRange: [height * 0.5, 0],
-                      }),
-                    },
-                  ],
-                }}>
-                <Base
-                  background={Base.Ripple('white', true)}
-                  onPress={Base.delayHandler(this.props.close)}>
-                  <View w={64} h={64} jc="center" ai="center">
-                    <GIcon name="close" color="white" size={40} />
-                  </View>
-                </Base>
-              </AnimatedView>
               <KeyboardAnimatedView />
             </View>
+            <Header
+              left={
+                <Base
+                  background={Base.Ripple('frenchSky', true)}
+                  onPress={Base.delayHandler(this.close)}>
+                  <View w={64} h={64} jc="center" ai="center">
+                    <Icon name="chevron-left" color="raisinBlack" size={40} />
+                  </View>
+                </Base>
+              }
+            />
           </FullscreenModal>
         )}
       </FormHelper>

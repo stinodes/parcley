@@ -32,7 +32,7 @@ const TextInput = ({
       labelTextStyle={subTheme('text')({ theme, modifier: 'small' })}
       titleTextStyle={subTheme('text')({ theme, modifier: 'small' })}
       style={[subTheme('text')({ theme }), { color: parsedProps.textColor }]}
-      ref={inputRef && (comp => inputRef(comp))}
+      ref={inputRef && (comp => inputRef(comp && comp.input))}
       {...props}
       {...parsedProps}
     />

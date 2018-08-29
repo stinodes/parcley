@@ -46,10 +46,7 @@ class LoginScreen extends React.Component<Props, State> {
             </Button>
           </View>
           <View my={2}>
-            <Button
-              color="frenchSky"
-              ripple="white"
-              onPress={this.showRegister}>
+            <Button color="gunMetal" ripple="white" onPress={this.showRegister}>
               <Text bold color="white">
                 Sign Up
               </Text>

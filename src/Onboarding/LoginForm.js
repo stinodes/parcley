@@ -6,22 +6,30 @@ import {
   Button,
   flex,
   KeyboardAnimatedView,
+  KeyboardConsumer,
+  Keyboard,
   space,
   Spinner,
   SystemView as View,
   textColor,
+  Absolute,
 } from 'nativesystem';
 import type { FormikBag } from 'formik';
 import { withFormik } from 'formik';
-import Icon from 'react-native-vector-icons/MaterialIcons';
 import g from 'glamorous-native';
 
-import { FormHelper, FTextInput, FullscreenModal, Text } from '../Components';
+import {
+  FormHelper,
+  FTextInput,
+  FullscreenModal,
+  Icon,
+  Text,
+} from '../Components';
 import { createError } from '../Utils/messageBar';
 import { login } from './helpers';
+import { Header } from '../App/Header';
 
 const AnimatedView = g(Animated.View)(flex, space);
-const GIcon = g(Icon)(textColor);
 
 type Props = {
   ...FormikBag,
@@ -63,6 +71,10 @@ class LoginForm extends React.Component<Props> {
     );
   };
 
+  close = () => {
+    this.props.close();
+  };
+
   render() {
     const {
       visible,
@@ -77,24 +89,24 @@ class LoginForm extends React.Component<Props> {
       titleAnimation,
       inputsAnimation,
       submitButtonAnimation,
-      closeButtonAnimation,
     } = this.animations;
     const { height } = Dimensions.get('window');
     return (
       <FormHelper inputNames={['email', 'password']}>
         {({ email: emailHelper, password: passwordHelper }) => (
           <FullscreenModal
-            invertStatusBarStyle
             visible={visible}
             onRequestClose={close}
             onHide={resetForm}
             createAnimation={this.createAnimation}
-            color="ufoGreen"
-            statusBarColor="ufoGreen"
-            statusBarStyle="light-content">
+            screenProps={{
+              dismissKeyboardOnTap: true,
+              ignoredTargets: () => [emailHelper.input, passwordHelper.input],
+            }}
+            color="white">
             <View px={3} jc="center" f={1}>
               <AnimatedView
-                my={2}
+                my={1}
                 style={{
                   transform: [
                     {
@@ -105,7 +117,8 @@ class LoginForm extends React.Component<Props> {
                     },
                   ],
                 }}>
-                <Text modifier="large" bold color="white">
+                <Text color="raisinBlack">Log In</Text>
+                <Text modifier="large" bold color="raisinBlack">
                   Welcome back!
                 </Text>
               </AnimatedView>
@@ -127,9 +140,9 @@ class LoginForm extends React.Component<Props> {
                   name="email"
                   value={email}
                   onChange={setFieldValue}
-                  color="white"
-                  accentColor="white"
-                  baseColor="white"
+                  color="raisinBlack"
+                  baseColor="raisinBlack"
+                  accentColor="ufoGreen"
                   autoCapitalize="none"
                   keyboardType="email-address"
                   returnKeyType="next"
@@ -154,9 +167,9 @@ class LoginForm extends React.Component<Props> {
                   name="password"
                   value={password}
                   onChange={setFieldValue}
-                  color="white"
-                  accentColor="white"
-                  baseColor="white"
+                  color="raisinBlack"
+                  baseColor="raisinBlack"
+                  accentColor="ufoGreen"
                   autoCapitalize="none"
                   returnKeyType="send"
                   onSubmitEditing={handleSubmit}
@@ -175,42 +188,33 @@ class LoginForm extends React.Component<Props> {
                 }}>
                 <View w={200} as="center" pt={2} pb={4}>
                   <Button
-                    color="white"
-                    ripple="ufoGreen"
+                    color="ufoGreen"
+                    ripple="white"
                     raised={20}
                     onPress={handleSubmit}>
                     {isSubmitting ? (
-                      <Spinner color="ufoGreen" />
+                      <Spinner color="white" />
                     ) : (
-                      <Text color="ufoGreen" bold>
+                      <Text color="white" bold>
                         Log In
                       </Text>
                     )}
                   </Button>
                 </View>
               </AnimatedView>
-              <AnimatedView
-                as="center"
-                style={{
-                  transform: [
-                    {
-                      translateY: closeButtonAnimation.interpolate({
-                        inputRange: [0, 1],
-                        outputRange: [height * 0.5, 0],
-                      }),
-                    },
-                  ],
-                }}>
-                <Base
-                  background={Base.Ripple('white', true)}
-                  onPress={Base.delayHandler(this.props.close)}>
-                  <View w={64} h={64} jc="center" ai="center">
-                    <GIcon name="close" color="white" size={40} />
-                  </View>
-                </Base>
-              </AnimatedView>
               <KeyboardAnimatedView />
             </View>
+            <Header
+              left={
+                <Base
+                  background={Base.Ripple('frenchSky', true)}
+                  onPress={Base.delayHandler(this.close)}>
+                  <View w={64} h={64} jc="center" ai="center">
+                    <Icon name="chevron-left" color="raisinBlack" size={40} />
+                  </View>
+                </Base>
+              }
+            />
           </FullscreenModal>
         )}
       </FormHelper>

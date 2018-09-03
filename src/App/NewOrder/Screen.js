@@ -103,10 +103,12 @@ class NewOrder extends React.Component<ReduxProps<Props, MappedProps>, State> {
                 background={Base.Ripple('gunMetal', true)}
                 onPress={Base.delayHandler(this.showJoin)}>
                 <View py={2} px={3} fd="row" ai="center">
-                  <Text bold modifier="large">
-                    Join an Order
-                  </Text>
-                  <View pl={1} as="flex-end">
+                  <View f={1}>
+                    <Text bold modifier="large">
+                      Join an Order
+                    </Text>
+                  </View>
+                  <View px={1} as="flex-end">
                     <Icon name="arrow-down" color="gunMetal" modifier="icon" />
                   </View>
                 </View>

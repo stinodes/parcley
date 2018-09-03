@@ -74,8 +74,10 @@ class Profile extends React.Component<ReduxProps<Props, MappedProps>> {
                 {user.email}
               </Text>
             </View>
-            <Separator color="gainsBoro" />
           </Background>
+          <View px={3}>
+            <Separator color="gainsBoro" />
+          </View>
         </Absolute>
 
         <Header />

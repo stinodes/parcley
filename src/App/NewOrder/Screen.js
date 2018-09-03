@@ -11,24 +11,21 @@ import {
   text,
   flex,
 } from 'nativesystem';
+import { Separator } from 'nativesystem/lib/Components/Separator';
 import { ScrollView, Animated } from 'react-native';
 import g from 'glamorous-native';
-import Icon from 'react-native-vector-icons/Feather';
 
 import { CreateOrderForm } from './CreateOrderForm';
 import { JoinOrderForm } from './JoinOrderForm';
 import { Header } from '../Header';
-import { Text } from '../../Components';
+import { Icon, Text } from '../../Components';
 import { connect } from 'react-redux';
-import { createOrder, isPending, isSuccessful } from './Redux';
-import type { CreateOrderValues } from './Saga';
+import { isPending, isSuccessful } from './Redux';
 import { SuccessAlert } from './SuccessAlert';
 
 const absolute = { position: 'absolute', top: 0, left: 0, right: 0 };
 const AbsoluteAnimate = g(Animated.View)(absolute, space, flex);
-const AnimatedView = g(Animated.View)(space, flex);
 const RaisedView = g(View)(backgroundColor, raised);
-const GIcon = g(Icon)(text, { fontSize: 28 });
 
 type Props = {};
 type MappedProps = {};
@@ -97,18 +94,21 @@ class NewOrder extends React.Component<ReduxProps<Props, MappedProps>, State> {
               style={{
                 height: this.state.joinAnimation.interpolate({
                   inputRange: [0, 1],
-                  outputRange: [0, (this.state.joinHeight || 1) - 75],
+                  outputRange: [0, (this.state.joinHeight || 1) - 120],
                 }),
               }}
             />
             <View alignItems="stretch">
               <Base
-                background={Base.Ripple('frenchSky', true)}
+                background={Base.Ripple('gunMetal', true)}
                 onPress={Base.delayHandler(this.showJoin)}>
-                <View py={2} px={3}>
+                <View py={2} px={3} fd="row" ai="center">
                   <Text bold modifier="large">
                     Join an Order
                   </Text>
+                  <View pl={1} as="flex-end">
+                    <Icon name="arrow-down" color="gunMetal" modifier="icon" />
+                  </View>
                 </View>
               </Base>
             </View>

@@ -92,7 +92,7 @@ class SuccessAlert extends React.Component<Props, State> {
               f={1}
               jc="center"
               ai="center"
-              color={transparentize(0.05, getColor(theme, 'gunMetal'))}>
+              color={transparentize(0.05, getColor(theme, 'white'))}>
               <Circle
                 color="ufoGreen"
                 jc="center"

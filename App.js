@@ -72,6 +72,8 @@ class App extends React.Component<Props, State> {
         })
           .withModifier('small', { fontSize: 38 * ratio })
           .withModifier('large', { fontSize: 58 * ratio })
+          .withModifier('icon', { fontSize: 24 })
+          .withModifier('icon-large', { fontSize: 34 })
           .done(),
       )
       .withSubTheme(

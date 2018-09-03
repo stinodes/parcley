@@ -264,14 +264,14 @@ class OrderDetail extends React.Component<
               onPress={() => this.props.navigation.goBack()}
               background={Base.Ripple('ufoGreen', true)}>
               <View p={2}>
-                <Icon name="arrow-left" color="ufoGreen" size={24} />
+                <Icon name="arrow-left" color="ufoGreen" modifier="icon" />
               </View>
             </Base>
           }
           right={
             <Base onPress={() => {}} background={Base.Ripple('ufoGreen', true)}>
               <View p={2}>
-                <Icon name="edit" color="ufoGreen" size={24} />
+                <Icon name="edit" color="ufoGreen" modifier="icon" />
               </View>
             </Base>
           }

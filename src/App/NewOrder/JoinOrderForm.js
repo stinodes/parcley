@@ -3,20 +3,18 @@ import * as React from 'react';
 import type { FormikBag } from 'formik';
 import { withFormik } from 'formik';
 import g from 'glamorous-native';
-import Icon from 'react-native-vector-icons/Feather';
 import {
   Button,
   Screen,
   Spinner,
   SystemView as View,
   text,
+  Absolute,
 } from 'nativesystem';
 
-import { Text, FTextInput } from '../../Components';
+import { Text, FTextInput, Icon } from '../../Components';
 import { isPending, isSuccessful, joinOrder } from './Redux';
 import { connect } from 'react-redux';
-
-const GIcon = g(Icon)(text, { fontSize: 34 });
 
 type Props = {
   ...FormikBag,
@@ -73,20 +71,21 @@ class JoinOrderForm extends React.Component<ReduxProps<Props, MappedProps>> {
         </View>
         {isSubmitting ? (
           <View pb={3} pt={2} fd="row" jc="center">
-            <Spinner size="large" color="gunMetal" /> :
+            <Spinner size="large" color="gunMetal" />
           </View>
         ) : (
           <View pb={2} pt={1} fd="row" jc="center">
-            <View mr={1}>
-              <Button color="white" ripple="error" onPress={close}>
-                <GIcon name="x" color="error" />
+            <View>
+              <Button color="gunMetal" ripple="white" onPress={handleSubmit}>
+                <Text color="white">Join!</Text>
               </Button>
             </View>
-            <View ml={1}>
-              <Button color="white" ripple="ufoGreen" onPress={handleSubmit}>
-                <GIcon name="check" color="ufoGreen" />
+
+            <Absolute b={2} r={1}>
+              <Button color="white" ripple="gunMetal" onPress={close}>
+                <Icon name="arrow-up" color="gunMetal" modifier="icon" />
               </Button>
-            </View>
+            </Absolute>
           </View>
         )}
       </Screen>

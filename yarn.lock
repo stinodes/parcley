@@ -4737,7 +4737,7 @@ nanomatch@^1.2.9:
     snapdragon "^0.8.1"
     to-regex "^3.0.1"
 
-nativesystem@1.0.0-beta.3:
+nativesystem@^1.0.0-beta.3:
   version "1.0.0-beta.3"
   resolved "https://registry.yarnpkg.com/nativesystem/-/nativesystem-1.0.0-beta.3.tgz#156841a24762763883215edb19cac29df011f376"
   dependencies:

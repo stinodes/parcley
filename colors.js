@@ -1,4 +1,4 @@
-import { Platform } from 'react-native';
+// @flow
 const baseWidth = 375;
 const desWidth = 1080;
 export const ratio = baseWidth / desWidth;

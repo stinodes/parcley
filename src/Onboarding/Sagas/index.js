@@ -29,12 +29,12 @@ const authSaga = function*(): Generator<*, *, *> {
           const action = NavigationActions.navigate({ routeName: 'App' });
           yield call(NavigationService.dispatch, action);
         } else {
-          yield put(authChanged(null));
-          yield put(setUserInformation(null));
           const action = NavigationActions.navigate({
             routeName: 'Onboarding',
           });
           yield call(NavigationService.dispatch, action);
+          yield put(authChanged(null));
+          yield put(setUserInformation(null));
         }
       } catch (e) {
         console.log('error in auth', e);

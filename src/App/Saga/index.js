@@ -1,5 +1,5 @@
 // @flow
-import { eventChannel } from 'redux-saga';
+import { eventChannel, END } from 'redux-saga';
 import {
   all,
   call,
@@ -74,7 +74,7 @@ const createJoinedOrdersChannel = (userId: Id) =>
       .firestore()
       .collection(`users/${userId}/orders`)
       .where('joined', '==', true)
-      .onSnapshot(querySnapshot => emit({ querySnapshot })),
+      .onSnapshot(querySnapshot => emit({ querySnapshot }), error => emit(END)),
   );
 const createMembersChannel = (orderUid: Id) =>
   eventChannel(emit =>
@@ -82,7 +82,7 @@ const createMembersChannel = (orderUid: Id) =>
       .firestore()
       .collection(`orders/${orderUid}/members`)
       .orderBy('username', 'asc')
-      .onSnapshot(querySnapshot => emit({ querySnapshot })),
+      .onSnapshot(querySnapshot => emit({ querySnapshot }), error => emit(END)),
   );
 const createFriendsChannel = (userId: Id) =>
   eventChannel(emit =>
@@ -90,7 +90,7 @@ const createFriendsChannel = (userId: Id) =>
       .firestore()
       .collection(`users/${userId}/friends`)
       .orderBy('rankIndex', 'desc')
-      .onSnapshot(querySnapshot => emit({ querySnapshot })),
+      .onSnapshot(querySnapshot => emit({ querySnapshot }), error => emit(END)),
   );
 const listenToMembersSaga = function*(orderId: Id) {
   const membersChannel = yield call(createMembersChannel, orderId);

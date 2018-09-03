@@ -2,7 +2,7 @@
 import { createMaterialTopTabNavigator } from 'react-navigation';
 import { elevationStyleFromRaised } from 'nativesystem';
 import { DashboardNavigator } from './Dashboard';
-import { Settings } from './Settings';
+import { Profile } from './Profile';
 import { NewOrder } from './NewOrder';
 import { createTabBarIcon } from './TabBar';
 
@@ -15,10 +15,10 @@ const AppNavigator = createMaterialTopTabNavigator(
         // tabBarButtonComponent: createTabBarButton('ufoGreen'),
       },
     },
-    Settings: {
-      screen: Settings,
+    Profile: {
+      screen: Profile,
       navigationOptions: {
-        tabBarIcon: createTabBarIcon('sliders', 'error'),
+        tabBarIcon: createTabBarIcon('user', 'error'),
         // tabBarButtonComponent: createTabBarButton('error'),
       },
     },
@@ -32,7 +32,7 @@ const AppNavigator = createMaterialTopTabNavigator(
   },
   {
     initialRouteName: 'Dashboard',
-    order: ['Dashboard', 'NewOrder', 'Settings'],
+    order: ['Dashboard', 'NewOrder', 'Profile'],
     tabBarPosition: 'bottom',
     // lazy: false,
     tabBarOptions: {

@@ -1,107 +1,107 @@
 // @flow
-import * as React from 'react';
-import { Animated, Dimensions, Keyboard } from 'react-native';
-import { Coordinator, Element, View, Button, Spinner } from 'nativesystem';
-import { PanGestureHandler, State } from 'react-native-gesture-handler';
-import { connect } from 'react-redux';
+import * as React from "react";
+import { Animated, Dimensions, Keyboard } from "react-native";
+import { Coordinator, Element, View, Button, Spinner } from "nativesystem";
+import { PanGestureHandler, State } from "react-native-gesture-handler";
+import { connect } from "react-redux";
 
 import {
   Background,
   FTextInput,
   Modal,
   Text,
-  TextInput,
-} from '../../Components';
-import { Separator } from 'nativesystem/lib/Components/Separator';
-import { meId } from '../../Onboarding/Redux/selectors';
-import { createError } from '../../Utils/messageBar';
+  TextInput
+} from "../../Components";
+import { Separator } from "nativesystem/lib/Components/Separator";
+import { meId } from "../../Onboarding/Redux/selectors";
+import { createError } from "../../Utils/messageBar";
 
-import type { Member, Order, FriendInformation } from 'parcley';
-import { MemberItem } from './MemberItem';
-import { friend } from '../Redux/selectors';
-import { addFriend, setQuantityOnOrder } from '../helpers';
-import { Formik } from 'formik';
+import type { Member, Order, FriendInformation } from "parcley";
+import { MemberItem } from "./MemberItem";
+import { friend } from "../Redux/selectors";
+import { addFriend, setQuantityOnOrder } from "../helpers";
+import { Formik } from "formik";
 
 type Props = {
   visible: boolean,
   startPosition: { x: number, y: number, w: number, h: number },
   onRequestClose: () => any,
   member: ?Member,
-  order: ?Order,
+  order: ?Order
 };
 type MappedProps = {
   meUid: ?string,
-  friendInfo: ?FriendInformation,
+  friendInfo: ?FriendInformation
 };
 type ComponentState = {
-  animation: Animated.Value,
+  animation: Animated.Value
 };
 
 class UserDetailModal extends React.Component<
   ReduxProps<Props, MappedProps>,
-  ComponentState,
+  ComponentState
 > {
   state = {
-    animation: new Animated.Value(Dimensions.get('window').height),
+    animation: new Animated.Value(Dimensions.get("window").height)
   };
 
-  height = Dimensions.get('window').height;
+  height = Dimensions.get("window").height;
   gestureEvent = Animated.event(
     [{ nativeEvent: { translationY: this.state.animation } }],
-    { userNativeDriver: true },
+    { userNativeDriver: true }
   );
 
   gestureEventStateChange = ({
-    nativeEvent: { state, translationY, velocityY },
+    nativeEvent: { state, translationY, velocityY }
   }: {
-    nativeEvent: { state: number, translationY: number, velocityY: number },
+    nativeEvent: { state: number, translationY: number, velocityY: number }
   }) => {
     if (state === State.END) {
       if (translationY < 75)
         Animated.spring(this.state.animation, {
           toValue: 0,
-          useNativeDriver: true,
+          useNativeDriver: true
         }).start();
       else
         Animated.spring(this.state.animation, {
           toValue: this.height,
           velocity: velocityY,
           overshootClamping: true,
-          useNativeDriver: true,
+          useNativeDriver: true
         }).start(this.props.onRequestClose);
     }
   };
 
   createAnimation = ({
     animation,
-    toValue,
+    toValue
   }: {
     animation: Animated.Value,
-    toValue: number,
+    toValue: number
   }) => {
     if (toValue === 1)
       return Animated.parallel([
         Animated.timing(animation, {
           toValue,
           duration: 0,
-          useNativeDriver: true,
+          useNativeDriver: true
         }),
         Animated.spring(this.state.animation, {
           toValue,
           overshootClamping: false,
-          useNativeDriver: true,
-        }),
+          useNativeDriver: true
+        })
       ]);
     return Animated.sequence([
       Animated.spring(this.state.animation, {
         toValue: this.height,
-        useNativeDriver: true,
+        useNativeDriver: true
       }),
       Animated.timing(animation, {
         toValue,
         duration: 0,
-        useNativeDriver: true,
-      }),
+        useNativeDriver: true
+      })
     ]);
   };
 
@@ -109,12 +109,12 @@ class UserDetailModal extends React.Component<
     if (!this.props.member || !this.props.meUid) return;
     if (this.props.member.uid === this.props.meUid)
       return createError({
-        message: "You can't add yourself as a friend, dumbass.",
+        message: "You can't add yourself as a friend, dumbass."
       });
 
-    if (this.props.friendInfo)
+    if (this.props.friendInfo && this.props.friendInfo.friend)
       createError({
-        message: 'Already friends!',
+        message: "Already friends!"
       });
 
     await addFriend(this.props.meUid, this.props.member.uid);
@@ -140,30 +140,34 @@ class UserDetailModal extends React.Component<
       member,
       order,
       meUid,
-      friendInfo,
+      friendInfo
     } = this.props;
     const height = this.height;
     return (
       <Modal
         visible={visible}
         onRequestClose={this.props.onRequestClose}
-        createAnimation={this.createAnimation}>
+        createAnimation={this.createAnimation}
+      >
         <PanGestureHandler
           onHandlerStateChange={this.gestureEventStateChange}
-          onGestureEvent={this.gestureEvent}>
+          onGestureEvent={this.gestureEvent}
+        >
           <View f={1}>
             <Coordinator
               f={1}
               animation={this.state.animation.interpolate({
                 inputRange: [0, height],
                 outputRange: [height, 0],
-                extrapolate: 'clamp',
+                extrapolate: "clamp"
               })}
-              inputRange={[0, height]}>
+              inputRange={[0, height]}
+            >
               <Element
                 positioning={{ top: 0, bottom: 0, left: 0, right: 0 }}
                 start={{ opacity: 0 }}
-                end={{ opacity: 1 }}>
+                end={{ opacity: 1 }}
+              >
                 <Background f={1} color="white" pt={80 + h + 1} px={3}>
                   {order &&
                     member &&
@@ -173,7 +177,7 @@ class UserDetailModal extends React.Component<
                           values: { quantity },
                           setFieldValue,
                           isSubmitting,
-                          handleSubmit,
+                          handleSubmit
                         }) => (
                           <View fd="column">
                             <Separator color="gainsBoro" />
@@ -215,7 +219,8 @@ class UserDetailModal extends React.Component<
               <Element
                 positioning={{ top: 0, left: 0 }}
                 start={{ x, y }}
-                end={{ x: 0, y: 80 }}>
+                end={{ x: 0, y: 80 }}
+              >
                 <View w={w} h={h}>
                   {member && (
                     <MemberItem
@@ -236,7 +241,7 @@ class UserDetailModal extends React.Component<
 
 const mapStateToProps = (state, ownProps: Props): MappedProps => ({
   meUid: meId(state),
-  friendInfo: ownProps.member ? friend(state, ownProps.member.uid) : null,
+  friendInfo: ownProps.member ? friend(state, ownProps.member.uid) : null
 });
 const ConnectedUserDetailModal = connect(mapStateToProps)(UserDetailModal);
 

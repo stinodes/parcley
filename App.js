@@ -1,41 +1,41 @@
 // @flow
-import React from 'react';
+import React from "react";
 import {
   Animated,
   Dimensions,
   Platform,
   StyleSheet,
-  UIManager,
-} from 'react-native';
-import { ThemeProvider } from 'glamorous-native';
-import { Provider } from 'react-redux';
-import type { Theme } from 'nativesystem';
+  UIManager
+} from "react-native";
+import { ThemeProvider } from "glamorous-native";
+import { Provider } from "react-redux";
+import type { Theme } from "nativesystem";
 import {
   createSubTheme,
   createTheme,
   Screen,
   Spinner,
-  subTheme,
-} from 'nativesystem';
-import { MessageBar, MessageBarManager } from 'react-native-message-bar';
-import { Constants } from 'expo';
+  subTheme
+} from "nativesystem";
+import { MessageBar, MessageBarManager } from "react-native-message-bar";
+import { Constants } from "expo";
 
-import { createReduxStore } from './src/Store';
-import { MainNavigator, NavigationService } from './src/Navigation';
-import { loadFonts, Logo } from './src/Components';
-import { delay } from './src/Utils';
-import { colors, ratio } from './colors';
-import firebase from '@firebase/app';
-import 'firebase/auth';
-import 'firebase/firestore';
+import { createReduxStore } from "./src/Store";
+import { MainNavigator, NavigationService } from "./src/Navigation";
+import { loadFonts, Logo } from "./src/Components";
+import { delay } from "./src/Utils";
+import { colors, ratio } from "./colors";
+import firebase from "@firebase/app";
+import "firebase/auth";
+import "firebase/firestore";
 
 const config = {
-  apiKey: 'AIzaSyDIbjaed8CjPxZsJwUIxE4n3_TzFyAyWjc',
-  authDomain: 'coolio-58d55.firebaseapp.com',
-  databaseURL: 'https://coolio-58d55.firebaseio.com',
-  projectId: 'coolio-58d55',
-  storageBucket: 'coolio-58d55.appspot.com',
-  messagingSenderId: '503306606752',
+  apiKey: "AIzaSyDIbjaed8CjPxZsJwUIxE4n3_TzFyAyWjc",
+  authDomain: "coolio-58d55.firebaseapp.com",
+  databaseURL: "https://coolio-58d55.firebaseio.com",
+  projectId: "coolio-58d55",
+  storageBucket: "coolio-58d55.appspot.com",
+  messagingSenderId: "503306606752"
 };
 firebase.initializeApp(config);
 firebase.firestore().settings({ timestampsInSnapshots: true });
@@ -47,7 +47,7 @@ type State = {
   spinnerAnimation: Animated.Value,
   navigatorAnimation: Animated.Value,
   theme: Theme,
-  loaded: boolean,
+  loaded: boolean
 };
 
 class App extends React.Component<Props, State> {
@@ -64,64 +64,74 @@ class App extends React.Component<Props, State> {
       .withColors(colors)
       .withSpacing([0, 8, 16, 32, 64])
       .withSubTheme(
-        'text',
+        "text",
         createSubTheme({
           color: colors.black,
-          fontFamily: 'Montserrat Medium',
-          fontSize: 48 * ratio,
+          fontFamily: "Montserrat Medium",
+          fontSize: 48 * ratio
         })
-          .withModifier('small', { fontSize: 38 * ratio })
-          .withModifier('large', { fontSize: 58 * ratio })
-          .withModifier('icon', { fontSize: 24 })
-          .withModifier('icon-large', { fontSize: 34 })
-          .done(),
+          .withModifier("small", { fontSize: 38 * ratio })
+          .withModifier("large", { fontSize: 58 * ratio })
+          .withModifier("icon", { fontSize: 24 })
+          .withModifier("icon-large", { fontSize: 34 })
+          .done()
       )
       .withSubTheme(
-        'textInput',
+        "textInput",
         createSubTheme({
           fontSize: 48 * ratio,
           paddingHorizontal: 4,
-          paddingVertical: 8,
-        }).done(),
+          paddingVertical: 8
+        }).done()
       )
       .withSubTheme(
-        'button',
+        "button",
         createSubTheme({
           backgroundColor: colors.ufoGreen,
           height: 160 * ratio,
           paddingHorizontal: 80 * ratio,
-          borderRadius: 80 * ratio,
+          borderRadius: 80 * ratio
         })
-          .withModifier('round', {
+          .withModifier("round", {
             height: 160 * ratio,
-            width: 160 * ratio,
+            width: 160 * ratio
           })
-          .withModifier('tabBar', { borderRadius: 0 })
-          .done(),
+          .withModifier("tabBar", { borderRadius: 0 })
+          .withModifier("small", {
+            height: 100 * ratio,
+            borderRadius: 50 * ratio
+          })
+          .withModifier("small-round", {
+            height: 100 * ratio,
+            width: 100 * ratio,
+            borderRadius: 50 * ratio,
+            paddingHorizontal: 0
+          })
+          .done()
       )
       .withSubTheme(
-        'card',
-        createSubTheme({ backgroundColor: 'white', borderRadius: 24 }).done(),
+        "card",
+        createSubTheme({ backgroundColor: "white", borderRadius: 24 }).done()
       )
       .withSubTheme(
-        'overlay',
-        createSubTheme({ backgroundColor: colors.white }).done(),
+        "overlay",
+        createSubTheme({ backgroundColor: colors.white }).done()
       )
       .withSubTheme(
-        'messageBar',
+        "messageBar",
         createSubTheme({
           titleColor: colors.white,
-          messageColor: colors.white,
+          messageColor: colors.white
         })
-          .withModifier('success', {
+          .withModifier("success", {
             strokeColor: colors.ufoGreen,
-            backgroundColor: colors.ufoGreen,
+            backgroundColor: colors.ufoGreen
           })
-          .withModifier('error', {
+          .withModifier("error", {
             strokeColor: colors.error,
-            backgroundColor: colors.error,
+            backgroundColor: colors.error
           })
-          .done(),
+          .done()
       )
       .done();
 
@@ -130,7 +140,7 @@ class App extends React.Component<Props, State> {
       spinnerAnimation: new Animated.Value(0),
       navigatorAnimation: new Animated.Value(0),
       theme,
-      loaded: false,
+      loaded: false
     };
   }
 
@@ -161,12 +171,12 @@ class App extends React.Component<Props, State> {
     const { logoAnimation, spinnerAnimation } = this.state;
     Animated.stagger(500, [
       Animated.spring(logoAnimation, { toValue, useNativeDriver: true }),
-      Animated.spring(spinnerAnimation, { toValue, useNativeDriver: true }),
+      Animated.spring(spinnerAnimation, { toValue, useNativeDriver: true })
     ]).start(callback);
   };
 
   getMessageTopInset = () => {
-    if (Platform.OS === 'ios' && Constants.statusBarHeight > 40)
+    if (Platform.OS === "ios" && Constants.statusBarHeight > 40)
       return Constants.statusBarHeight;
     return undefined;
   };
@@ -176,9 +186,9 @@ class App extends React.Component<Props, State> {
       theme,
       logoAnimation,
       spinnerAnimation,
-      navigatorAnimation,
+      navigatorAnimation
     } = this.state;
-    const { height } = Dimensions.get('window');
+    const { height } = Dimensions.get("window");
     const inputRange = [0, 1, 2];
     const outputRange = [height, 0, -height];
     return (
@@ -193,19 +203,19 @@ class App extends React.Component<Props, State> {
                 messageBarPadding={16}
                 viewTopInset={this.getMessageTopInset()}
                 titleStyle={{
-                  ...subTheme('text')({ theme, modifier: 'small' }),
-                  fontFamily: 'Montserrat Bold',
+                  ...subTheme("text")({ theme, modifier: "small" }),
+                  fontFamily: "Montserrat Bold"
                 }}
-                messageStyle={subTheme('text')({ theme, modifier: 'small' })}
-                stylesheetSuccess={subTheme('messageBar')({
+                messageStyle={subTheme("text")({ theme, modifier: "small" })}
+                stylesheetSuccess={subTheme("messageBar")({
                   theme,
-                  modifier: 'success',
+                  modifier: "success"
                 })}
-                stylesheetError={subTheme('messageBar')({
+                stylesheetError={subTheme("messageBar")({
                   theme,
-                  modifier: 'error',
+                  modifier: "error"
                 })}
-                stylesheetInfo={subTheme('messageBar')({ theme })}
+                stylesheetInfo={subTheme("messageBar")({ theme })}
               />
             </Animated.View>
           ) : (
@@ -215,18 +225,20 @@ class App extends React.Component<Props, State> {
               ai="center"
               color="white"
               statusBarColor="white"
-              statusBarStyle="dark-content">
+              statusBarStyle="dark-content"
+            >
               <Animated.View
                 style={{
                   transform: [
                     {
                       translateY: logoAnimation.interpolate({
                         inputRange,
-                        outputRange,
-                      }),
-                    },
-                  ],
-                }}>
+                        outputRange
+                      })
+                    }
+                  ]
+                }}
+              >
                 <Logo size={200} />
               </Animated.View>
               <Animated.View
@@ -235,11 +247,12 @@ class App extends React.Component<Props, State> {
                     {
                       translateY: spinnerAnimation.interpolate({
                         inputRange,
-                        outputRange,
-                      }),
-                    },
-                  ],
-                }}>
+                        outputRange
+                      })
+                    }
+                  ]
+                }}
+              >
                 <Spinner color="ufoGreen" size="large" />
               </Animated.View>
             </Screen>

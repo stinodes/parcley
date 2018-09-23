@@ -2119,6 +2119,13 @@ create-react-context@^0.2.1, create-react-context@^0.2.2:
     fbjs "^0.8.0"
     gud "^1.0.0"
 
+create-react-context@^0.2.3:
+  version "0.2.3"
+  resolved "https://registry.yarnpkg.com/create-react-context/-/create-react-context-0.2.3.tgz#9ec140a6914a22ef04b8b09b7771de89567cb6f3"
+  dependencies:
+    fbjs "^0.8.0"
+    gud "^1.0.0"
+
 cross-spawn@^5.0.1, cross-spawn@^5.1.0:
   version "5.1.0"
   resolved "https://registry.yarnpkg.com/cross-spawn/-/cross-spawn-5.1.0.tgz#e8bd0efee58fcff6f8f94510a0a554bbfa235449"
@@ -4737,10 +4744,11 @@ nanomatch@^1.2.9:
     snapdragon "^0.8.1"
     to-regex "^3.0.1"
 
-nativesystem@^1.0.0-beta.3:
-  version "1.0.0-beta.3"
-  resolved "https://registry.yarnpkg.com/nativesystem/-/nativesystem-1.0.0-beta.3.tgz#156841a24762763883215edb19cac29df011f376"
+nativesystem@^1.0.0-beta.9:
+  version "1.0.0-beta.9"
+  resolved "https://registry.yarnpkg.com/nativesystem/-/nativesystem-1.0.0-beta.9.tgz#4bdeff51efe57a7741f8257978964d31229f46ed"
   dependencies:
+    create-react-context "^0.2.3"
     fnional "^0.0.5"
     glamorous-native "^1.4.0"
     polished "^1.9.2"

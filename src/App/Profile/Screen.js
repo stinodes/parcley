@@ -1,28 +1,28 @@
 // @flow
-import * as React from 'react';
-import { Button, Screen, View, Absolute } from 'nativesystem';
-import { Separator } from 'nativesystem/lib/Components/Separator';
-import { connect } from 'react-redux';
-import { ScrollView } from 'react-native';
+import * as React from "react";
+import { Button, Screen, View, Absolute } from "nativesystem";
+import { Separator } from "nativesystem/lib/Components/Separator";
+import { connect } from "react-redux";
+import { ScrollView } from "react-native";
 
-import { logout } from '../../Onboarding/helpers';
-import { Background, Text } from '../../Components';
-import { friends, users } from '../Redux/selectors';
-import { meInfo } from '../../Onboarding/Redux/selectors';
-import { Header } from '../Header';
+import { logout } from "../../Onboarding/helpers";
+import { Background, Text } from "../../Components";
+import { friends, users } from "../Redux/selectors";
+import { meInfo } from "../../Onboarding/Redux/selectors";
+import { Header } from "../Header";
 
-import type { Id, FriendInformation, UserInformation } from 'parcley';
-import { FriendItem } from './FriendItem';
+import type { Id, FriendInformation, UserInformation } from "parcley";
+import { FriendItem } from "./FriendItem";
 
 type Props = {};
 type MappedProps = {
   friends: {|
-    [Id]: FriendInformation,
+    [Id]: FriendInformation
   |},
   users: {|
-    [Id]: UserInformation,
+    [Id]: UserInformation
   |},
-  user: UserInformation,
+  user: ?UserInformation
 };
 
 class Profile extends React.Component<ReduxProps<Props, MappedProps>> {
@@ -31,19 +31,21 @@ class Profile extends React.Component<ReduxProps<Props, MappedProps>> {
   render() {
     const { user, friends, users } = this.props;
     const friendArray = Object.keys(friends).map(key => friends[key]);
-    console.log(user);
+    if (!user) return null;
     return (
       <Screen
         color="white"
         f={1}
         statusBarColor="white"
-        statusBarStyle="dark-content">
+        statusBarStyle="dark-content"
+      >
         <ScrollView
           style={{ flex: 1 }}
           contentContainerStyle={{
             flexGrow: 1,
-            paddingTop: 80 + this.infoHeight,
-          }}>
+            paddingTop: 80 + this.infoHeight
+          }}
+        >
           {!friendArray.length && (
             <View px={3} py={3}>
               <Text color="raisinBlack" bold>
@@ -52,7 +54,11 @@ class Profile extends React.Component<ReduxProps<Props, MappedProps>> {
             </View>
           )}
           {friendArray.map(friend => (
-            <FriendItem friend={friend} user={users[friend.uid]} />
+            <FriendItem
+              meUid={user.uid}
+              friend={friend}
+              user={users[friend.uid]}
+            />
           ))}
         </ScrollView>
         <Button color="transparent" onPress={logout}>
@@ -89,7 +95,7 @@ class Profile extends React.Component<ReduxProps<Props, MappedProps>> {
 const mapStateToProps = (state): MappedProps => ({
   friends: friends(state),
   users: users(state),
-  user: meInfo(state),
+  user: meInfo(state)
 });
 const ConnectedProfile = connect(mapStateToProps)(Profile);
 

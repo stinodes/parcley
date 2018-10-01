@@ -91,7 +91,6 @@ class LoginForm extends React.Component<Props> {
       submitButtonAnimation
     } = this.animations;
     const { height } = Dimensions.get("window");
-    console.log(email, password);
     return (
       <FormHelper inputNames={["email", "password"]}>
         {({ email: emailHelper, password: passwordHelper }) => (

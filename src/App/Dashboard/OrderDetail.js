@@ -11,6 +11,7 @@ import {
 } from "nativesystem";
 import { Animated, Dimensions, ScrollView } from "react-native";
 import { connect } from "react-redux";
+import { Constants } from "expo";
 
 import { Icon } from "../../Components";
 import { members, order } from "../Redux/selectors";
@@ -178,7 +179,10 @@ class OrderDetail extends React.Component<
           ref={comp => (this.scrollView = comp)}
           contentContainerStyle={{
             flexGrow: 1,
-            height: infoCollapsedHeight + Dimensions.get("window").height,
+            minHeight:
+              infoCollapsedHeight +
+              Dimensions.get("window").height -
+              Constants.statusBarHeight,
             paddingTop: infoExpandedHeight + 80
           }}
           scrollEventThrottle={16}

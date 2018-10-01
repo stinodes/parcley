@@ -6,7 +6,7 @@ import { connect } from "react-redux";
 import { ScrollView } from "react-native";
 
 import { logout } from "../../Onboarding/helpers";
-import { Background, Text } from "../../Components";
+import { Background, Text, CollapsableOptions, Option } from "../../Components";
 import { friends, users } from "../Redux/selectors";
 import { meInfo } from "../../Onboarding/Redux/selectors";
 import { Header } from "../Header";
@@ -33,6 +33,8 @@ class Profile extends React.Component<ReduxProps<Props, MappedProps>> {
     const friendArray = Object.keys(friends)
       .filter(key => friends[key] && friends[key].friend)
       .map(key => friends[key]);
+
+    const arr = ["red", "blue", "green"];
 
     if (!user) return null;
 
@@ -68,9 +70,6 @@ class Profile extends React.Component<ReduxProps<Props, MappedProps>> {
             />
           ))}
         </ScrollView>
-        <Button color="transparent" onPress={logout}>
-          <Text color="error">Log out</Text>
-        </Button>
 
         <Absolute h={this.infoHeight} t={80} l={0} r={0}>
           <Background color="white" jc="space-between" px={3} f={1}>
@@ -92,8 +91,18 @@ class Profile extends React.Component<ReduxProps<Props, MappedProps>> {
             <Separator color="gainsBoro" />
           </View>
         </Absolute>
-
         <Header />
+        <CollapsableOptions color="error">
+          <Option icon="edit" onPress={() => {}}>
+            Edit Profile
+          </Option>
+          <Option icon="plus-circle" onPress={() => {}}>
+            Add Friend
+          </Option>
+          <Option icon="log-out" onPress={logout}>
+            Log out
+          </Option>
+        </CollapsableOptions>
       </Screen>
     );
   }

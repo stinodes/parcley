@@ -101,6 +101,7 @@ class App extends React.Component<Props, State> {
             height: 100 * ratio,
             borderRadius: 50 * ratio
           })
+          .withModifier("no-padding", { padding: 0 })
           .withModifier("small-round", {
             height: 100 * ratio,
             width: 100 * ratio,

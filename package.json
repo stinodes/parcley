@@ -2,6 +2,7 @@
   "main": "node_modules/expo/AppEntry.js",
   "private": true,
   "scripts": {
+    "start": "expo start",
     "flow": "flow",
     "prettier": "prettier --jsx-bracket-same-line true --single-quote --trailing-comma all --write \"./src/**\""
   },

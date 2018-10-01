@@ -56,7 +56,11 @@ class Profile extends React.Component<ReduxProps<Props, MappedProps>> {
             </View>
           )}
           {friendArray.map(friend => (
-            <FriendItem friend={friend} user={users[friend.uid]} />
+            <FriendItem
+              meUid={user.uid}
+              friend={friend}
+              user={users[friend.uid]}
+            />
           ))}
         </ScrollView>
         <Button color="transparent" onPress={logout}>

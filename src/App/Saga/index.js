@@ -1,5 +1,5 @@
 // @flow
-import { eventChannel, END } from 'redux-saga';
+import { eventChannel, END } from "redux-saga";
 import {
   all,
   call,
@@ -9,8 +9,8 @@ import {
   take,
   takeLatest,
   cancel,
-  cancelled,
-} from 'redux-saga/effects';
+  cancelled
+} from "redux-saga/effects";
 import {
   setFriends,
   setMember,
@@ -19,32 +19,32 @@ import {
   setOrders,
   setPending,
   setUser,
-  setUsers,
-} from '../Redux';
+  setUsers
+} from "../Redux";
 import {
   readFriends,
   readOrder,
   readUserInfo,
-  removeOrderFromUser,
-} from '../helpers';
-import firebase from '@firebase/app';
+  removeOrderFromUser
+} from "../helpers";
+import firebase from "@firebase/app";
 
 import type {
   Id,
   Order,
   Unsynced,
   UserInformation,
-  ThrowableRead,
-} from 'parcley';
-import { user } from '../Redux/selectors';
-import { actionTypes } from '../Redux/actions';
-import { meId } from '../../Onboarding/Redux/selectors';
-import { toEntityMap } from '../../Utils';
-import { ReadError } from '../../Utils/firebase';
+  ThrowableRead
+} from "parcley";
+import { user } from "../Redux/selectors";
+import { actionTypes } from "../Redux/actions";
+import { meId } from "../../Onboarding/Redux/selectors";
+import { toEntityMap } from "../../Utils";
+import { ReadError } from "../../Utils/firebase";
 
 export const _readUserIfNecessary = function*(
   uid: Id,
-  alwaysReturn?: boolean,
+  alwaysReturn?: boolean
 ): Generator<*, *, *> {
   let userInfo = yield select(user, uid);
   if (userInfo) return alwaysReturn ? userInfo : null;
@@ -61,7 +61,7 @@ export const fetchUserSaga = function*(userId: string): Generator<*, *, *> {
     }
     return userInfo;
   } catch (e) {
-    console.log('error', userId, e);
+    console.log("error", userId, e);
   }
 };
 
@@ -73,24 +73,24 @@ const createJoinedOrdersChannel = (userId: Id) =>
     firebase
       .firestore()
       .collection(`users/${userId}/orders`)
-      .where('joined', '==', true)
-      .onSnapshot(querySnapshot => emit({ querySnapshot }), error => emit(END)),
+      .where("joined", "==", true)
+      .onSnapshot(querySnapshot => emit({ querySnapshot }), error => emit(END))
   );
 const createMembersChannel = (orderUid: Id) =>
   eventChannel(emit =>
     firebase
       .firestore()
       .collection(`orders/${orderUid}/members`)
-      .orderBy('username', 'asc')
-      .onSnapshot(querySnapshot => emit({ querySnapshot }), error => emit(END)),
+      .orderBy("username", "asc")
+      .onSnapshot(querySnapshot => emit({ querySnapshot }), error => emit(END))
   );
 const createFriendsChannel = (userId: Id) =>
   eventChannel(emit =>
     firebase
       .firestore()
       .collection(`users/${userId}/friends`)
-      .orderBy('rankIndex', 'desc')
-      .onSnapshot(querySnapshot => emit({ querySnapshot }), error => emit(END)),
+      .orderBy("rankIndex", "desc")
+      .onSnapshot(querySnapshot => emit({ querySnapshot }), error => emit(END))
   );
 const listenToMembersSaga = function*(orderId: Id) {
   const membersChannel = yield call(createMembersChannel, orderId);
@@ -99,13 +99,13 @@ const listenToMembersSaga = function*(orderId: Id) {
       const { querySnapshot } = yield take(membersChannel);
       const members = querySnapshot.docs.reduce(
         (prev, doc) => ({ ...prev, [doc.id]: doc.data() }),
-        {},
+        {}
       );
       yield put(setMembers(orderId, members));
       yield all(querySnapshot.docs.map(doc => call(fetchUserSaga, doc.id)));
     }
   } catch (e) {
-    console.log('error', e);
+    console.log("error", e);
   } finally {
     membersChannel.close();
   }
@@ -117,7 +117,7 @@ const fetchDataForOrderSaga = function*(orderId: Id) {
     yield put(setOrder(order));
     yield call(listenToMembersSaga, orderId);
   } catch (e) {
-    console.log('error', e);
+    console.log("error", e);
   } finally {
     membersChannel && membersChannel.close();
   }
@@ -130,12 +130,12 @@ const listenToOrdersSaga = function*() {
     while (true) {
       const { querySnapshot } = yield take(channel);
       const newTasks = yield all(
-        querySnapshot.docs.map(doc => fork(fetchDataForOrderSaga, doc.id)),
+        querySnapshot.docs.map(doc => fork(fetchDataForOrderSaga, doc.id))
       );
       newTasks.map((task, i) => (tasks[querySnapshot.docs[i].id] = task));
     }
   } catch (e) {
-    console.log('error', e);
+    console.log("error", e);
   } finally {
     channel.close();
     yield all(Object.keys(tasks).map(key => cancel(tasks[key])));
@@ -147,18 +147,19 @@ const listenToFriendsSaga = function*() {
   try {
     while (true) {
       const { querySnapshot } = yield take(channel);
+      querySnapshot.docs.forEach(doc => console.log(doc.id, doc.data()));
       const friends = querySnapshot.docs.reduce(
         (prev, doc) => ({
           ...prev,
-          [doc.id]: doc.data(),
+          [doc.id]: doc.data()
         }),
-        {},
+        {}
       );
       yield put(setFriends(friends));
       yield all(querySnapshot.docs.map(doc => call(fetchUserSaga, doc.id)));
     }
   } catch (e) {
-    console.log('friends error', e);
+    console.log("friends error", e);
   } finally {
     channel.close();
   }

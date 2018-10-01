@@ -112,7 +112,7 @@ class UserDetailModal extends React.Component<
         message: "You can't add yourself as a friend, dumbass."
       });
 
-    if (this.props.friendInfo)
+    if (this.props.friendInfo && this.props.friendInfo.friend)
       createError({
         message: "Already friends!"
       });

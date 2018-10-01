@@ -30,7 +30,9 @@ class Profile extends React.Component<ReduxProps<Props, MappedProps>> {
 
   render() {
     const { user, friends, users } = this.props;
-    const friendArray = Object.keys(friends).map(key => friends[key]);
+    const friendArray = Object.keys(friends)
+      .filter(key => friends[key] && friends[key].friend)
+      .map(key => friends[key]);
 
     if (!user) return null;
 
@@ -51,7 +53,10 @@ class Profile extends React.Component<ReduxProps<Props, MappedProps>> {
           {!friendArray.length && (
             <View px={3} py={3}>
               <Text color="raisinBlack" bold>
-                You don't have any friends yet. :(
+                You don't have any friends yet.
+              </Text>
+              <Text color="raisinBlack" modifier="small">
+                Loser.
               </Text>
             </View>
           )}

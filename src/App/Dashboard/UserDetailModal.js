@@ -88,14 +88,15 @@ class UserDetailModal extends React.Component<
         }),
         Animated.spring(this.state.animation, {
           toValue,
-          overshootClamping: false,
+          overshootClamping: true,
           useNativeDriver: true
         })
       ]);
     return Animated.sequence([
       Animated.spring(this.state.animation, {
         toValue: this.height,
-        useNativeDriver: true
+        useNativeDriver: true,
+        overshootClamping: true
       }),
       Animated.timing(animation, {
         toValue,

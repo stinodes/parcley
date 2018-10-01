@@ -1,5 +1,5 @@
 // @flow
-import * as React from 'react';
+import * as React from "react";
 import {
   Base,
   flex,
@@ -7,36 +7,36 @@ import {
   Screen,
   size,
   space,
-  SystemView as View,
-} from 'nativesystem';
-import { Animated, Dimensions, ScrollView } from 'react-native';
-import { connect } from 'react-redux';
+  SystemView as View
+} from "nativesystem";
+import { Animated, Dimensions, ScrollView } from "react-native";
+import { connect } from "react-redux";
 
-import { Icon } from '../../Components';
-import { members, order } from '../Redux/selectors';
-import { meId } from '../../Onboarding/Redux/selectors';
-import { Header } from '../Header';
-import { MemberItem } from './MemberItem';
-import { OrderInformation } from './OrderInformation';
-import { ScoreForm } from './ScoreForm';
+import { Icon } from "../../Components";
+import { members, order } from "../Redux/selectors";
+import { meId } from "../../Onboarding/Redux/selectors";
+import { Header } from "../Header";
+import { MemberItem } from "./MemberItem";
+import { OrderInformation } from "./OrderInformation";
+import { ScoreForm } from "./ScoreForm";
 
-import type { Member, Order, Id } from 'parcley';
+import type { Member, Order, Id } from "parcley";
 import type {
   NavigationScreenProp,
-  NavigationStateRoute,
-} from 'react-navigation';
-import { AskScoreItem } from './AskScoreItem';
-import { SwipeItem } from './SwipeItem';
-import { UserDetailModal } from './UserDetailModal';
-import { measureInWindow } from '../../Utils';
+  NavigationStateRoute
+} from "react-navigation";
+import { AskScoreItem } from "./AskScoreItem";
+import { SwipeItem } from "./SwipeItem";
+import { UserDetailModal } from "./UserDetailModal";
+import { measureInWindow } from "../../Utils";
 
 type Props = {
-  navigation: NavigationScreenProp<NavigationStateRoute>,
+  navigation: NavigationScreenProp<NavigationStateRoute>
 };
 type MappedProps = {
   order: Order,
   meUid: string,
-  members: { [Id]: Member },
+  members: { [Id]: Member }
 };
 type State = {
   infoExpandedHeight: number,
@@ -48,15 +48,15 @@ type State = {
     x: number,
     y: number,
     w: number,
-    h: number,
+    h: number
   },
   userDetailModalMember: ?string,
-  userDetailModalVisible: boolean,
+  userDetailModalVisible: boolean
 };
 
 class OrderDetail extends React.Component<
   ReduxProps<Props, MappedProps>,
-  State,
+  State
 > {
   state = {
     infoExpandedHeight: 220,
@@ -68,14 +68,14 @@ class OrderDetail extends React.Component<
       x: 0,
       y: 0,
       w: 0,
-      h: 0,
+      h: 0
     },
     userDetailModalMember: null,
-    userDetailModalVisible: false,
+    userDetailModalVisible: false
   };
 
   itemRefs: {
-    [string]: ?View,
+    [string]: ?View
   } = {};
   scrollView: ScrollView;
 
@@ -91,13 +91,13 @@ class OrderDetail extends React.Component<
   entryAnimation = () => {
     Animated.parallel([
       Animated.timing(this.state.entryOpacityAnimation, { toValue: 1 }),
-      Animated.spring(this.state.entryPositionAnimation, { toValue: 1 }),
+      Animated.spring(this.state.entryPositionAnimation, { toValue: 1 })
     ]).start();
   };
 
   onInfoLayout = event => {
     this.setState({
-      infoExpandedHeight: event.nativeEvent.layout.height,
+      infoExpandedHeight: event.nativeEvent.layout.height
     });
   };
 
@@ -107,6 +107,7 @@ class OrderDetail extends React.Component<
     const velocity = e.nativeEvent.velocity.y;
     const offset = e.nativeEvent.contentOffset.y;
     if (offset <= interval) {
+      console.log(offset, interval);
       if (velocity > 0)
         this.scrollView.getNode().scrollTo({ y: 0, animated: true });
       if (velocity <= 0)
@@ -123,11 +124,16 @@ class OrderDetail extends React.Component<
         y,
         x,
         w,
-        h,
+        h
       },
       userDetailModalMember: uid,
-      userDetailModalVisible: true,
+      userDetailModalVisible: true
     });
+  };
+  closeUserDetail = () => this.setState({ userDetailModalVisible: false });
+  handleBackPress = () => {
+    if (this.state.userDetailModalVisible) this.closeUserDetail();
+    else this.props.navigation.goBack();
   };
 
   render() {
@@ -139,11 +145,11 @@ class OrderDetail extends React.Component<
       scrollAnimation,
       userDetailModalMember,
       userDetailModalVisible,
-      userDetailModalStartPosition,
+      userDetailModalStartPosition
     } = this.state;
     const { order, meUid, members } = this.props;
     const membersArray: Member[] = Object.keys(members).map(
-      key => members[key],
+      key => members[key]
     );
     const host = membersArray.find(member => member.uid === order.host);
     const ownMember = Object.keys(members)
@@ -152,7 +158,7 @@ class OrderDetail extends React.Component<
 
     const entryOpacity = entryOpacityAnimation.interpolate({
       inputRange: [0, 1],
-      outputRange: [0, 1],
+      outputRange: [0, 1]
     });
     return (
       <Screen f={1} color="white">
@@ -164,15 +170,16 @@ class OrderDetail extends React.Component<
               {
                 translateY: entryPositionAnimation.interpolate({
                   inputRange: [0, 1],
-                  outputRange: [Dimensions.get('window').height * 0.33, 0],
-                }),
-              },
-            ],
+                  outputRange: [Dimensions.get("window").height * 0.33, 0]
+                })
+              }
+            ]
           }}
           ref={comp => (this.scrollView = comp)}
           contentContainerStyle={{
             flexGrow: 1,
-            paddingTop: infoExpandedHeight + 80,
+            height: infoCollapsedHeight + Dimensions.get("window").height,
+            paddingTop: infoExpandedHeight + 80
           }}
           scrollEventThrottle={16}
           onScrollEndDrag={this.onScrollEnd}
@@ -180,14 +187,15 @@ class OrderDetail extends React.Component<
             [
               {
                 nativeEvent: {
-                  contentOffset: { y: this.state.scrollAnimation },
-                },
-              },
+                  contentOffset: { y: this.state.scrollAnimation }
+                }
+              }
             ],
             {
-              useNativeDriver: true,
-            },
-          )}>
+              useNativeDriver: true
+            }
+          )}
+        >
           <View>
             {ownMember &&
               (ownMember.quantity === null ||
@@ -199,7 +207,8 @@ class OrderDetail extends React.Component<
             {host && (
               <View
                 onLayout={() => {}}
-                innerRef={component => (this.itemRefs[host.uid] = component)}>
+                innerRef={component => (this.itemRefs[host.uid] = component)}
+              >
                 <MemberItem
                   member={host}
                   self={order.host === meUid}
@@ -214,7 +223,8 @@ class OrderDetail extends React.Component<
                   onLayout={() => {}}
                   innerRef={component =>
                     (this.itemRefs[ownMember.uid] = component)
-                  }>
+                  }
+                >
                   <MemberItem
                     self
                     member={ownMember}
@@ -230,13 +240,14 @@ class OrderDetail extends React.Component<
                     onLayout={() => {}}
                     innerRef={component =>
                       (this.itemRefs[member.uid] = component)
-                    }>
+                    }
+                  >
                     <MemberItem
                       member={member}
                       onPress={() => this.showUserDetailModal(member.uid)}
                     />
                   </View>
-                ),
+                )
             )}
           </View>
         </Animated.ScrollView>
@@ -248,28 +259,27 @@ class OrderDetail extends React.Component<
           scrollAnimation={scrollAnimation}
         />
         <UserDetailModal
-          onRequestClose={() =>
-            this.setState({ userDetailModalVisible: false })
-          }
+          onRequestClose={this.closeUserDetail}
           visible={!!userDetailModalVisible}
           startPosition={userDetailModalStartPosition}
           order={order}
           member={membersArray.find(
-            member => member.uid === userDetailModalMember,
+            member => member.uid === userDetailModalMember
           )}
         />
         <Header
           left={
             <Base
-              onPress={() => this.props.navigation.goBack()}
-              background={Base.Ripple('ufoGreen', true)}>
+              onPress={this.handleBackPress}
+              background={Base.Ripple("ufoGreen", true)}
+            >
               <View p={2}>
                 <Icon name="arrow-left" color="ufoGreen" modifier="icon" />
               </View>
             </Base>
           }
           right={
-            <Base onPress={() => {}} background={Base.Ripple('ufoGreen', true)}>
+            <Base onPress={() => {}} background={Base.Ripple("ufoGreen", true)}>
               <View p={2}>
                 <Icon name="edit" color="ufoGreen" modifier="icon" />
               </View>
@@ -282,9 +292,9 @@ class OrderDetail extends React.Component<
 }
 
 const mapStateToProps = (state, ownProps): MappedProps => ({
-  order: order(state, ownProps.navigation.getParam('uid')),
-  members: members(state, ownProps.navigation.getParam('uid')),
-  meUid: meId(state) || '',
+  order: order(state, ownProps.navigation.getParam("uid")),
+  members: members(state, ownProps.navigation.getParam("uid")),
+  meUid: meId(state) || ""
 });
 const ConnectedOrderDetail = connect(mapStateToProps)(OrderDetail);
 export { ConnectedOrderDetail as OrderDetail };

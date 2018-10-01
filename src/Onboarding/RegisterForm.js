@@ -1,5 +1,5 @@
 // @flow
-import * as React from 'react';
+import * as React from "react";
 import {
   Absolute,
   Base,
@@ -9,30 +9,30 @@ import {
   space,
   Spinner,
   SystemView as View,
-  textColor,
-} from 'nativesystem';
-import type { FormikBag } from 'formik';
-import { withFormik } from 'formik';
-import g from 'glamorous-native';
+  textColor
+} from "nativesystem";
+import type { FormikBag } from "formik";
+import { withFormik, Field } from "formik";
+import g from "glamorous-native";
 
 import {
   FormHelper,
   FTextInput,
   FullscreenModal,
   Icon,
-  Text,
-} from '../Components';
-import { createError } from '../Utils/messageBar';
-import { Animated, Dimensions, Keyboard } from 'react-native';
-import { isUserUnique, registerUser, writeUserInfo } from './helpers';
-import { Header } from '../App/Header';
+  Text
+} from "../Components";
+import { createError } from "../Utils/messageBar";
+import { Animated, Dimensions, Keyboard } from "react-native";
+import { isUserUnique, registerUser, writeUserInfo } from "./helpers";
+import { Header } from "../App/Header";
 
 const AnimatedView = g(Animated.View)(flex, space);
 
 type Props = {
   ...FormikBag,
   visible: boolean,
-  close: () => any,
+  close: () => any
 };
 
 class RegisterForm extends React.Component<Props> {
@@ -40,7 +40,7 @@ class RegisterForm extends React.Component<Props> {
     titleAnimation: new Animated.Value(0),
     inputsAnimation: new Animated.Value(0),
     submitButtonAnimation: new Animated.Value(0),
-    closeButtonAnimation: new Animated.Value(0),
+    closeButtonAnimation: new Animated.Value(0)
   };
 
   createAnimation = ({ animation, toValue }) => {
@@ -48,25 +48,25 @@ class RegisterForm extends React.Component<Props> {
       titleAnimation,
       inputsAnimation,
       submitButtonAnimation,
-      closeButtonAnimation,
+      closeButtonAnimation
     } = this.animations;
     const config = {
       toValue,
       useNativeDriver: true,
       tension: 80,
-      friction: 10,
+      friction: 10
     };
     const animations = [
       Animated.spring(animation, config),
       Animated.spring(titleAnimation, config),
       Animated.spring(inputsAnimation, config),
       Animated.spring(submitButtonAnimation, config),
-      Animated.spring(closeButtonAnimation, config),
+      Animated.spring(closeButtonAnimation, config)
     ];
 
     return Animated.stagger(
       50,
-      toValue === 1 ? animations : animations.reverse(),
+      toValue === 1 ? animations : animations.reverse()
     );
   };
 
@@ -83,21 +83,21 @@ class RegisterForm extends React.Component<Props> {
       values: { email, password, username },
       handleSubmit,
       isSubmitting,
-      resetForm,
+      resetForm
     } = this.props;
     const {
       titleAnimation,
       inputsAnimation,
       submitButtonAnimation,
-      closeButtonAnimation,
+      closeButtonAnimation
     } = this.animations;
-    const { height } = Dimensions.get('window');
+    const { height } = Dimensions.get("window");
     return (
-      <FormHelper inputNames={['email', 'username', 'password']}>
+      <FormHelper inputNames={["email", "username", "password"]}>
         {({
           email: emailHelper,
           username: usernameHelper,
-          password: passwordHelper,
+          password: passwordHelper
         }) => (
           <FullscreenModal
             visible={visible}
@@ -110,9 +110,10 @@ class RegisterForm extends React.Component<Props> {
               ignoredTargets: () => [
                 emailHelper.input,
                 usernameHelper.input,
-                passwordHelper.input,
-              ],
-            }}>
+                passwordHelper.input
+              ]
+            }}
+          >
             <View px={3} jc="center" f={1}>
               <AnimatedView
                 my={1}
@@ -121,11 +122,12 @@ class RegisterForm extends React.Component<Props> {
                     {
                       translateY: titleAnimation.interpolate({
                         inputRange: [0, 1],
-                        outputRange: [height * 0.5, 0],
-                      }),
-                    },
-                  ],
-                }}>
+                        outputRange: [height * 0.5, 0]
+                      })
+                    }
+                  ]
+                }}
+              >
                 <Text color="raisinBlack">Sign Up</Text>
                 <Text modifier="large" bold color="raisinBlack">
                   Fancy meeting you!
@@ -138,16 +140,16 @@ class RegisterForm extends React.Component<Props> {
                     {
                       translateY: inputsAnimation.interpolate({
                         inputRange: [0, 1],
-                        outputRange: [height * 0.5, 0],
-                      }),
-                    },
-                  ],
-                }}>
-                <FTextInput
+                        outputRange: [height * 0.5, 0]
+                      })
+                    }
+                  ]
+                }}
+              >
+                <Field
+                  component={FTextInput}
                   inputRef={emailHelper.ref}
                   name="email"
-                  value={email}
-                  onChange={setFieldValue}
                   label="E-mail address"
                   color="raisinBlack"
                   baseColor="raisinBlack"
@@ -164,17 +166,17 @@ class RegisterForm extends React.Component<Props> {
                     {
                       translateY: inputsAnimation.interpolate({
                         inputRange: [0, 1],
-                        outputRange: [height * 0.5, 0],
-                      }),
-                    },
-                  ],
-                }}>
-                <FTextInput
+                        outputRange: [height * 0.5, 0]
+                      })
+                    }
+                  ]
+                }}
+              >
+                <Field
+                  component={FTextInput}
                   inputRef={usernameHelper.ref}
                   name="username"
                   label="Username"
-                  value={username}
-                  onChange={setFieldValue}
                   color="raisinBlack"
                   baseColor="raisinBlack"
                   accentColor="gunMetal"
@@ -189,18 +191,18 @@ class RegisterForm extends React.Component<Props> {
                     {
                       translateY: inputsAnimation.interpolate({
                         inputRange: [0, 1],
-                        outputRange: [height * 0.5, 0],
-                      }),
-                    },
-                  ],
-                }}>
-                <FTextInput
+                        outputRange: [height * 0.5, 0]
+                      })
+                    }
+                  ]
+                }}
+              >
+                <Field
+                  component={FTextInput}
                   secureTextEntry
                   inputRef={passwordHelper.ref}
                   label="Password"
                   name="password"
-                  value={password}
-                  onChange={setFieldValue}
                   color="raisinBlack"
                   baseColor="raisinBlack"
                   accentColor="gunMetal"
@@ -216,17 +218,19 @@ class RegisterForm extends React.Component<Props> {
                     {
                       translateY: submitButtonAnimation.interpolate({
                         inputRange: [0, 1],
-                        outputRange: [height * 0.5, 0],
-                      }),
-                    },
-                  ],
-                }}>
+                        outputRange: [height * 0.5, 0]
+                      })
+                    }
+                  ]
+                }}
+              >
                 <View w={200} as="center" pt={2} pb={4}>
                   <Button
                     color="gunMetal"
                     ripple="white"
                     raised={20}
-                    onPress={handleSubmit}>
+                    onPress={handleSubmit}
+                  >
                     {isSubmitting ? (
                       <Spinner color="white" />
                     ) : (
@@ -242,10 +246,15 @@ class RegisterForm extends React.Component<Props> {
             <Header
               left={
                 <Base
-                  background={Base.Ripple('frenchSky', true)}
-                  onPress={Base.delayHandler(this.close)}>
+                  background={Base.Ripple("frenchSky", true)}
+                  onPress={Base.delayHandler(this.close)}
+                >
                   <View w={64} h={64} jc="center" ai="center">
-                    <Icon name="chevron-left" color="raisinBlack" size={40} />
+                    <Icon
+                      name="chevron-left"
+                      color="raisinBlack"
+                      modifier="icon"
+                    />
                   </View>
                 </Base>
               }
@@ -258,10 +267,10 @@ class RegisterForm extends React.Component<Props> {
 }
 
 const FormikRegisterForm = withFormik({
-  mapPropsToValues: props => ({ email: '', username: '', password: '' }),
+  mapPropsToValues: props => ({ email: "", username: "", password: "" }),
   handleSubmit: async (
     { username, email, password },
-    { props, setSubmitting, setErrors },
+    { props, setSubmitting, setErrors }
   ) => {
     setSubmitting(true);
     try {
@@ -269,11 +278,11 @@ const FormikRegisterForm = withFormik({
     } catch (e) {
       console.log(e);
       createError({
-        title: e.message,
+        title: e.message
       });
     }
     setSubmitting(false);
-  },
+  }
 })(RegisterForm);
 
 export { FormikRegisterForm as RegisterForm };

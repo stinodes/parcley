@@ -1,29 +1,29 @@
 // @flow
-import * as React from 'react';
-import type { FormikBag } from 'formik';
-import { withFormik } from 'formik';
-import g from 'glamorous-native';
+import * as React from "react";
+import type { FormikBag } from "formik";
+import { withFormik, Field } from "formik";
+import g from "glamorous-native";
 import {
   Button,
   Screen,
   Spinner,
   SystemView as View,
   text,
-  Absolute,
-} from 'nativesystem';
+  Absolute
+} from "nativesystem";
 
-import { Text, FTextInput, Icon } from '../../Components';
-import { isPending, isSuccessful, joinOrder } from './Redux';
-import { connect } from 'react-redux';
+import { Text, FTextInput, Icon } from "../../Components";
+import { isPending, isSuccessful, joinOrder } from "./Redux";
+import { connect } from "react-redux";
 
 type Props = {
   ...FormikBag,
   close: () => any,
-  onSubmit: () => any,
+  onSubmit: () => any
 };
 type MappedProps = {
   isPending: boolean,
-  isSuccessful: boolean,
+  isSuccessful: boolean
 };
 type State = {};
 
@@ -40,7 +40,7 @@ class JoinOrderForm extends React.Component<ReduxProps<Props, MappedProps>> {
   }
 
   onSuccess() {
-    this.props.resetForm({ code: '' });
+    this.props.resetForm({ code: "" });
     this.props.onSuccess && this.props.onSuccess();
   }
 
@@ -50,7 +50,7 @@ class JoinOrderForm extends React.Component<ReduxProps<Props, MappedProps>> {
       setFieldValue,
       handleSubmit,
       close,
-      isSubmitting,
+      isSubmitting
     } = this.props;
     return (
       <Screen dismissKeyboardOnTap>
@@ -60,13 +60,12 @@ class JoinOrderForm extends React.Component<ReduxProps<Props, MappedProps>> {
           </Text>
         </View>
         <View f={1} pt={1} px={3}>
-          <FTextInput
+          <Field
+            component={FTextInput}
             autoCapitalize="none"
             accentColor="gunMetal"
             name="code"
-            value={values.code}
             placeholder="Order code"
-            onChange={setFieldValue}
           />
         </View>
         {isSubmitting ? (
@@ -94,21 +93,21 @@ class JoinOrderForm extends React.Component<ReduxProps<Props, MappedProps>> {
 }
 
 const FormikJoinOrderForm = withFormik({
-  mapPropsToValues: () => ({ code: '' }),
+  mapPropsToValues: () => ({ code: "" }),
   validate: values => {
     const errors = {};
-    if (!values.code) errors.name = 'Order code is required';
+    if (!values.code) errors.name = "Order code is required";
     return errors;
   },
-  handleSubmit: (values, { props }) => props.dispatch(joinOrder(values)),
+  handleSubmit: (values, { props }) => props.dispatch(joinOrder(values))
 })(JoinOrderForm);
 
 const mapStateToProps = (state): MappedProps => ({
   isPending: isPending(state),
-  isSuccessful: isSuccessful(state),
+  isSuccessful: isSuccessful(state)
 });
 const ConnectedFormikJoinOrderForm = connect(mapStateToProps)(
-  FormikJoinOrderForm,
+  FormikJoinOrderForm
 );
 
 export { ConnectedFormikJoinOrderForm as JoinOrderForm };

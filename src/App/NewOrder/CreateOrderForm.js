@@ -1,26 +1,26 @@
 // @flow
-import * as React from 'react';
-import type { FormikBag } from 'formik';
-import { withFormik } from 'formik';
+import * as React from "react";
+import type { FormikBag } from "formik";
+import { withFormik, Field } from "formik";
 import {
   Screen,
   SystemView as View,
   Button,
   KeyboardAnimatedView,
-  Spinner,
-} from 'nativesystem';
-import { FTextInput, Text } from '../../Components';
-import type { CreateOrderValues } from './Saga';
-import { connect } from 'react-redux';
-import { createOrder, isPending, isSuccessful } from './Redux';
+  Spinner
+} from "nativesystem";
+import { FTextInput, Text } from "../../Components";
+import type { CreateOrderValues } from "./Saga";
+import { connect } from "react-redux";
+import { createOrder, isPending, isSuccessful } from "./Redux";
 
 type Props = {
   ...FormikBag,
-  onSuccess: () => any,
+  onSuccess: () => any
 };
 type MappedProps = {
   isPending: boolean,
-  isSuccessful: boolean,
+  isSuccessful: boolean
 };
 
 type State = {};
@@ -37,12 +37,12 @@ class CreateOrderForm extends React.Component<ReduxProps<Props, MappedProps>> {
   }
 
   onSuccess() {
-    console.log('on success');
+    console.log("on success");
     this.props.resetForm({
-      name: '',
-      description: '',
-      members: '',
-      isPrivate: false,
+      name: "",
+      description: "",
+      members: "",
+      isPrivate: false
     });
     this.props.onSuccess && this.props.onSuccess();
   }
@@ -59,35 +59,32 @@ class CreateOrderForm extends React.Component<ReduxProps<Props, MappedProps>> {
           </View>
 
           <View>
-            <FTextInput
+            <Field
+              component={FTextInput}
               baseColor="black"
               label="Order name"
               accentColor="gunMetal"
               name="name"
-              value={values.name}
-              onChange={setFieldValue}
             />
           </View>
           <View>
-            <FTextInput
+            <Field
+              component={FTextInput}
               baseColor="black"
               accentColor="gunMetal"
               label="Description"
               name="description"
-              value={values.description}
-              onChange={setFieldValue}
             />
           </View>
           <View>
-            <FTextInput
+            <Field
+              component={FTextInput}
               baseColor="black"
               label="Members"
               accentColor="gunMetal"
               autoCapitalize="none"
               name="members"
               title="Enter members' usernames split by commas"
-              value={values.members}
-              onChange={setFieldValue}
             />
           </View>
           <View mt={2} w={200} as="center" mb={4}>
@@ -95,7 +92,8 @@ class CreateOrderForm extends React.Component<ReduxProps<Props, MappedProps>> {
               onPress={handleSubmit}
               color="gunMetal"
               raised={20}
-              ripple="white">
+              ripple="white"
+            >
               {isSubmitting ? (
                 <Spinner color="white" />
               ) : (
@@ -112,26 +110,26 @@ class CreateOrderForm extends React.Component<ReduxProps<Props, MappedProps>> {
 
 const FormikCreateOrderForm = withFormik({
   mapPropsToValues: () => ({
-    name: '',
-    description: '',
-    members: '',
-    isPrivate: false,
+    name: "",
+    description: "",
+    members: "",
+    isPrivate: false
   }),
   validate: values => {
     const errors = {};
-    if (!values.name) errors.name = 'Name is required';
+    if (!values.name) errors.name = "Name is required";
     return errors;
   },
   handleSubmit: (values: CreateOrderValues, { props }) =>
-    props.dispatch(createOrder(values)),
+    props.dispatch(createOrder(values))
 })(CreateOrderForm);
 
 const mapStateToProps = (state): MappedProps => ({
   isPending: isPending(state),
-  isSuccessful: isSuccessful(state),
+  isSuccessful: isSuccessful(state)
 });
 const ConnectedFormikCreateOrderForm = connect(mapStateToProps)(
-  FormikCreateOrderForm,
+  FormikCreateOrderForm
 );
 
 export { ConnectedFormikCreateOrderForm as CreateOrderForm };

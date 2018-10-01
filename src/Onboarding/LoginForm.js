@@ -1,6 +1,6 @@
 // @flow
-import * as React from 'react';
-import { Animated, Dimensions } from 'react-native';
+import * as React from "react";
+import { Animated, Dimensions } from "react-native";
 import {
   Base,
   Button,
@@ -12,28 +12,28 @@ import {
   Spinner,
   SystemView as View,
   textColor,
-  Absolute,
-} from 'nativesystem';
-import type { FormikBag } from 'formik';
-import { withFormik } from 'formik';
-import g from 'glamorous-native';
+  Absolute
+} from "nativesystem";
+import type { FormikBag } from "formik";
+import { withFormik, Field } from "formik";
+import g from "glamorous-native";
 
 import {
   FormHelper,
   FTextInput,
   FullscreenModal,
   Icon,
-  Text,
-} from '../Components';
-import { createError } from '../Utils/messageBar';
-import { login } from './helpers';
-import { Header } from '../App/Header';
+  Text
+} from "../Components";
+import { createError } from "../Utils/messageBar";
+import { login } from "./helpers";
+import { Header } from "../App/Header";
 
 const AnimatedView = g(Animated.View)(flex, space);
 
 type Props = {
   ...FormikBag,
-  close: () => any,
+  close: () => any
 };
 
 class LoginForm extends React.Component<Props> {
@@ -41,7 +41,7 @@ class LoginForm extends React.Component<Props> {
     titleAnimation: new Animated.Value(0),
     inputsAnimation: new Animated.Value(0),
     submitButtonAnimation: new Animated.Value(0),
-    closeButtonAnimation: new Animated.Value(0),
+    closeButtonAnimation: new Animated.Value(0)
   };
 
   createAnimation = ({ animation, toValue }) => {
@@ -49,25 +49,25 @@ class LoginForm extends React.Component<Props> {
       titleAnimation,
       inputsAnimation,
       submitButtonAnimation,
-      closeButtonAnimation,
+      closeButtonAnimation
     } = this.animations;
     const config = {
       toValue,
       useNativeDriver: true,
       tension: 80,
-      friction: 10,
+      friction: 10
     };
     const animations = [
       Animated.spring(animation, config),
       Animated.spring(titleAnimation, config),
       Animated.spring(inputsAnimation, config),
       Animated.spring(submitButtonAnimation, config),
-      Animated.spring(closeButtonAnimation, config),
+      Animated.spring(closeButtonAnimation, config)
     ];
 
     return Animated.stagger(
       50,
-      toValue === 1 ? animations : animations.reverse(),
+      toValue === 1 ? animations : animations.reverse()
     );
   };
 
@@ -83,16 +83,17 @@ class LoginForm extends React.Component<Props> {
       values: { email, password },
       handleSubmit,
       isSubmitting,
-      resetForm,
+      resetForm
     } = this.props;
     const {
       titleAnimation,
       inputsAnimation,
-      submitButtonAnimation,
+      submitButtonAnimation
     } = this.animations;
-    const { height } = Dimensions.get('window');
+    const { height } = Dimensions.get("window");
+    console.log(email, password);
     return (
-      <FormHelper inputNames={['email', 'password']}>
+      <FormHelper inputNames={["email", "password"]}>
         {({ email: emailHelper, password: passwordHelper }) => (
           <FullscreenModal
             visible={visible}
@@ -101,9 +102,10 @@ class LoginForm extends React.Component<Props> {
             createAnimation={this.createAnimation}
             screenProps={{
               dismissKeyboardOnTap: true,
-              ignoredTargets: () => [emailHelper.input, passwordHelper.input],
+              ignoredTargets: () => [emailHelper.input, passwordHelper.input]
             }}
-            color="white">
+            color="white"
+          >
             <View px={3} jc="center" f={1}>
               <AnimatedView
                 my={1}
@@ -112,11 +114,12 @@ class LoginForm extends React.Component<Props> {
                     {
                       translateY: titleAnimation.interpolate({
                         inputRange: [0, 1],
-                        outputRange: [height * 0.5, 0],
-                      }),
-                    },
-                  ],
-                }}>
+                        outputRange: [height * 0.5, 0]
+                      })
+                    }
+                  ]
+                }}
+              >
                 <Text color="raisinBlack">Log In</Text>
                 <Text modifier="large" bold color="raisinBlack">
                   Welcome back!
@@ -129,17 +132,17 @@ class LoginForm extends React.Component<Props> {
                     {
                       translateY: inputsAnimation.interpolate({
                         inputRange: [0, 1],
-                        outputRange: [height * 0.5, 0],
-                      }),
-                    },
-                  ],
-                }}>
-                <FTextInput
+                        outputRange: [height * 0.5, 0]
+                      })
+                    }
+                  ]
+                }}
+              >
+                <Field
+                  component={FTextInput}
                   label="E-mail address"
                   inputRef={emailHelper.ref}
                   name="email"
-                  value={email}
-                  onChange={setFieldValue}
                   color="raisinBlack"
                   baseColor="raisinBlack"
                   accentColor="ufoGreen"
@@ -155,18 +158,18 @@ class LoginForm extends React.Component<Props> {
                     {
                       translateY: inputsAnimation.interpolate({
                         inputRange: [0, 1],
-                        outputRange: [height * 0.5, 0],
-                      }),
-                    },
-                  ],
-                }}>
-                <FTextInput
+                        outputRange: [height * 0.5, 0]
+                      })
+                    }
+                  ]
+                }}
+              >
+                <Field
+                  component={FTextInput}
                   label="Password"
                   secureTextEntry
                   inputRef={passwordHelper.ref}
                   name="password"
-                  value={password}
-                  onChange={setFieldValue}
                   color="raisinBlack"
                   baseColor="raisinBlack"
                   accentColor="ufoGreen"
@@ -181,17 +184,19 @@ class LoginForm extends React.Component<Props> {
                     {
                       translateY: submitButtonAnimation.interpolate({
                         inputRange: [0, 1],
-                        outputRange: [height * 0.5, 0],
-                      }),
-                    },
-                  ],
-                }}>
+                        outputRange: [height * 0.5, 0]
+                      })
+                    }
+                  ]
+                }}
+              >
                 <View w={200} as="center" pt={2} pb={4}>
                   <Button
                     color="ufoGreen"
                     ripple="white"
                     raised={20}
-                    onPress={handleSubmit}>
+                    onPress={handleSubmit}
+                  >
                     {isSubmitting ? (
                       <Spinner color="white" />
                     ) : (
@@ -207,10 +212,15 @@ class LoginForm extends React.Component<Props> {
             <Header
               left={
                 <Base
-                  background={Base.Ripple('frenchSky', true)}
-                  onPress={Base.delayHandler(this.close)}>
+                  background={Base.Ripple("frenchSky", true)}
+                  onPress={Base.delayHandler(this.close)}
+                >
                   <View w={64} h={64} jc="center" ai="center">
-                    <Icon name="chevron-left" color="raisinBlack" size={40} />
+                    <Icon
+                      name="chevron-left"
+                      color="raisinBlack"
+                      modifier="icon"
+                    />
                   </View>
                 </Base>
               }
@@ -223,19 +233,20 @@ class LoginForm extends React.Component<Props> {
 }
 
 const FormikLoginForm = withFormik({
-  mapPropsToValues: props => ({ email: '', password: '' }),
+  mapPropsToValues: props => ({ email: "", password: "" }),
   handleSubmit: async (values, { props, setSubmitting }) => {
     setSubmitting(true);
+    console.log(values);
     try {
       await login(values);
     } catch (e) {
       console.log(e);
       createError({
-        title: e.message,
+        title: e.message
       });
       setSubmitting(false);
     }
-  },
+  }
 })(LoginForm);
 
 export { FormikLoginForm as LoginForm };

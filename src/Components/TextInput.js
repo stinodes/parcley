@@ -1,14 +1,20 @@
 // @flow
-import * as React from 'react';
-import { getColor, subTheme, FormikInputWrapper } from 'nativesystem';
-import g, { withTheme } from 'glamorous-native';
-import { TextField } from 'react-native-material-textfield';
-import type { Color } from 'nativesystem';
+import * as React from "react";
+import {
+  getColor,
+  subTheme,
+  FormikInputWrapper,
+  formikFieldWrapper,
+  normalizeInputProps
+} from "nativesystem";
+import g, { withTheme } from "glamorous-native";
+import { TextField } from "react-native-material-textfield";
+import type { Color } from "nativesystem";
 
 type Props = {
   color: Color,
   accentColor: Color,
-  baseColor: Color,
+  baseColor: Color
 };
 
 const TextInput = ({
@@ -23,15 +29,15 @@ const TextInput = ({
     textColor: getColor(theme, color),
     tintColor: getColor(theme, accentColor),
     baseColor: getColor(theme, baseColor),
-    errorColor: getColor(theme, 'error'),
-    labelHeight: !props.label ? 0 : undefined,
+    errorColor: getColor(theme, "error"),
+    labelHeight: !props.label ? 0 : undefined
   };
 
   return (
     <TextField
-      labelTextStyle={subTheme('text')({ theme, modifier: 'small' })}
-      titleTextStyle={subTheme('text')({ theme, modifier: 'small' })}
-      style={[subTheme('text')({ theme }), { color: parsedProps.textColor }]}
+      labelTextStyle={subTheme("text")({ theme, modifier: "small" })}
+      titleTextStyle={subTheme("text")({ theme, modifier: "small" })}
+      style={[subTheme("text")({ theme }), { color: parsedProps.textColor }]}
       ref={inputRef && (comp => inputRef(comp && comp.input))}
       {...props}
       {...parsedProps}
@@ -40,6 +46,13 @@ const TextInput = ({
 };
 
 const ThemedTextInput = withTheme(TextInput);
-const FTextInput = FormikInputWrapper(ThemedTextInput);
+const FTextInput = formikFieldWrapper(
+  normalizeInputProps(
+    {
+      onChange: "onChangeText"
+    },
+    ThemedTextInput
+  )
+);
 
 export { ThemedTextInput as TextInput, FTextInput };

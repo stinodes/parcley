@@ -13,3 +13,4 @@ export * from "./Circle";
 export * from "./ScoreCircle";
 export * from "./Icon";
 export * from "./CollapsableOptions";
+export * from "./FeedbackButton";

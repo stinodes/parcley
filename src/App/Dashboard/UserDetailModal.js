@@ -10,7 +10,9 @@ import {
   FTextInput,
   Modal,
   Text,
-  TextInput
+  TextInput,
+  FeedbackButton,
+  FeedbackContent
 } from "../../Components";
 import { Separator } from "nativesystem/lib/Components/Separator";
 import { meId } from "../../Onboarding/Redux/selectors";
@@ -113,10 +115,12 @@ class UserDetailModal extends React.Component<
         message: "You can't add yourself as a friend, dumbass."
       });
 
-    if (this.props.friendInfo && this.props.friendInfo.friend)
+    if (this.props.friendInfo && this.props.friendInfo.friend) {
       createError({
         message: "Already friends!"
       });
+      throw new Error("already friends");
+    }
 
     await addFriend(this.props.meUid, this.props.member.uid);
   };
@@ -210,9 +214,9 @@ class UserDetailModal extends React.Component<
                     )}
                   <Separator color="gainsBoro" />
                   <View py={2} fd="row" jc="space-around">
-                    <Button ripple="white" onPress={this.addFriend}>
+                    <FeedbackButton ripple="white" onPress={this.addFriend}>
                       <Text color="white">Add Friend</Text>
-                    </Button>
+                    </FeedbackButton>
                   </View>
                 </Background>
               </Element>

@@ -64,6 +64,7 @@ class Profile extends React.Component<ReduxProps<Props, MappedProps>> {
           )}
           {friendArray.map(friend => (
             <FriendItem
+              key={friend.uid}
               meUid={user.uid}
               friend={friend}
               user={users[friend.uid]}
